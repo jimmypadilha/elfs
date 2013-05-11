@@ -32,13 +32,7 @@ main(int argc, char *argv[])
 
 {
   yyin = fopen(argv[1], "r");
-
-  if (yylex()){
-    fprintf (stderr, "\nCorrija e tente de novo!\n\n");
-  }
-  else{
-    fprintf(stderr, "\n Passou\n\n");
-  }
+  yylex();
   fclose(yyin);
   return 0;
 
