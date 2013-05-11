@@ -1,0 +1,83 @@
+%{
+/* Compilador do Compilex */
+%}
+ESPACO [ \t]+
+QUEBRA_LINHA [\n]
+LETRA [a-zA-Z]
+NUMERO [0-9]+
+INTEIRO inteiro
+REAL real
+LOGICO logico
+CARACTERE caractere
+ALGORITMO {ESPACO}*algoritmo
+INICIO {ESPACO}*inicio
+LEIA {ESPACO}*leia{ESPACO}*[\(]({VARIAVEL}|{VARIAVEL}\[({NUMERO}|{VARIAVEL})\])[\)]{ESPACO}*({COMENTARIO})?
+VETOR vetor
+PARA para
+ATE ate
+FACA faca
+FIMPARA {ESPACO}*fimpara
+SE se
+SENAO {ESPACO}*senao{ESPACO}*({COMENTARIO})?
+ENTAO entao
+FIMSE {ESPACO}*fimse{ESPACO}*({COMENTARIO})?
+ENQUANTO enquanto
+FIMENQUANTO {ESPACO}*fimenquanto
+REPITA {ESPACO}*repita{ESPACO}*({COMENTARIO})?
+E e
+OU ou
+DE de
+MOD mod
+OPERACAO_MOD {ESPACO}*{VARIAVEL}{ESPACO}{MOD}{ESPACO}{VARIAVEL}
+VARIAVEL_VETOR {ESPACO}*{VARIAVEL}\[({NUMERO}|{VARIAVEL}|{VARIAVEL}{ESPACO}*[\+\/\-\*]{ESPACO}*{NUMERO})\]
+ESCREVA escreva(l){0,1}
+FIMALGORITMO {ESPACO}*fimalgoritmo
+TIPO {ESPACO}*({INTEIRO}|{REAL}|{LOGICO}|{CARACTERE})
+VAR {ESPACO}*var({ESPACO}|{QUEBRA_LINHA})
+VARIAVEL {ESPACO}*{LETRA}+{NUMERO}*
+DECLARACAO {ESPACO}*{VARIAVEL}{ESPACO}*([\,]{VARIAVEL}){0,10}{ESPACO}*[:]{ESPACO}*{TIPO}{ESPACO}*({COMENTARIO})?
+DECLARACAO_VETOR {ESPACO}*{VARIAVEL}{ESPACO}*[:]{ESPACO}*{VETOR}\[{NUMERO}\.\.{NUMERO}\]{ESPACO}{DE}{ESPACO}{TIPO}{ESPACO}*({COMENTARIO})?
+STRING \".*\"
+ALGORITMO_COMPLETO {ESPACO}*{ALGORITMO}{ESPACO}+{STRING}
+ESCREVA_COMPLETO ({ESPACO}*{ESCREVA}{ESPACO}*\({STRING}\)|{ESPACO}*{ESCREVA}{ESPACO}*\({STRING}[,].*\)|{ESPACO}*{ESCREVA}{ESPACO}*\(.*[,]{STRING}\)|{ESPACO}*{ESCREVA}{ESPACO}*\({VARIAVEL}\)){ESPACO}*({COMENTARIO})?
+COMENTARIO {ESPACO}*[/][/].*
+ATRIBUICAO {ESPACO}*{VARIAVEL}{ESPACO}*[<][-]{ESPACO}*[\(]*{ESPACO}*({NUMERO}|{VARIAVEL}|{VARIAVEL_VETOR}){ESPACO}*([\+\/\-\*]{ESPACO}*({NUMERO}|{VARIAVEL}|{VARIAVEL_VETOR})([\)])?){0,10}{ESPACO}*({COMENTARIO})?
+RELACIONAL [(]?({VARIAVEL}|{NUMERO}|{OPERACAO_MOD}){ESPACO}*([=]|[>]|[>][=]|[<][=]|[<]|[<][>]){ESPACO}*({VARIAVEL}|{NUMERO}|{VARIAVEL_VETOR}|\"[A-Za-z]\")[)]?
+COMANDO_SE {ESPACO}*{SE}{ESPACO}*[(]?{RELACIONAL}({ESPACO}({E}|{OU}){ESPACO}{RELACIONAL}){0,10}[)]?{ESPACO}{ENTAO}{ESPACO}*({COMENTARIO})?
+COMANDO_PARA {ESPACO}*{PARA}{ESPACO}{VARIAVEL}{ESPACO}{DE}{ESPACO}{NUMERO}{ESPACO}{ATE}{ESPACO}({NUMERO}|{VARIAVEL}){ESPACO}{FACA}{ESPACO}*({COMENTARIO})?
+COMANDO_ENQUANTO {ESPACO}*{ENQUANTO}{ESPACO}*[(]{RELACIONAL}({ESPACO}({E}|{OU}){ESPACO}{RELACIONAL}){0,10}[)]{ESPACO}*{FACA}{ESPACO}*({COMENTARIO})?
+COMANDO_ATE {ESPACO}*{ATE}{ESPACO}*[(]{RELACIONAL}({ESPACO}({E}|{OU}){ESPACO}{RELACIONAL}){0,10}[)]{ESPACO}*({COMENTARIO})?
+
+%%
+{ALGORITMO_COMPLETO} printf("%s\n", yytext);
+{INICIO} printf("%s\n", yytext);
+{VAR} printf("%s\n", yytext);
+{VARIAVEL} printf("%s\n", yytext);
+{ESCREVA_COMPLETO} printf("%s\n", yytext);
+{FIMALGORITMO} printf("%s\n", yytext);
+{DECLARACAO} printf("%s\n", yytext);
+{DECLARACAO_VETOR} printf("%s\n", yytext);
+{COMENTARIO} printf("%s\n", yytext);
+{ATRIBUICAO} printf("%s\n", yytext);
+{COMANDO_SE} printf("%s\n", yytext);
+{FIMSE} printf("%s\n", yytext);
+{COMANDO_PARA} printf("%s\n", yytext);
+{FIMPARA} printf("%s\n", yytext);
+{COMANDO_ENQUANTO} printf("%s\n", yytext);
+{FIMENQUANTO} printf("%s\n", yytext);
+{COMANDO_ATE} printf("%s\n", yytext);
+{ESPACO} printf("%s\n", yytext);
+{LEIA} printf("%s", yytext);
+{SENAO} printf("%s", yytext);
+{REPITA} printf("%s", yytext);
+.* printf("TOKEN DESCONHECIDO: %s\n", yytext);
+%%
+int main(int argc, char *argv[]) {
+	yyin = fopen(argv[1], "r");
+	if(yylex())
+		fprintf(stderr, "\nCorriga e tente de novo!\n\n");
+	else
+		fprintf(stderr, "\nCodigo escrito corretamente!\n\n");
+	fclose(yyin);
+	return 0;
+}
