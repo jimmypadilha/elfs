@@ -13,11 +13,11 @@ PARENTESES [\("[:alnum:]"\)]
 
 %%
 
-{BRANCO} printf("%s \n", yytext);
-{COMENTARIO}* printf("%s \n", yytext);
-{ASPAS} printf("%s \n", yytext);
-{PARENTESES} printf("%s \n", yytext);
-algoritmo printf("%s \n", yytext);
+{BRANCO} printf("%s", yytext);
+{COMENTARIO}* printf("%s", yytext);
+{ASPAS} printf("%s", yytext);
+{PARENTESES} printf("%s", yytext);
+algoritmo printf("%s", yytext);
 var printf("%s \n", yytext);
 inicio printf("%s \n", yytext);
 escreva|escreval printf("%s \n", yytext);
