@@ -1,6 +1,8 @@
 GCC = gcc
 FILE = compilador_v1
-DATA = lista_email.txt
+FOLDER1 = Link1
+FOLDER2 = Link2
+FOLDER3 = Link3
 FLEX = flex
 
 .PHONY: clean
@@ -12,11 +14,11 @@ compile:
 
 clean:
 	@ echo Cleaning...
-	#rm -rf $(BIN_DIR)/
-	#find . -name  *.*~ -print0 | xargs -0 rm -rf
-	#find . -name  *~ -print0 | xargs -0 rm -rf
+	rm -rf $(FILE).lex.c $(FILE)
 	@ echo
 
 test:
-	@ testing file with emails
-	./$(FILE) $(DATA)
+	@ echo testing
+	./$(FILE) $(FOLDER1)/*
+	./$(FILE) $(FOLDER2)/*
+	./$(FILE) $(FOLDER3)/*
