@@ -1,27 +1,41 @@
 %{
-#define YYSTYPE double
-#include "sql.tab.h"
-#include <stdlib.h>
 %}
 
 white [ \t]+
-digit [0-9]
-integer {digit}+
-exponent [eE][+-]?{integer}
-real {integer}("."{integer})?{exponent}?
+tabela [A-Z]+
+coluna [A-Z0-9]+[,._]?
+
+%%
+ 
+{white} { }
+{tabela} printf(" TTT %s ", yytext);
+{coluna} printf(" CCC  %s ", yytext);
+"*" printf(" %s ", yytext);
+"=" printf(" %s", yytext);
+"SELECT" printf(" SSS %s ",yytext);
+"FROM" printf(" %s ", yytext);
+"WHERE" printf(" %s ", yytext);
+"AS" printf(" %s ", yytext);
+"ORDER BY" printf(" %s ", yytext);
+. printf(" Nao reconhecido %s\n", yytext);
 
 %%
 
-{white} { }
-{real} { yylval=atof(yytext); 
- return NUMBER;
+main(int argc, char *argv[])
+
+{
+
+  if (argc < 2)
+
+  {
+
+    printf ("Missing input file\n");exit(-1);
+
+  }
+
+  yyin = fopen(argv[1], "r" );
+
+  yylex();
+
 }
 
-"+" return PLUS;
-"-" return MINUS;
-"*" return TIMES;
-"/" return DIVIDE;
-"^" return POWER;
-"(" return LEFT;
-")" return RIGHT;
-"\n" return END;
