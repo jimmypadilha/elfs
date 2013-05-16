@@ -10,20 +10,25 @@
 
  /* PALAVRAS CHAVES */ 
 
+SELECT {return SELECT;}
+FROM {return FROM;}
+WHERE {return WHERE;}
+GROUP {return GROUP;}
+ORDER {return ORDER;}
+BY {return BY;}
+HAVING {return HAVING}
+DISTINCT {return DISTINCT}
+TABLE {return TABLE;}
 AND {return AND;}
 AS {return AS;}
 COLUMN  {return COLUMN;}
-CREATE  {return CREATE;}
-DATABASE  {return DATABASE;}
-DATABASES  {return DATABASES;}
 DIV  {return DIV;}
 DOUBLE {return DOUBLE;}
+FLOAT4? {return FLOAT;}
 INTEGER  {return INTEGER;}
 LIKE {return LIKE;}
 NULL {return NULLX;}
 NUMBER {return NUMBER;}
-SELECT {return SELECT;}
-WHERE {return WHERE;}
 
 
  /* numeros */
