@@ -1,56 +1,36 @@
 %{
-#include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
-#define YYSTYPE double
 %}
 
+%token ALL
 %token SELECT
 %token FROM
 %token WHERE
-%token GROUP
-%token BY
-%token HAVING
-%token DISTINCT
-%token TABLE
-%token AND
 %token AS
-%token COLUMN
-%token DIV
-%token DOUBLE
-%token FLOAT
-%token INTEGER 
+%token AND
+%token ORDER BY
 %token LIKE
-%token NULLX
-%token NUMBER
-
-%left PLUS MINUS
-%left TIMES DIVIDE
-%left NEG
-%right POWER
+%token TABELA
+%token COLUNA
+%token VALOR
+%token END
 
 %start Input
 %%
 
 Input:
-    
+     
      | Input Line
 ;
 
 Line:
      END
-     | Expression END { printf("Result: %f\n", $1); }
+     | Expression END
 ;
 
 Expression:
-     NUMBER { $$=$1; }
-| Expression PLUS Expression { $$=$1+$3; }
-| Expression MINUS Expression { $$=$1-$3; }
-| Expression TIMES Expression { $$=$1*$3; }
-| Expression DIVIDE Expression { $$=$1/$3; }
-| MINUS Expression %prec NEG { $$=-$2; }
-| Expression POWER Expression { $$=pow($1,$3); }
-| LEFT Expression RIGHT { $$=$2; }
+     SELECT ALL FROM TABELA
 ;
 
 %%
