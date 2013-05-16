@@ -5,10 +5,24 @@
 #define YYSTYPE double
 %}
 
+%token SELECT
+%token FROM
+%token WHERE
+%token GROUP
+%token BY
+%token HAVING
+%token DISTINCT
+%token TABLE
+%token AND
+%token AS
+%token COLUMN
+%token DIV
+%token DOUBLE
+%token FLOAT
+%token INTEGER 
+%token LIKE
+%token NULLX
 %token NUMBER
-%token PLUS MINUS TIMES DIVIDE POWER
-%token LEFT RIGHT
-%token END
 
 %left PLUS MINUS
 %left TIMES DIVIDE

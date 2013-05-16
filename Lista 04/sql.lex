@@ -4,6 +4,7 @@
 white [ \t]+
 tabela [A-Z]+
 coluna [A-Z0-9]+[,._]?
+valor [A-z0-9]*['']?
 
 %%
  
@@ -14,9 +15,12 @@ coluna [A-Z0-9]+[,._]?
 "FROM" printf(" %s ", yytext);
 "WHERE" printf(" %s ", yytext);
 "AS" printf(" %s ", yytext);
+"AND" printf(" % s", yytext);
 "ORDER BY" printf(" %s ", yytext);
+"LIKE" printf(" %s ", yytext);
 {tabela} printf(" TT %s ", yytext);
 {coluna} printf(" CCC %s ", yytext);
+{valor} printf(" VVV %s ", yytext);
 . printf(" Nao reconhecido %s\n", yytext);
 
 %%
