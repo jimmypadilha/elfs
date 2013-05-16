@@ -8,8 +8,6 @@ coluna [A-Z0-9]+[,._]?
 %%
  
 {white} { }
-{tabela} printf(" TTT %s ", yytext);
-{coluna} printf(" CCC  %s ", yytext);
 "*" printf(" %s ", yytext);
 "=" printf(" %s", yytext);
 "SELECT" printf(" SSS %s ",yytext);
@@ -17,6 +15,8 @@ coluna [A-Z0-9]+[,._]?
 "WHERE" printf(" %s ", yytext);
 "AS" printf(" %s ", yytext);
 "ORDER BY" printf(" %s ", yytext);
+{tabela} printf(" TT %s ", yytext);
+{coluna} printf(" CCC %s ", yytext);
 . printf(" Nao reconhecido %s\n", yytext);
 
 %%

@@ -380,10 +380,10 @@ struct yy_trans_info
 	};
 static yyconst flex_int16_t yy_accept[41] =
     {   0,
-        0,    0,   13,   11,    1,   12,    4,    3,    5,    2,
-        2,    2,    2,    2,    2,    1,    3,    3,    2,    2,
-        2,    2,    2,    2,    2,    2,    2,    2,    2,    2,
-        2,    2,    2,    2,    2,    0,    2,    0,   10,    0
+        0,    0,   13,   11,    1,   12,    2,   10,    3,    9,
+        9,    9,    9,    9,    9,    1,   10,   10,    9,    7,
+        9,    9,    9,    9,    9,    9,    9,    9,    5,    9,
+        9,    9,    9,    9,    6,    0,    4,    0,    8,    0
     } ;
 
 static yyconst flex_int32_t yy_ec[256] =
@@ -778,27 +778,27 @@ YY_RULE_SETUP
 case 2:
 YY_RULE_SETUP
 #line 11 "sql.lex"
-printf(" TTT %s ", yytext);
+printf(" %s ", yytext);
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
 #line 12 "sql.lex"
-printf(" CCC  %s ", yytext);
+printf(" %s", yytext);
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
 #line 13 "sql.lex"
-printf(" %s ", yytext);
+printf(" SSS %s ",yytext);
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
 #line 14 "sql.lex"
-printf(" %s", yytext);
+printf(" %s ", yytext);
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
 #line 15 "sql.lex"
-printf(" SSS %s ",yytext);
+printf(" %s ", yytext);
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
@@ -813,12 +813,12 @@ printf(" %s ", yytext);
 case 9:
 YY_RULE_SETUP
 #line 18 "sql.lex"
-printf(" %s ", yytext);
+printf(" TT %s ", yytext);
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
 #line 19 "sql.lex"
-printf(" %s ", yytext);
+printf(" CCC %s ", yytext);
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
