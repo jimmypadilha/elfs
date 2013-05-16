@@ -38,18 +38,19 @@
       know about them.  */
    enum yytokentype {
      ALL = 258,
-     SELECT = 259,
-     FROM = 260,
-     WHERE = 261,
-     AS = 262,
-     AND = 263,
-     ORDER = 264,
-     BY = 265,
-     LIKE = 266,
-     TABELA = 267,
-     COLUNA = 268,
-     VALOR = 269,
-     END = 270
+     IGUAL = 259,
+     SELECT = 260,
+     FROM = 261,
+     WHERE = 262,
+     AS = 263,
+     AND = 264,
+     ORDER = 265,
+     BY = 266,
+     LIKE = 267,
+     TABELA = 268,
+     COLUNA = 269,
+     VALOR = 270,
+     END = 271
    };
 #endif
 
