@@ -378,11 +378,11 @@ struct yy_trans_info
 	};
 static yyconst flex_int16_t yy_accept[50] =
     {   0,
-       13,   13,   16,   15,    1,   13,    2,   12,   14,   11,
-       11,   11,   11,   11,   11,   11,   11,   13,    1,   13,
-       12,   12,   13,   12,   11,   11,    6,    9,   11,   11,
-       11,   11,   11,    7,   11,   11,   11,   11,   11,    4,
-       10,   11,   11,   11,    8,   11,    5,    3,    0
+       14,   14,   16,   15,    1,   14,    2,   13,    3,   12,
+       12,   12,   12,   12,   12,   12,   12,   14,    1,   14,
+       13,   13,   14,   13,   12,   12,    7,   10,   12,   12,
+       12,   12,   12,    8,   12,   12,   12,   12,   12,    5,
+       11,   12,   12,   12,    9,   12,    6,    4,    0
     } ;
 
 static yyconst flex_int32_t yy_ec[256] =
@@ -392,8 +392,8 @@ static yyconst flex_int32_t yy_ec[256] =
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
         1,    2,    1,    1,    1,    1,    1,    1,    3,    1,
         1,    4,    1,    5,    1,    5,    1,    6,    6,    6,
-        6,    6,    6,    6,    6,    6,    6,    1,    7,    1,
-        1,    1,    1,    1,    8,    9,   10,   11,   12,   13,
+        6,    6,    6,    6,    6,    6,    6,    1,    1,    1,
+        7,    1,    1,    1,    8,    9,   10,   11,   12,   13,
        14,   15,   16,   14,   17,   18,   19,   20,   21,   14,
        14,   22,   23,   24,   14,   14,   25,   14,   26,   14,
        27,   27,   27,   27,   28,   27,   27,   27,   27,   27,
@@ -786,66 +786,66 @@ return ALL;
 case 3:
 YY_RULE_SETUP
 #line 15 "sql.lex"
-return SELECT;
+return IGUAL;
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
 #line 16 "sql.lex"
-return FROM;
+return SELECT;
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
 #line 17 "sql.lex"
-return WHERE;
+return FROM;
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
 #line 18 "sql.lex"
-return AS;
+return WHERE;
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
 #line 19 "sql.lex"
-return AND;
+return AS;
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
 #line 20 "sql.lex"
-return ORDER;
+return AND;
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
 #line 21 "sql.lex"
-return BY;
+return ORDER;
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
 #line 22 "sql.lex"
-return LIKE;
+return BY;
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
 #line 23 "sql.lex"
-return TABELA;
+return LIKE;
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
 #line 24 "sql.lex"
-return COLUNA;
+return TABELA;
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
 #line 25 "sql.lex"
-return VALOR;
+return COLUNA;
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
 #line 26 "sql.lex"
-return END;
+return VALOR;
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 27 "sql.lex"
+#line 28 "sql.lex"
 ECHO;
 	YY_BREAK
 #line 852 "sql.lex.c"
@@ -1846,4 +1846,4 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 27 "sql.lex"
+#line 28 "sql.lex"

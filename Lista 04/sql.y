@@ -4,6 +4,7 @@
 %}
 
 %token ALL
+%token IGUAL
 %token SELECT
 %token FROM
 %token WHERE
