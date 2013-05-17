@@ -27,11 +27,11 @@ Input:
 
 Line:
      END
-     | Expression END
+     | Expression END { printf("Result: OK\n", $1); }
 ;
 
 Expression:
-     SELECT ALL FROM TABELA
+     SELECT ALL FROM TABELA { $$=$1; }
 ;
 
 %%
