@@ -1,7 +1,8 @@
 /*Definicoes*/
 %{
-#include "sql.tab.h"
+#include "sqlParser.tab.h"
 #include <stdarg.h>
+#include <stdio.h>
 #include <string.h>
 %}
 
@@ -16,10 +17,10 @@ WHERE {return WHERE;}
 GROUP {return GROUP;}
 ORDER {return ORDER;}
 BY {return BY;}
-HAVING {return HAVING}
-DISTINCT {return DISTINCT}
+HAVING {return HAVING;}
+DISTINCT {return DISTINCT;}
 TABLE {return TABLE;}
-AND {return AND;}
+ANDOP {return ANDOP;}
 AS {return AS;}
 COLUMN  {return COLUMN;}
 DIV  {return DIV;}
@@ -29,6 +30,10 @@ INTEGER  {return INTEGER;}
 LIKE {return LIKE;}
 NULL {return NULLX;}
 NUMBER {return NUMBER;}
+ASC {return ASC;}
+DESC {return DESC;}
+INTO { return INTO; }
+LIMIT {return LIMIT;}
 
 
  /* numeros */
@@ -73,12 +78,20 @@ FALSE	{ yylval.intval = 0; return BOOL; }
 "!="	|
 "<>"	{ yylval.subtok = 3; return COMPARISON; }
 
+  /* nomes  */
 
+[A-Za-z][A-Za-z0-9_]*	{ yylval.strval = strdup(yytext);
+                          return NAME; }
+`[^`/\\.\n]+`           { yylval.strval = strdup(yytext+1);
+                          yylval.strval[yyleng-2] = 0;
+                          return NAME; }
+
+`[^`\n]*$               { yyerror("tipo de nome indeterminado %s", yytext); }
 
  /*demais */
 
 [ \t\n]         /* white space */
-.               { yyerror("mystery character '%c'", *yytext); }
+.               { yyerror("caractere desconhecido'%c'", *yytext); }
 
 
 

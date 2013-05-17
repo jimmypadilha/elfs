@@ -1,8 +1,8 @@
  /*Definicoes */
 %{
  #include <stdlib.h>
- #include <stdlarg.h>
- #include <string.h>
+#include <string.h>
+#include <stdio.h>
 %} 
 
 %union {
@@ -23,7 +23,7 @@
  /*Precedencia e nivel de operadores */ 
 
 %left OR
-%left AND
+%left ANDOP
 %nonassoc IN IS LIKE
 %left <subtok> COMPARISON /*= <> <= etc */
 %left '|'
@@ -41,7 +41,7 @@
 %token HAVING
 %token DISTINCT
 %token TABLE
-%token AND
+%token ANDOP
 %token AS
 %token COLUMN
 %token DIV
@@ -51,53 +51,90 @@
 %token LIKE
 %token NULLX
 %token NUMBER
+%token ASC
+%token DESC
+%token INTO
+%token LIMIT
+%token ORDER
 
  /*SIMBOLOS NAO TERMINAIS */
 
-//%type <intval>  select_expr_list
+%type <intval> select_expr_list
+%type <intval> table_references 
+
 
 
  /* Simbolo nao terminal de Inicio*/
-//%start stmt_list
+%start stmt_list
 
 %%
  
-/*
+
 stmt_list:  stmt ';'
  | stmt_list stmt ';'
 ;
 
 
-stmt: select_stmt  {printf("ddd\n"); } 
+stmt: select_stmt  {printf("Base Statement\n"); } 
 ;
 
-select_stmt: SELECT select_expr_list {printf("Select No data %d",$2);};
+select_stmt: SELECT select_expr_list {printf("Select Vazio %d\n",$2);};
  |  SELECT select_expr_list FROM table_references 
-	opt_where opt_groupby opt_having opt_orderby opt_limit opt_into_list
-	{printf("SELECT %d %d %d ",$2,$3,$5);};
+	{printf("SELECT %d %d  ",$2,$4);};
 ;
+
 
 select_expr_list: select_expr {$$ = 1;}
 	| select_expr_list ',' select_expr {$$ = $1 + 1; }
-	| '*' {printf("Selecionou tudo"); $$=1;}
+	| '*' {printf("Selecionou todos os campos\n"); $$=1;}
 ;
 
 select_expr: expr opt_as_alias; 
-*/
 
+opt_as_alias: AS NAME { printf("COMO %s\n", $2); free($2); }
+  | NAME              { printf("COMO %s\n", $1); free($1); }
+  | /* nil */
+  ;
+  
  /******** expressoes *****/
-
-
-expr: NAME         { printf("NAME %s", $1); free($1); }
-   | NAME '.' NAME { printf("FIELDNAME %s.%s", $1, $3); free($1); free($3); }
-   | STRING        { printf("STRING %s", $1); free($1); }
-   | INTNUM        { printf("NUMBER %d", $1); }
-   | APPROXNUM     { printf"FLOAT %g", $1); }
-   | BOOL          { printf"BOOL %d", $1); }
+ expr: NAME         { printf("  NAME  %s\n", $1); free($1); }
+   | NAME '.' NAME { printf("FIELDNAME %s.%s\n", $1, $3); free($1); free($3); }
+   | STRING        { printf("STRING %s\n", $1); free($1); }
+   | INTNUM        { printf("NUMBER %d\n", $1); }
+   | APPROXNUM     { printf("FLOAT %g\n", $1); }
+   | BOOL          { printf("BOOL %d\n", $1); }
    ;
+  
+expr: expr '+' expr { printf("ADD\n"); }
+   | expr '-' expr { printf("SUB\n"); }
+   | expr '*' expr { printf("MUL\n"); }
+   | expr '/' expr { printf("DIV\n"); }
+   | '-' expr %prec UMINUS { printf("NEG\n"); }
+   | expr ANDOP expr { printf("AND\n"); }
+   | expr OR expr { printf("OR\n"); }
+   | expr COMPARISON '(' select_stmt ')' { printf("CMPSELECT %d\n", $2); }
+   | expr '|' expr { printf("BITOR\n"); }
+   | expr '&' expr { printf("BITAND\n"); }
+   | expr '^' expr { printf("BITXOR\n"); }
+   ;    
+  
+table_references:    table_reference { $$ = 1; }
+    | table_references ',' table_reference { $$ = $1 + 1; }
+    ;
 
+table_reference:  table_factor
+;
 
+table_factor:
+    NAME { printf("\nTABLE %s\n", $1); free($1); }
+  | NAME '.' NAME { printf("TABLE REFERENCIANDO CAMPO %s.%s\n", $1, $3);
+                               free($1); free($3); }
+  | '(' table_references ')' { printf("TABLE_REFERENCES %d\n", $2); }
+  ;
 
+  
+
+   
 %%
 
 
@@ -107,7 +144,7 @@ int yyerror(char *s) {
 
 int main() {
   if (yyparse())
-     fprintf(stderr, "Successful parsing.\n");
+     fprintf(stderr, "Sucesso.\n");
   else
-     fprintf(stderr, "error found.\n");
+     fprintf(stderr, "Erros Encontrados.\n");
 }
