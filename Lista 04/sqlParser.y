@@ -80,6 +80,7 @@ stmt: select_stmt  {printf("Base Statement\n"); }
 
 select_stmt: SELECT select_expr_list {printf("Select Vazio %d\n",$2);};
  |  SELECT select_expr_list FROM table_references 
+ 	opt_where
 	{printf("SELECT %d %d  ",$2,$4);};
 ;
 
@@ -112,10 +113,11 @@ expr: expr '+' expr { printf("ADD\n"); }
    | '-' expr %prec UMINUS { printf("NEG\n"); }
    | expr ANDOP expr { printf("AND\n"); }
    | expr OR expr { printf("OR\n"); }
-   | expr COMPARISON '(' select_stmt ')' { printf("CMPSELECT %d\n", $2); }
    | expr '|' expr { printf("BITOR\n"); }
    | expr '&' expr { printf("BITAND\n"); }
    | expr '^' expr { printf("BITXOR\n"); }
+   | expr COMPARISON expr { printf(" Comparando %d\n", $2); }
+   | expr COMPARISON '(' select_stmt ')' { printf("Comparando_SELECT %d ", $2); }
    ;    
   
 table_references:    table_reference { $$ = 1; }
@@ -132,7 +134,8 @@ table_factor:
   | '(' table_references ')' { printf("TABLE_REFERENCES %d\n", $2); }
   ;
 
-  
+ opt_where: /* nil */ 
+   | WHERE expr { printf("WHERE \n"); };  
 
    
 %%

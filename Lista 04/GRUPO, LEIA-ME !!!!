@@ -6,3 +6,8 @@ Adicionado Querys do tipo:
 	SELECT nome,salario, cidade FROM empregados;
         SELECT nome, data_nascimento AS aniversario, cidade AS residencia FROM empregados;
         SELECT nome + ' mora em ' + cidade + '/' + estado FROM empregados;
+
+
+Adicionado Querys do tipo:
+
+        SELECT nome FROM pessoal WHERE time = 'São Paulo';
