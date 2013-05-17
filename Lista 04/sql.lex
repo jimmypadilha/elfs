@@ -24,4 +24,5 @@ valor [A-z0-9]*['']?
 {tabela} return TABELA;
 {coluna} return COLUNA;
 {valor} return VALOR;
+"\n" return END;
 

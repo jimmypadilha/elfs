@@ -1347,10 +1347,24 @@ yyreduce:
   YY_REDUCE_PRINT (yyn);
   switch (yyn)
     {
-      
+        case 5:
 
 /* Line 1806 of yacc.c  */
-#line 1354 "sql.tab.c"
+#line 30 "sql.y"
+    { printf("Result: OK\n", (yyvsp[(1) - (2)])); }
+    break;
+
+  case 6:
+
+/* Line 1806 of yacc.c  */
+#line 34 "sql.y"
+    { (yyval)=(yyvsp[(1) - (4)]); }
+    break;
+
+
+
+/* Line 1806 of yacc.c  */
+#line 1368 "sql.tab.c"
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
