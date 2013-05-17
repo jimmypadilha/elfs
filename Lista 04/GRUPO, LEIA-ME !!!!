@@ -11,3 +11,9 @@ Adicionado Querys do tipo:
 Adicionado Querys do tipo:
 
         SELECT nome FROM pessoal WHERE time = 'São Paulo';
+
+
+Adicionado Querys do tipo:
+
+	SELECT nome FROM pessoal ORDER BY nome DESC;
+	SELECT nome FROM pessoal ORDER BY nome ASC;

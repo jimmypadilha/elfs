@@ -61,6 +61,7 @@
 
 %type <intval> select_expr_list
 %type <intval> table_references 
+%type <intval> groupby_list opt_asc_desc
 
 
 
@@ -80,7 +81,7 @@ stmt: select_stmt  {printf("Base Statement\n"); }
 
 select_stmt: SELECT select_expr_list {printf("Select Vazio %d\n",$2);};
  |  SELECT select_expr_list FROM table_references 
- 	opt_where
+ 	opt_where opt_orderby
 	{printf("SELECT %d %d  ",$2,$4);};
 ;
 
@@ -134,8 +135,22 @@ table_factor:
   | '(' table_references ')' { printf("TABLE_REFERENCES %d\n", $2); }
   ;
 
- opt_where: /* nil */ 
+opt_where: /* nil */ 
    | WHERE expr { printf("WHERE \n"); };  
+
+opt_orderby: /* nil */ | ORDER BY groupby_list { printf("ORDERBY %d\n", $3); }
+;
+
+groupby_list: expr opt_asc_desc
+                             { printf("GROUPBY %d \n",  $2); $$ = 1; }
+   | groupby_list ',' expr opt_asc_desc
+                             { printf("GROUPBY %d\n",  $4); $$ = $1 + 1; }
+   ;
+ 
+opt_asc_desc: /* nil */ { $$ = 0; }
+   | ASC                { $$ = 0; }
+   | DESC               { $$ = 1; }
+    ;
 
    
 %%
