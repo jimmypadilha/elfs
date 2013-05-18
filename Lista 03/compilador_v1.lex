@@ -6,8 +6,8 @@ Compilador parcial da lista 1
 
 %}
 
-BRANCO [ \t\n\r\f\v]
-COMENTARIO ^\/\/.
+BRANCO [\t\n\r\]
+COMENTARIO \/\/.*
 ASPAS ["[:alnum:]:,+=.<>$"-]
 PARENTESES [\(\)]
 VARIAVEL [[:alnum:]:_\[\]/*+^-]
