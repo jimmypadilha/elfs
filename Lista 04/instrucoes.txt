@@ -1,19 +1,10 @@
-
-Adicionado Querys do tipo: 
-
-
+O parser SQL gerado aceita palavras reservadas como SELECT, FROM em letras maiúsculas.
+No final das cláusulas SELECT deve ser colocado o ponto-e-vírgula (;)
+Exemplos de querys aceitas pelo parser: 
 	SELECT * FROM empregados;
 	SELECT nome,salario, cidade FROM empregados;
         SELECT nome, data_nascimento AS aniversario, cidade AS residencia FROM empregados;
         SELECT nome + ' mora em ' + cidade + '/' + estado FROM empregados;
-
-
-Adicionado Querys do tipo:
-
         SELECT nome FROM pessoal WHERE time = 'São Paulo';
-
-
-Adicionado Querys do tipo:
-
 	SELECT nome FROM pessoal ORDER BY nome DESC;
 	SELECT nome FROM pessoal ORDER BY nome ASC;
