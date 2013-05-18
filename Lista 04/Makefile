@@ -1,7 +1,7 @@
-sql: sql.y sql.lex
-	bison -d sql.y
-	flex  -o sql.lex.c sql.lex
-	gcc  -o sql sql.lex.c sql.tab.c -lfl 
+sql: sqlParser.y sqlScanner.lex
+	bison -d sqlParser.y
+	flex -o sqlScanner.lex.c sqlScanner.lex
+	gcc -o sql sqlScanner.lex.c sqlParser.tab.c -lfl 
 
 clean:
 	rm -f *.c *.h sql

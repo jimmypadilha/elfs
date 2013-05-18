@@ -37,27 +37,51 @@
    /* Put the tokens into the symbol table, so that GDB and other debuggers
       know about them.  */
    enum yytokentype {
-     ALL = 258,
-     IGUAL = 259,
-     SELECT = 260,
-     FROM = 261,
-     WHERE = 262,
-     AS = 263,
-     AND = 264,
-     ORDER = 265,
-     BY = 266,
-     LIKE = 267,
-     TABELA = 268,
-     COLUNA = 269,
-     VALOR = 270,
-     END = 271
+     NAME = 258,
+     STRING = 259,
+     INTNUM = 260,
+     APPROXNUM = 261,
+     OR = 262,
+     ANDOP = 263,
+     COMPARISON = 264,
+     UMINUS = 265,
+     SELECT = 266,
+     FROM = 267,
+     WHERE = 268,
+     BY = 269,
+     TABLE = 270,
+     AS = 271,
+     COLUMN = 272,
+     DIV = 273,
+     DOUBLE = 274,
+     FLOAT = 275,
+     INTEGER = 276,
+     NUMBER = 277,
+     ASC = 278,
+     DESC = 279,
+     ORDER = 280
    };
 #endif
 
 
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
-typedef int YYSTYPE;
+typedef union YYSTYPE
+{
+
+/* Line 2068 of yacc.c  */
+#line 8 "sqlParser.y"
+
+ int intval;
+ double floatval;
+ char *strval;
+ int subtok;
+
+
+
+/* Line 2068 of yacc.c  */
+#line 84 "sqlParser.tab.h"
+} YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1
