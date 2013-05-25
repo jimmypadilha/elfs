@@ -17,6 +17,7 @@ COMMENT [/][/].*[\n]
 REAL (REAL|real)
 ATRIBUICAO ("<-")
 QUEBRA_LINHA [\n]
+ESPACO [\t\r]+
 
 %%
 {ALGORITMO} {return ALGORITMO;}
@@ -31,6 +32,7 @@ QUEBRA_LINHA [\n]
 {REAL}  {return REAL;}
 {ATRIBUICAO}  {return ATRIBUICAO;}
 {QUEBRA_LINHA}  {return QUEBRA_LINHA;}
+{ESPACO} {return ESPACO;}
   
 [-+&~|^/%*(),.;!]   { return yytext[0]; }
 
@@ -48,8 +50,6 @@ QUEBRA_LINHA [\n]
 -?[0-9]+"."[0-9]*E[-+]?[0-9]+ |
 -?"."[0-9]*E[-+]?[0-9]+	{ yylval.floatval = atof(yytext) ;
                                   return APPROXNUM; }
-
-. printf("%s TOKEN DESCONHECIDO\n", yytext);
 
 %%
 

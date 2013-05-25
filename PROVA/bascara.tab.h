@@ -52,7 +52,8 @@
      REAL = 270,
      ATRIBUICAO = 271,
      QUEBRA_LINHA = 272,
-     UMINUS = 273
+     ESPACO = 273,
+     UMINUS = 274
    };
 #endif
 
@@ -71,7 +72,7 @@ typedef union YYSTYPE
 
 
 /* Line 2068 of yacc.c  */
-#line 75 "bascara.tab.h"
+#line 76 "bascara.tab.h"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
