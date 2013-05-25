@@ -5,11 +5,14 @@ Compilador parcial da lista 1
  */
 
 %}
-INICIO (inicio|INICIO)
 ALGORITMO (algoritmo|ALGORITMO) 
-FIMALGORITMO (fimalgoritmo|FIMALGORITMO)
-LEIA (leia|LEIA)
 VAR (var|VAR)
+INICIO (inicio|INICIO)
+LEIA (leia|LEIA)
+ESCREVA escreva|ESCREVA
+ESCREVAL ESCREVAL|escreval
+FIMALGORITMO (fimalgoritmo|FIMALGORITMO)
+RAIZQ raizq|RAIZQ
 REAL (real|REAL)
 LOGICO (logico|LOGICO)
 INTEIRO  (inteiro|INTEIRO )
@@ -32,10 +35,7 @@ E  (e|E)
 OU  (ou|OU)
 DE  (de|DE)
 MOD (mod|MOD)
-ESCREVA escreva|ESCREVA
-ESCREVAL ESCREVAL|escreval
 OPERACAO  \+ | \/ | \- |\* | ^
-RAIZQ raizq|RAIZQ
 
 
 
