@@ -27,6 +27,7 @@
 %token INICIO
 %token LEIA
 %token ESCREVA
+%token ESCREVAL
 %token FIMALGORITMO
 %token RAIZQ
 %token COMMENT
@@ -48,7 +49,13 @@ estrutura_cabecalho:ALGORITMO STRING{printf("estrutura incompleta");}
 ; 
 
 estrutura_var: /*nil*/
-| VARIAVEL ',' VARIAVEL ':' 
+| VARIAVEL ':' REAL
+| variavel_declaracao  ':' REAL
+; 
+
+variavel_declaracao: VARIAVEL
+ | variavel_declaracao ',' VARIAVEL
+;
 
 expr: VARIAVEL         { printf("NAME:  %s\n", $1); free($1); }
    | STRING        { printf("STRING %s\n", $1); free($1); }
