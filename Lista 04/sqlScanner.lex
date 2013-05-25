@@ -19,6 +19,7 @@ BY {return BY;}
 TABLE {return TABLE;}
 AND {return AND;}
 AS {return AS;}
+OR {return OR;}
 COLUMN  {return COLUMN;}
 DIV  {return DIV;}
 DOUBLE {return DOUBLE;}
@@ -53,7 +54,6 @@ DESC {return DESC;}
   
 [-+&~|^/%*(),.;!]   { return yytext[0]; }
 
-"||"            { return OR; }
 
 "="	{ yylval.subtok = 4; return COMPARISON; }
 "<=>"	{ yylval.subtok = 12; return COMPARISON; }

@@ -37,6 +37,7 @@
 %token BY
 %token TABLE
 %token AND
+%token OR
 %token AS
 %token COLUMN
 %token DIV
@@ -103,9 +104,7 @@ expr: expr '+' expr { printf("ADD\n"); }
    | expr '/' expr { printf("DIV\n"); }
    | '-' expr %prec UMINUS { printf("NEG\n"); }
    | expr AND expr { printf("Usando AND\n"); }
-   | expr OR expr { printf("OR\n"); }
-   | expr '|' expr { printf("BITOR\n"); }
-   | expr '&' expr { printf("BITAND\n"); }
+   | expr OR expr { printf("Usando OR\n"); }
    | expr COMPARISON expr { printf("Tipo de  Comparacao: %d\n", $2); }
    | expr COMPARISON '(' select_stmt ')' { printf("Comparando_SELECT %d ", $2); }
    ;    
