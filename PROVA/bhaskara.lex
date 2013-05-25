@@ -6,7 +6,7 @@ Compilador parcial da lista 1
 
 %}
 ALGORITMO (algoritmo|ALGORITMO) 
-VAR (var|VAR)
+VAR (var|VAR) 
 INICIO (inicio|INICIO)
 LEIA (leia|LEIA)
 ESCREVA escreva|ESCREVA
@@ -14,28 +14,13 @@ ESCREVAL ESCREVAL|escreval
 FIMALGORITMO (fimalgoritmo|FIMALGORITMO)
 RAIZQ raizq|RAIZQ
 REAL (real|REAL)
-LOGICO (logico|LOGICO)
-INTEIRO  (inteiro|INTEIRO )
-CARACTERE (caractere|CARACTERE)
-VETOR (vetor|VETOR)
-PARA (para|PARA)
-ATE (ate|ATE)
-FACA (faca|FACA)
-FIMPARA (fimpara|FIMPARA)
-FIMSE (fimse|FIMSE)
-OUTROCASO (outrocaso|OUTROCASO)
-SE (se|SE)
-SENAO (SENAO|Senao)
-ENTAO (entao|ENTAO)
-ENQUANTO (enquanto|ENQUANTO)
-FIMENQUANTO (fimenquanto|FIMENQUANTO)
-VAR (VAR|var)
-REPITA (repita|REPITA)
-E  (e|E)
-OU  (ou|OU)
-DE  (de|DE)
-MOD (mod|MOD)
 OPERACAO  \+ | \/ | \- |\* | ^
+
+[A-Za-z][A-Za-z0-9_]*   { yylval.strval = strdup(yytext);
+                          return VARIAVEL; }
+`[^`/\\.\n]+`           { yylval.strval = strdup(yytext+1);
+                          yylval.strval[yyleng-2] = 0;
+                          return VARIAVEL; }
 
 
 %%
