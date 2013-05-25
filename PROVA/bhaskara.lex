@@ -1,5 +1,6 @@
 %{
 
+
 /*
 Compilador parcial da lista 1
  */
