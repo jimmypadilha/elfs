@@ -22,7 +22,6 @@ OPERACAO  \+ | \/ | \- |\* | ^
                           yylval.strval[yyleng-2] = 0;
                           return VARIAVEL; }
 
-
 %%
 
 /*strings */
