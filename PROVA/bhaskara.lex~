@@ -35,16 +35,12 @@ MOD (mod|MOD)
 ESCREVA escreva|ESCREVA
 ESCREVAL ESCREVAL|escreval
 OPERACAO  \+ | \/ | \- |\* | ^
-RAIZQ raizq|RAIZQ
+
 
 
 
 %%
 
-/*strings */
-
-'(\\.|''|[^'\n])*'	|
-\"(\\.|\"\"|[^"\n])*\"  { yylval.strval = strdup(yytext); return STRING; }
 
 {ALGORITMO} printf("%s", yytext);
 {FIMALGORITMO} printf("%s \n", yytext);
