@@ -22,7 +22,7 @@
  /*Precedencia e nivel de operadores */ 
 
 %left OR
-%left ANDOP
+%left AND
 %left <subtok> COMPARISON /*= <> <= etc */
 %left '|'
 %left '&'
@@ -36,7 +36,7 @@
 %token WHERE
 %token BY
 %token TABLE
-%token ANDOP
+%token AND
 %token AS
 %token COLUMN
 %token DIV
@@ -67,13 +67,13 @@ stmt_list:  stmt ';'
 ;
 
 
-stmt: select_stmt  {printf("Base Statement\n"); } 
+stmt: select_stmt  {printf("\n***->De volta ao Simbolo de inicio\n"); } 
 ;
 
 select_stmt: SELECT select_expr_list {printf("Select Vazio %d\n",$2);};
  |  SELECT select_expr_list FROM table_references 
  	opt_where opt_orderby
-	{printf("SELECT %d %d  ",$2,$4);};
+	{printf("Quantidade de campos selecionados: %d, Quantidade de tabelas: %d  ",$2,$4);};
 ;
 
 
@@ -90,7 +90,7 @@ opt_as_alias: AS NAME { printf("COMO %s\n", $2); free($2); }
   ;
   
  /******** expressoes *****/
- expr: NAME         { printf("  NAME  %s\n", $1); free($1); }
+ expr: NAME         { printf("NAME:  %s\n", $1); free($1); }
    | NAME '.' NAME { printf("FIELDNAME %s.%s\n", $1, $3); free($1); free($3); }
    | STRING        { printf("STRING %s\n", $1); free($1); }
    | INTNUM        { printf("NUMBER %d\n", $1); }
@@ -102,11 +102,11 @@ expr: expr '+' expr { printf("ADD\n"); }
    | expr '*' expr { printf("MUL\n"); }
    | expr '/' expr { printf("DIV\n"); }
    | '-' expr %prec UMINUS { printf("NEG\n"); }
-   | expr ANDOP expr { printf("AND\n"); }
+   | expr AND expr { printf("Usando AND\n"); }
    | expr OR expr { printf("OR\n"); }
    | expr '|' expr { printf("BITOR\n"); }
    | expr '&' expr { printf("BITAND\n"); }
-   | expr COMPARISON expr { printf(" Comparando %d\n", $2); }
+   | expr COMPARISON expr { printf("Tipo de  Comparacao: %d\n", $2); }
    | expr COMPARISON '(' select_stmt ')' { printf("Comparando_SELECT %d ", $2); }
    ;    
   
@@ -118,22 +118,23 @@ table_reference:  table_factor
 ;
 
 table_factor:
-    NAME { printf("\nTABLE %s\n", $1); free($1); }
+    NAME { printf("TABLE: %s\n", $1); free($1); }
   | NAME '.' NAME { printf("TABLE REFERENCIANDO CAMPO %s.%s\n", $1, $3);
                                free($1); free($3); }
   | '(' table_references ')' { printf("TABLE_REFERENCES %d\n", $2); }
+  | NAME AS NAME { printf("TABLE RENOMEADA %s AS  %s\n", $1,$3); free($1); free($3); }
   ;
 
 opt_where: /* nil */ 
-   | WHERE expr { printf("WHERE \n"); };  
+   | WHERE expr { printf("USANDO SELECT com WHERE \n"); };  
 
-opt_orderby: /* nil */ | ORDER BY groupby_list { printf("ORDERBY %d\n", $3); }
+opt_orderby: /* nil */ | ORDER BY groupby_list { printf("Quantidade de campos ordenando %d\n", $3); }
 ;
 
 groupby_list: expr opt_asc_desc
-                             { printf("GROUPBY %d \n",  $2); $$ = 1; }
+                             { printf("GROUPBY: %d \n",  $2); $$ = 1; }
    | groupby_list ',' expr opt_asc_desc
-                             { printf("GROUPBY %d\n",  $4); $$ = $1 + 1; }
+                             { printf("GROUPBY: %d\n",  $4); $$ = $1 + 1; }
    ;
  
 opt_asc_desc: /* nil */ { $$ = 0; }

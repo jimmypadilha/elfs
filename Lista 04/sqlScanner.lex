@@ -17,7 +17,7 @@ WHERE {return WHERE;}
 ORDER {return ORDER;}
 BY {return BY;}
 TABLE {return TABLE;}
-ANDOP {return ANDOP;}
+AND {return AND;}
 AS {return AS;}
 COLUMN  {return COLUMN;}
 DIV  {return DIV;}
@@ -53,7 +53,6 @@ DESC {return DESC;}
   
 [-+&~|^/%*(),.;!]   { return yytext[0]; }
 
-"&&"		{ return ANDOP; }
 "||"            { return OR; }
 
 "="	{ yylval.subtok = 4; return COMPARISON; }

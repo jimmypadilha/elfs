@@ -42,7 +42,7 @@
      INTNUM = 260,
      APPROXNUM = 261,
      OR = 262,
-     ANDOP = 263,
+     AND = 263,
      COMPARISON = 264,
      UMINUS = 265,
      SELECT = 266,
