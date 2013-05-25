@@ -45,7 +45,7 @@
 algoritmo_inicio:estrutura_cabecalho;
 
 estrutura_cabecalho:ALGORITMO STRING{printf("estrutura incompleta");}
-  | ALGORITMO STRING COMMENT VAR estrutura_var
+  | ALGORITMO STRING COMMENT VAR estrutura_var INICIO lista_dentro_inicio FIMALGORITMO
 ; 
 
 estrutura_var: /*nil*/
@@ -56,6 +56,17 @@ estrutura_var: /*nil*/
 variavel_declaracao: VARIAVEL
  | variavel_declaracao ',' VARIAVEL
 ;
+
+lista_dentro_inicio: /*nil*/
+ | ESCREVA '('STRING ')' 
+ | ESCREVAL '('STRING ')'
+ | ESCREVA '('STRING ',' variavel_declaracao ')'
+ | ESCREVAL '('STRING ',' variavel_declaracao ')'
+ | ESCREVA '('variavel_declaracao ')'
+ | ESCREVAL '('variavel_declaracao ')'
+
+
+
 
 expr: VARIAVEL         { printf("NAME:  %s\n", $1); free($1); }
    | STRING        { printf("STRING %s\n", $1); free($1); }
