@@ -50,18 +50,17 @@
      FROM = 268,
      WHERE = 269,
      BY = 270,
-     TABLE = 271,
-     AS = 272,
-     COLUMN = 273,
-     DIV = 274,
-     DOUBLE = 275,
-     FLOAT = 276,
-     INTEGER = 277,
-     NUMBER = 278,
-     ASC = 279,
-     DESC = 280,
-     ORDER = 281,
-     GROUP = 282
+     AS = 271,
+     COLUMN = 272,
+     DIV = 273,
+     DOUBLE = 274,
+     FLOAT = 275,
+     INTEGER = 276,
+     NUMBER = 277,
+     ASC = 278,
+     DESC = 279,
+     ORDER = 280,
+     GROUP = 281
    };
 #endif
 
@@ -82,7 +81,7 @@ typedef union YYSTYPE
 
 
 /* Line 2068 of yacc.c  */
-#line 86 "sqlParser.tab.h"
+#line 85 "sqlParser.tab.h"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */

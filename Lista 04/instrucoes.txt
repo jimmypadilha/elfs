@@ -1,6 +1,9 @@
 
 O parser SQL é baseado no manual do mysql. O proprio mysql tem um parser bison.
-
+O parser SQL gerado aceita palavras reservadas como SELECT, FROM em letras maiúsculas.
+No final das cláusulas SELECT deve ser colocado o ponto-e-vírgula (;)
+Exemplos de querys aceitas pelo parser: 
+	
 
 TESTANDO CONSULTAS SELECT NO PARSER DESENVOLVIDO PELO GRUPO ELFS.
 
@@ -18,21 +21,6 @@ TIPOS DE QUERYS ACEITAS :
 	SELECT Numero, Nome, Tempo FROM Musicas WHERE CodigoCd=5 ORDER BY Numero;
 	SELECT c.Nome, m.Tempo AS Total FROM Cds AS c, Musicas AS m WHERE c.Codigo=m.CodigoCd GROUP BY c.Nome;
 	SELECT * FROM Cds WHERE Album=TRUE;
-	
-
-
-
-
-
-
-	
-
-
-
-
-O parser SQL gerado aceita palavras reservadas como SELECT, FROM em letras maiúsculas.
-No final das cláusulas SELECT deve ser colocado o ponto-e-vírgula (;)
-Exemplos de querys aceitas pelo parser: 
 	SELECT * FROM empregados;
 	SELECT nome,salario, cidade FROM empregados;
         SELECT nome, data_nascimento AS aniversario, cidade AS residencia FROM empregados;
@@ -40,3 +28,8 @@ Exemplos de querys aceitas pelo parser:
         SELECT nome FROM pessoal WHERE time = 'São Paulo';
 	SELECT nome FROM pessoal ORDER BY nome DESC;
 	SELECT nome FROM pessoal ORDER BY nome ASC;
+	
+
+
+
+

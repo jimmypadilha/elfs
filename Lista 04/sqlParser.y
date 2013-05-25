@@ -36,7 +36,6 @@
 %token FROM
 %token WHERE
 %token BY
-%token TABLE
 %token AND
 %token OR
 %token AS

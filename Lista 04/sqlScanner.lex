@@ -17,7 +17,6 @@ WHERE {return WHERE;}
 ORDER {return ORDER;}
 GROUP	{ return GROUP; }
 BY {return BY;}
-TABLE {return TABLE;}
 AND {return AND;}
 AS {return AS;}
 OR {return OR;}
