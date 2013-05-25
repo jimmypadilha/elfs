@@ -32,25 +32,27 @@
 %token RAIZQ
 %token COMMENT
 %token REAL
+%token ATRIBUICAO
+%token QUEBRA_LINHA
 
 %left '+' '-'
 %left '*''/'
 %right '^'
 %nonassoc UMINUS
 
+
 %start algoritmo_inicio
 
 %%
-
 algoritmo_inicio:estrutura_cabecalho;
 
 estrutura_cabecalho:ALGORITMO STRING{printf("estrutura incompleta");}
-  | ALGORITMO STRING COMMENT VAR estrutura_var INICIO lista_dentro_inicio FIMALGORITMO
+  | ALGORITMO STRING QUEBRA_LINHA estrutura_comment QUEBRA_LINHA  VAR QUEBRA_LINHA estrutura_var QUEBRA_LINHA INICIO QUEBRA_LINHA lista_dentro_inicio QUEBRA_LINHA FIMALGORITMO
 ; 
 
 estrutura_var: /*nil*/
-| VARIAVEL ':' REAL
-| variavel_declaracao  ':' REAL
+| VARIAVEL ':' REAL QUEBRA_LINHA
+| variavel_declaracao  ':' REAL QUEBRA_LINHA
 ; 
 
 variavel_declaracao: VARIAVEL
@@ -58,15 +60,36 @@ variavel_declaracao: VARIAVEL
 ;
 
 lista_dentro_inicio: /*nil*/
- | ESCREVA '('STRING ')' 
+ | lista_escreva lista_dentro_inicio
+ | lista_leia lista_dentro_inicio
+ | lista_escreva
+ | lista_leia
+ | lista_atribuicao lista_dentro_inicio
+ | lista_atribuicao
+;
+
+lista_escreva: ESCREVA '('STRING ')' 
  | ESCREVAL '('STRING ')'
  | ESCREVA '('STRING ',' variavel_declaracao ')'
  | ESCREVAL '('STRING ',' variavel_declaracao ')'
  | ESCREVA '('variavel_declaracao ')'
  | ESCREVAL '('variavel_declaracao ')'
+ | lista_escreva
+;
 
+lista_leia: LEIA '('VARIAVEL')'
+| lista_leia
+;
 
+lista_atribuicao: VARIAVEL ATRIBUICAO expr
+| lista_atribuicao 
 
+;
+
+estrutura_comment:/*NIL*/
+ | COMMENT QUEBRA_LINHA
+ | estrutura_comment
+;
 
 expr: VARIAVEL         { printf("NAME:  %s\n", $1); free($1); }
    | STRING        { printf("STRING %s\n", $1); free($1); }
