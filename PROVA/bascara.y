@@ -42,7 +42,7 @@ algoritmo_inicio:estrutura_cabecalho {printf("base do algoritmo\n");}
 ;
 
 
-estrutura_cabecalho: ALGORITMO STRING QUEBRA_LINHA estrutura_comment VAR QUEBRA_LINHA estrutura_var QUEBRA_LINHA {printf("pegou primeira linha algoritmo\n");}
+estrutura_cabecalho: ALGORITMO STRING QUEBRA_LINHA estrutura_comment VAR QUEBRA_LINHA estrutura_var QUEBRA_LINHA INICIO QUEBRA_LINHA lista_dentro_inicio QUEBRA_LINHA {printf("pegou primeira linha algoritmo\n");}
 ;
 
 estrutura_comment: /*nil*/ 
@@ -56,6 +56,19 @@ estrutura_var: /*nil*/
 variavel_declaracao: VARIAVEL ',' variavel_declaracao
   | VARIAVEL
 ;
+
+lista_dentro_inicio: /*nil*/
+  | lista_escreva QUEBRA_LINHA lista_dentro_inicio
+;
+
+lista_escreva: ESCREVA '('STRING ')'  {printf("pegou\n");} 
+ | ESCREVAL '('STRING ')'  {printf("pegou1\n");}
+ | ESCREVA '('STRING ',' variavel_declaracao ')'  {printf("pegou2\n");}
+ | ESCREVAL '('STRING ',' variavel_declaracao ')'  {printf("pegou3\n");}
+ | ESCREVA '('variavel_declaracao ')'   {printf("pegou4\n");}
+ | ESCREVAL '('variavel_declaracao ')' {printf("pegou5\n");}
+;
+
 
 %%
 
