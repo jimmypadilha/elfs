@@ -40,20 +40,21 @@
      STRING = 258,
      VARIAVEL = 259,
      APPROXNUM = 260,
-     ALGORITMO = 261,
-     VAR = 262,
-     INICIO = 263,
-     LEIA = 264,
-     ESCREVA = 265,
-     ESCREVAL = 266,
-     FIMALGORITMO = 267,
-     RAIZQ = 268,
-     COMMENT = 269,
-     REAL = 270,
-     ATRIBUICAO = 271,
-     QUEBRA_LINHA = 272,
-     ESPACO = 273,
-     UMINUS = 274
+     INTNUM = 261,
+     ALGORITMO = 262,
+     VAR = 263,
+     INICIO = 264,
+     LEIA = 265,
+     ESCREVA = 266,
+     ESCREVAL = 267,
+     FIMALGORITMO = 268,
+     RAIZQ = 269,
+     COMMENT = 270,
+     REAL = 271,
+     ATRIBUICAO = 272,
+     QUEBRA_LINHA = 273,
+     ESPACO = 274,
+     UMINUS = 275
    };
 #endif
 
@@ -66,13 +67,14 @@ typedef union YYSTYPE
 /* Line 2068 of yacc.c  */
 #line 7 "bascara.y"
 
+ int intval;
  double floatval;
  char *strval;
 
 
 
 /* Line 2068 of yacc.c  */
-#line 76 "bascara.tab.h"
+#line 78 "bascara.tab.h"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */

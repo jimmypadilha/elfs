@@ -44,6 +44,8 @@ ESPACO [\t\r]+
 
 \"(\\.|\"\"|[^"\n])*\"  { yylval.strval = strdup(yytext); return STRING; }
 
+-?[0-9]+  { yylval.intval = atoi(yytext); return INTNUM;}
+
 -?[0-9]+"."[0-9]* |
 -?"."[0-9]+	|
 -?[0-9]+E[-+]?[0-9]+	|

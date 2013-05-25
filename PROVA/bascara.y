@@ -5,6 +5,7 @@
 %}
 
 %union {
+ int intval;
  double floatval;
  char *strval;
 }
@@ -13,6 +14,7 @@
 %token <strval> STRING
 %token <strval> VARIAVEL
 %token <floatval> APPROXNUM
+%token <intval> INTNUM
 
 %token ALGORITMO
 %token VAR
@@ -30,7 +32,7 @@
 
 %left '+' '-'
 %left '*''/'
-%left '^'
+%right '^'
 %nonassoc UMINUS
 
 
@@ -42,7 +44,7 @@ algoritmo_inicio:estrutura_cabecalho {printf("base do algoritmo\n");}
 ;
 
 
-estrutura_cabecalho: ALGORITMO STRING QUEBRA_LINHA estrutura_comment VAR QUEBRA_LINHA estrutura_var QUEBRA_LINHA INICIO QUEBRA_LINHA lista_dentro_inicio QUEBRA_LINHA {printf("pegou primeira linha algoritmo\n");}
+estrutura_cabecalho: ALGORITMO STRING QUEBRA_LINHA estrutura_comment VAR QUEBRA_LINHA estrutura_var INICIO QUEBRA_LINHA lista_dentro_inicio  FIMALGORITMO QUEBRA_LINHA {printf("pegou primeira linha algoritmo\n");}
 ;
 
 estrutura_comment: /*nil*/ 
@@ -50,15 +52,18 @@ estrutura_comment: /*nil*/
 ;
 
 estrutura_var: /*nil*/ 
-  | variavel_declaracao ':' REAL {printf("Variaveis\n");}
+  | variavel_declaracao ':' REAL QUEBRA_LINHA {printf("Variaveis\n");}
 ; 
 
-variavel_declaracao: VARIAVEL ',' variavel_declaracao
+variavel_declaracao: /*nil*/
+  | VARIAVEL ',' variavel_declaracao
   | VARIAVEL
 ;
 
 lista_dentro_inicio: /*nil*/
   | lista_escreva QUEBRA_LINHA lista_dentro_inicio
+  | lista_leia QUEBRA_LINHA lista_dentro_inicio
+  | lista_atribuicao QUEBRA_LINHA lista_dentro_inicio
 ;
 
 lista_escreva: ESCREVA '('STRING ')'  {printf("pegou\n");} 
@@ -67,6 +72,28 @@ lista_escreva: ESCREVA '('STRING ')'  {printf("pegou\n");}
  | ESCREVAL '('STRING ',' variavel_declaracao ')'  {printf("pegou3\n");}
  | ESCREVA '('variavel_declaracao ')'   {printf("pegou4\n");}
  | ESCREVAL '('variavel_declaracao ')' {printf("pegou5\n");}
+;
+
+lista_leia: LEIA '('VARIAVEL')'
+;
+
+lista_atribuicao: VARIAVEL ATRIBUICAO expr 
+;
+
+expr: VARIAVEL     { printf("VARIAVEL:\n"); }
+   | STRING        { printf("STRING\n");}
+   | APPROXNUM     { printf("FLOAT\n");}
+   | INTNUM        { printf("INTEIRO\n");}
+   | RAIZQ '('expr')'   { printf("Funcao Raizq\n");} 
+;
+
+expr: expr '+' expr { printf("ADD\n"); }
+   | expr '-' expr { printf("SUB\n"); }
+   | expr '*' expr { printf("MUL\n"); }
+   | expr '/' expr { printf("DIV\n"); }
+   | expr '^' expr { printf("POWER\n");}
+   | '-' expr %prec UMINUS { printf("NEG\n"); }
+   | '('expr')'   
 ;
 
 

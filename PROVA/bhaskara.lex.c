@@ -369,8 +369,8 @@ static void yy_fatal_error (yyconst char msg[]  );
 	*yy_cp = '\0'; \
 	(yy_c_buf_p) = yy_cp;
 
-#define YY_NUM_RULES 23
-#define YY_END_OF_BUFFER 24
+#define YY_NUM_RULES 24
+#define YY_END_OF_BUFFER 25
 /* This struct is not used in this scanner,
    but its presence is necessary. */
 struct yy_trans_info
@@ -380,15 +380,15 @@ struct yy_trans_info
 	};
 static yyconst flex_int16_t yy_accept[137] =
     {   0,
-        0,    0,   24,   23,   13,   12,   14,   23,   14,   14,
-       14,   23,   23,   15,   15,   15,   15,   15,   15,   15,
-       15,   23,   15,   15,   15,   15,   15,   15,   15,   13,
-        0,   17,    0,    0,    0,   19,    0,    0,   18,    0,
+        0,    0,   25,   24,   13,   12,   14,   24,   14,   14,
+       14,   18,   24,   15,   15,   15,   15,   15,   15,   15,
+       15,   24,   15,   15,   15,   15,   15,   15,   15,   13,
+        0,   17,    0,    0,   18,   20,    0,    0,   19,    0,
        11,   15,   15,   15,   15,   15,   15,   15,   15,   15,
         0,   15,   15,   15,   15,   15,   15,   15,   15,    0,
-       17,    0,    0,   22,    0,    9,   18,    0,    0,   20,
+       17,    0,    0,   23,    0,    9,   19,    0,    0,   21,
        15,   15,   15,   15,   15,   15,   15,    2,   16,   15,
-       15,   15,   15,   15,   15,   15,    0,   21,   15,   15,
+       15,   15,   15,   15,   15,   15,    0,   22,   15,   15,
        15,   15,    4,   15,   10,   15,   15,   15,   15,   15,
 
        15,   15,   15,   15,    8,   15,   15,   15,   15,   15,
@@ -923,25 +923,30 @@ YY_RULE_SETUP
 { yylval.strval = strdup(yytext); return STRING; }
 	YY_BREAK
 case 18:
-#line 48 "bhaskara.lex"
-case 19:
-#line 49 "bhaskara.lex"
-case 20:
-#line 50 "bhaskara.lex"
-case 21:
-#line 51 "bhaskara.lex"
-case 22:
 YY_RULE_SETUP
+#line 47 "bhaskara.lex"
+{ yylval.intval = atoi(yytext); return INTNUM;}
+	YY_BREAK
+case 19:
+#line 50 "bhaskara.lex"
+case 20:
 #line 51 "bhaskara.lex"
+case 21:
+#line 52 "bhaskara.lex"
+case 22:
+#line 53 "bhaskara.lex"
+case 23:
+YY_RULE_SETUP
+#line 53 "bhaskara.lex"
 { yylval.floatval = atof(yytext) ;
                                   return APPROXNUM; }
 	YY_BREAK
-case 23:
+case 24:
 YY_RULE_SETUP
-#line 54 "bhaskara.lex"
+#line 56 "bhaskara.lex"
 ECHO;
 	YY_BREAK
-#line 945 "bhaskara.lex.c"
+#line 950 "bhaskara.lex.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -1939,7 +1944,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 54 "bhaskara.lex"
+#line 56 "bhaskara.lex"
 
 
 
