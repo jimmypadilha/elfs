@@ -2,6 +2,8 @@
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
+
+extern FILE *yyin;
 %}
 
 %union {
@@ -39,12 +41,12 @@
 %start algoritmo_inicio
 
 %%
-algoritmo_inicio:estrutura_cabecalho {printf("base do algoritmo\n");}
- | algoritmo_inicio estrutura_cabecalho
+algoritmo_inicio:estrutura_cabecalho QUEBRA_LINHA {printf("ALGORITMO REALIZADO COM SUCESSO\n");}
+ | algoritmo_inicio estrutura_cabecalho QUEBRA_LINHA {printf("ALGORITMO REALIZADO COM SUCESSO\n");} 
 ;
 
 
-estrutura_cabecalho: ALGORITMO STRING QUEBRA_LINHA estrutura_comment VAR QUEBRA_LINHA estrutura_var INICIO QUEBRA_LINHA lista_dentro_inicio  FIMALGORITMO QUEBRA_LINHA {printf("pegou primeira linha algoritmo\n");}
+estrutura_cabecalho: ALGORITMO STRING QUEBRA_LINHA estrutura_comment VAR QUEBRA_LINHA estrutura_var INICIO QUEBRA_LINHA lista_dentro_inicio  FIMALGORITMO
 ;
 
 estrutura_comment: /*nil*/ 
@@ -103,9 +105,16 @@ int yyerror(char *s) {
   printf("%s\n", s);
 }
 
-int main() {
-  if (yyparse())
-     fprintf(stderr, "---QUERY FINALIZADA---\n");
-  else
-    fprintf(stderr, "Erros Encontrados.\n");
+int main(int argc, char *argv[]) {
+//tentativa de recebimento de arquivo
+/*  if (argc < 2){
+     printf("Digite o arquivo\n");
+  } 
+  else{
+     yyin = fopen(argv[1], "r");*/
+     if (yyparse())
+        fprintf(stderr, "---QUERY FINALIZADA---\n");
+     else
+        fprintf(stderr, "Erros Encontrados.\n");
+ // }
 }
