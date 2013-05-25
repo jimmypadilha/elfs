@@ -79,6 +79,7 @@ RAIZQ raizq|RAIZQ
 {OPERACAO} printf("%s\n", yytext);
 {RAIZQ} printf("%s\n", yytext);
 
+
 . printf("%s TOKEN DESCONHECIDO\n", yytext);
 
 %%
