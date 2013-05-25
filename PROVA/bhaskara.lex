@@ -34,7 +34,7 @@ ESPACO [\t\r]+
 {QUEBRA_LINHA}  {return QUEBRA_LINHA;}
 {ESPACO} {return ESPACO;}
   
-[-+&~|^/%*(),.;!]   { return yytext[0]; }
+[-+&~|^/%*(),.;!:]   { return yytext[0]; }
 
 [A-Za-z][A-Za-z0-9_]*	{ yylval.strval = strdup(yytext);
                           return VARIAVEL; }

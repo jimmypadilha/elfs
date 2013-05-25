@@ -42,13 +42,20 @@ algoritmo_inicio:estrutura_cabecalho {printf("base do algoritmo\n");}
 ;
 
 
-estrutura_cabecalho: ALGORITMO STRING QUEBRA_LINHA estrutura_comment VAR QUEBRA_LINHA {printf("pegou primeira linha algoritmo\n");}
+estrutura_cabecalho: ALGORITMO STRING QUEBRA_LINHA estrutura_comment VAR QUEBRA_LINHA estrutura_var QUEBRA_LINHA {printf("pegou primeira linha algoritmo\n");}
 ;
 
 estrutura_comment: /*nil*/ 
   | COMMENT  estrutura_comment {printf("Comentarios:\n");}
 ;
 
+estrutura_var: /*nil*/ 
+  | variavel_declaracao ':' REAL {printf("Variaveis\n");}
+; 
+
+variavel_declaracao: VARIAVEL ',' variavel_declaracao
+  | VARIAVEL
+;
 
 %%
 
