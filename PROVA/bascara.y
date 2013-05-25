@@ -37,7 +37,7 @@
 
 %left '+' '-'
 %left '*''/'
-%right '^'
+%left '^'
 %nonassoc UMINUS
 
 
@@ -46,8 +46,7 @@
 %%
 algoritmo_inicio:estrutura_cabecalho;
 
-estrutura_cabecalho:ALGORITMO STRING{printf("estrutura incompleta");}
-  | ALGORITMO STRING QUEBRA_LINHA estrutura_comment QUEBRA_LINHA  VAR QUEBRA_LINHA estrutura_var QUEBRA_LINHA INICIO QUEBRA_LINHA lista_dentro_inicio QUEBRA_LINHA FIMALGORITMO
+estrutura_cabecalho: ALGORITMO STRING QUEBRA_LINHA estrutura_comment QUEBRA_LINHA  VAR QUEBRA_LINHA estrutura_var QUEBRA_LINHA INICIO QUEBRA_LINHA lista_dentro_inicio QUEBRA_LINHA FIMALGORITMO
 ; 
 
 estrutura_var: /*nil*/
@@ -55,17 +54,14 @@ estrutura_var: /*nil*/
 | variavel_declaracao  ':' REAL QUEBRA_LINHA
 ; 
 
-variavel_declaracao: VARIAVEL
- | variavel_declaracao ',' VARIAVEL
+variavel_declaracao: variavel_declaracao ',' VARIAVEL
+| VARIAVEL
 ;
 
 lista_dentro_inicio: /*nil*/
  | lista_escreva lista_dentro_inicio
  | lista_leia lista_dentro_inicio
- | lista_escreva
- | lista_leia
  | lista_atribuicao lista_dentro_inicio
- | lista_atribuicao
 ;
 
 lista_escreva: ESCREVA '('STRING ')' 
@@ -74,21 +70,15 @@ lista_escreva: ESCREVA '('STRING ')'
  | ESCREVAL '('STRING ',' variavel_declaracao ')'
  | ESCREVA '('variavel_declaracao ')'
  | ESCREVAL '('variavel_declaracao ')'
- | lista_escreva
 ;
 
-lista_leia: LEIA '('VARIAVEL')'
-| lista_leia
+lista_leia:LEIA '('VARIAVEL')'
 ;
 
-lista_atribuicao: VARIAVEL ATRIBUICAO expr
-| lista_atribuicao 
-
+lista_atribuicao: VARIAVEL ATRIBUICAO expr 
 ;
 
-estrutura_comment:/*NIL*/
- | COMMENT QUEBRA_LINHA
- | estrutura_comment
+estrutura_comment: COMMENT QUEBRA_LINHA
 ;
 
 expr: VARIAVEL         { printf("NAME:  %s\n", $1); free($1); }
