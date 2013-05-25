@@ -4,7 +4,7 @@ bascara: bascara.y bhaskara.lex
 	gcc -o bascara bhaskara.lex.c bascara.tab.c -lfl 
 
 clean:
-	rm -f *.c *.h sql
+	rm -f *.c *.h bascara
 
 test: bascara
 	./bascara
