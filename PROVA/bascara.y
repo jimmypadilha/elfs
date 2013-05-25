@@ -29,18 +29,26 @@
 %token ESCREVA
 %token FIMALGORITMO
 %token RAIZQ
+%token COMMENT
+%token REAL
 
-%left OR
-%left AND
-%left <subtok> COMPARISON /*= <> <= etc */
-%left '|'
-%left '&'
 %left '+' '-'
 %left '*''/'
-%left '^'
+%right '^'
 %nonassoc UMINUS
 
+%start algoritmo_inicio
+
 %%
+
+algoritmo_inicio:estrutura_cabecalho;
+
+estrutura_cabecalho:ALGORITMO STRING{printf("estrutura incompleta");}
+  | ALGORITMO STRING COMMENT VAR estrutura_var
+; 
+
+estrutura_var: /*nil*/
+| VARIAVEL ',' VARIAVEL ':' 
 
 expr: VARIAVEL         { printf("NAME:  %s\n", $1); free($1); }
    | STRING        { printf("STRING %s\n", $1); free($1); }
@@ -58,4 +66,15 @@ expr: expr '+' expr { printf("ADD\n"); }
    | '-' expr %prec UMINUS { printf("NEG\n"); }
    | '('expr')'  
  ;
+
+
+
+
+
+
+
+
+
+
+
 
