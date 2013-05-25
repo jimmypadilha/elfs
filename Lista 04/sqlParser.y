@@ -17,6 +17,7 @@
 %token <strval> NAME
 %token <strval> STRING
 %token <intval> INTNUM
+%token <intval> BOOL
 %token <floatval> APPROXNUM
 
  /*Precedencia e nivel de operadores */ 
@@ -48,6 +49,7 @@
 %token ASC
 %token DESC
 %token ORDER
+%token GROUP
 
  /*SIMBOLOS NAO TERMINAIS */
 
@@ -73,7 +75,7 @@ stmt: select_stmt  {printf("\n***->De volta ao Simbolo de inicio\n"); }
 
 select_stmt: SELECT select_expr_list {printf("Select Vazio %d\n",$2);};
  |  SELECT select_expr_list FROM table_references 
- 	opt_where opt_orderby
+ 	opt_where opt_orderby opt_groupby
 	{printf("Quantidade de campos selecionados: %d, Quantidade de tabelas: %d  ",$2,$4);};
 ;
 
@@ -85,7 +87,7 @@ select_expr_list: select_expr {$$ = 1;}
 
 select_expr: expr opt_as_alias; 
 
-opt_as_alias: AS NAME { printf("COMO %s\n", $2); free($2); }
+opt_as_alias: AS NAME { printf("NOME RENOMEADO COMO %s\n", $2); free($2); }
   | NAME              { printf("COMO %s\n", $1); free($1); }
   | /* nil */
   ;
@@ -96,7 +98,8 @@ opt_as_alias: AS NAME { printf("COMO %s\n", $2); free($2); }
    | STRING        { printf("STRING %s\n", $1); free($1); }
    | INTNUM        { printf("NUMBER %d\n", $1); }
    | APPROXNUM     { printf("FLOAT %g\n", $1); }
-   ;
+   | BOOL          { printf("BOOLEAN %d\n", $1); }  
+ ;
   
 expr: expr '+' expr { printf("ADD\n"); }
    | expr '-' expr { printf("SUB\n"); }
@@ -131,6 +134,11 @@ opt_where: /* nil */
 
 opt_orderby: /* nil */ | ORDER BY groupby_list { printf("Quantidade de campos ordenando %d\n", $3); }
 ;
+
+opt_groupby: /* nil */ 
+   | GROUP BY groupby_list{ printf("Quantidade de campos no GROUPBY %d\n", $3); }
+;
+
 
 groupby_list: expr opt_asc_desc
                              { printf("GROUPBY: %d \n",  $2); $$ = 1; }

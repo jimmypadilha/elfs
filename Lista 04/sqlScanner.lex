@@ -15,6 +15,7 @@ SELECT {return SELECT;}
 FROM {return FROM;}
 WHERE {return WHERE;}
 ORDER {return ORDER;}
+GROUP	{ return GROUP; }
 BY {return BY;}
 TABLE {return TABLE;}
 AND {return AND;}
@@ -64,6 +65,11 @@ DESC {return DESC;}
 "!="	|
 "<>"	{ yylval.subtok = 3; return COMPARISON; }
 
+ /* booleans */
+TRUE { yylval.intval = 1; return BOOL; }
+FALSE { yylval.intval = 0; return BOOL; }
+
+
   /* nomes  */
 
 [A-Za-z][A-Za-z0-9_]*	{ yylval.strval = strdup(yytext);
@@ -78,7 +84,6 @@ DESC {return DESC;}
 
 [ \t\n]         /* white space */
 .               { yyerror("caractere desconhecido'%c'", *yytext); }
-
 
 
 

@@ -40,26 +40,28 @@
      NAME = 258,
      STRING = 259,
      INTNUM = 260,
-     APPROXNUM = 261,
-     OR = 262,
-     AND = 263,
-     COMPARISON = 264,
-     UMINUS = 265,
-     SELECT = 266,
-     FROM = 267,
-     WHERE = 268,
-     BY = 269,
-     TABLE = 270,
-     AS = 271,
-     COLUMN = 272,
-     DIV = 273,
-     DOUBLE = 274,
-     FLOAT = 275,
-     INTEGER = 276,
-     NUMBER = 277,
-     ASC = 278,
-     DESC = 279,
-     ORDER = 280
+     BOOL = 261,
+     APPROXNUM = 262,
+     OR = 263,
+     AND = 264,
+     COMPARISON = 265,
+     UMINUS = 266,
+     SELECT = 267,
+     FROM = 268,
+     WHERE = 269,
+     BY = 270,
+     TABLE = 271,
+     AS = 272,
+     COLUMN = 273,
+     DIV = 274,
+     DOUBLE = 275,
+     FLOAT = 276,
+     INTEGER = 277,
+     NUMBER = 278,
+     ASC = 279,
+     DESC = 280,
+     ORDER = 281,
+     GROUP = 282
    };
 #endif
 
@@ -80,7 +82,7 @@ typedef union YYSTYPE
 
 
 /* Line 2068 of yacc.c  */
-#line 84 "sqlParser.tab.h"
+#line 86 "sqlParser.tab.h"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */

@@ -11,7 +11,16 @@ TIPOS DE QUERYS ACEITAS :
 	SELECT Nome, DataCompra FROM Cds ORDER By DataCompra DESC;
 	SELECT * FROM Musicas WHERE CodCd=1;
 	SELECT T1.CAMPO1, T2.CAMPO2 FROM TABELA AS T1, TABELA2 AS T2 WHERE T1.CAMPO1 = VALOR AND T2.CAMPO2 = VALOR2;
+	SELECT * FROM Customers WHERE Country='Germany' AND City='Berlin';
+	SELECT * FROM Customers WHERE City='Berlin' OR City='München'; 
+	SELECT * FROM Customers WHERE Country='Germany' AND (City='Berlin' OR City='München');
+	SELECT Nome, Artista FROM Musicas;
+	SELECT Numero, Nome, Tempo FROM Musicas WHERE CodigoCd=5 ORDER BY Numero;
+	SELECT c.Nome, m.Tempo AS Total FROM Cds AS c, Musicas AS m WHERE c.Codigo=m.CodigoCd GROUP BY c.Nome;
+	SELECT * FROM Cds WHERE Album=TRUE;
 	
+
+
 
 
 
