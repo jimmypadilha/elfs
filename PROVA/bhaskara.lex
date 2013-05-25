@@ -1,8 +1,8 @@
 %{
-
-/*
-Compilador parcial da lista 1
- */
+#include "bascara.tab.h"
+#include <stdarg.h>
+#include <stdio.h>
+#include <string.h>
 %}
 ALGORITMO (algoritmo|ALGORITMO)
 VAR (VAR|var)
@@ -51,12 +51,4 @@ QUEBRA_LINHA [\n]
 . printf("%s TOKEN DESCONHECIDO\n", yytext);
 
 %%
-main(int argc, char *argv[])
 
-{
-  yyin = fopen(argv[1], "r");
-  yylex();
-  fclose(yyin);
-  return 0;
-
-}
