@@ -38,7 +38,6 @@ MOD (mod|MOD)
 OPERACAO  \+ | \/ | \- |\* | ^
 
 
-
 %%
 
 /*strings */
