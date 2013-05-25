@@ -39,22 +39,20 @@
    enum yytokentype {
      STRING = 258,
      VARIAVEL = 259,
-     INTNUM = 260,
-     BOOL = 261,
-     APPROXNUM = 262,
-     ALGORITMO = 263,
-     VAR = 264,
-     INICIO = 265,
-     LEIA = 266,
-     ESCREVA = 267,
-     ESCREVAL = 268,
-     FIMALGORITMO = 269,
-     RAIZQ = 270,
-     COMMENT = 271,
-     REAL = 272,
-     ATRIBUICAO = 273,
-     QUEBRA_LINHA = 274,
-     UMINUS = 275
+     APPROXNUM = 260,
+     ALGORITMO = 261,
+     VAR = 262,
+     INICIO = 263,
+     LEIA = 264,
+     ESCREVA = 265,
+     ESCREVAL = 266,
+     FIMALGORITMO = 267,
+     RAIZQ = 268,
+     COMMENT = 269,
+     REAL = 270,
+     ATRIBUICAO = 271,
+     QUEBRA_LINHA = 272,
+     UMINUS = 273
    };
 #endif
 

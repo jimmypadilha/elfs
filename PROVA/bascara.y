@@ -6,8 +6,6 @@
 
 %token <strval> STRING
 %token <strval> VARIAVEL
-%token <intval> INTNUM
-%token <intval> BOOL
 %token <floatval> APPROXNUM
 
 %token ALGORITMO
@@ -70,7 +68,6 @@ lista_atribuicao: VARIAVEL ATRIBUICAO expr
 
 expr: VARIAVEL     { printf("VARIAVEL:  %s\n", $1); free($1); }
    | STRING        { printf("STRING %s\n", $1); free($1); }
-   | INTNUM        { printf("NUMBER %d\n", $1); }
    | APPROXNUM     { printf("FLOAT %g\n", $1); }
  ;
 
@@ -83,3 +80,15 @@ expr: expr '+' expr { printf("ADD\n"); }
    | '('expr')'  
  ;
 
+%%
+
+int yyerror(char *s) {
+  printf("%s\n", s);
+}
+
+int main() {
+  if (yyparse())
+     fprintf(stderr, "---QUERY FINALIZADA---\n");
+  else
+     fprintf(stderr, "Erros Encontrados.\n");
+}
