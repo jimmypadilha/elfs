@@ -554,10 +554,10 @@ int yy_flex_debug = 0;
 char *yytext;
 #line 1 "bhaskara.lex"
 #line 2 "bhaskara.lex"
-
-/*
-Compilador parcial da lista 1
- */
+#include "bascara.tab.h"
+#include <stdarg.h>
+#include <stdio.h>
+#include <string.h>
 #line 562 "bhaskara.lex.c"
 
 #define INITIAL 0
@@ -745,7 +745,7 @@ YY_DECL
 	register char *yy_cp, *yy_bp;
 	register int yy_act;
     
-#line 20 "bhaskara.lex"
+#line 21 "bhaskara.lex"
 
 #line 751 "bhaskara.lex.c"
 
@@ -832,111 +832,111 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 21 "bhaskara.lex"
+#line 22 "bhaskara.lex"
 {return ALGORITMO;}
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 22 "bhaskara.lex"
+#line 23 "bhaskara.lex"
 {return VAR;}
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 23 "bhaskara.lex"
+#line 24 "bhaskara.lex"
 {return INICIO;}
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 24 "bhaskara.lex"
+#line 25 "bhaskara.lex"
 {return LEIA;}
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 25 "bhaskara.lex"
+#line 26 "bhaskara.lex"
 {return ESCREVA;}
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 26 "bhaskara.lex"
+#line 27 "bhaskara.lex"
 {return ESCREVAL;}
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 27 "bhaskara.lex"
+#line 28 "bhaskara.lex"
 {return FIMALGORITMO;}
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 28 "bhaskara.lex"
+#line 29 "bhaskara.lex"
 {return RAIZQ;}
 	YY_BREAK
 case 9:
 /* rule 9 can match eol */
 YY_RULE_SETUP
-#line 29 "bhaskara.lex"
+#line 30 "bhaskara.lex"
 {return COMMENT;}
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 30 "bhaskara.lex"
+#line 31 "bhaskara.lex"
 {return REAL;}
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 31 "bhaskara.lex"
+#line 32 "bhaskara.lex"
 {return ATRIBUICAO;}
 	YY_BREAK
 case 12:
 /* rule 12 can match eol */
 YY_RULE_SETUP
-#line 32 "bhaskara.lex"
+#line 33 "bhaskara.lex"
 {return QUEBRA_LINHA;}
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 34 "bhaskara.lex"
+#line 35 "bhaskara.lex"
 { return yytext[0]; }
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 36 "bhaskara.lex"
+#line 37 "bhaskara.lex"
 { yylval.strval = strdup(yytext);
                           return VARIAVEL; }
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 38 "bhaskara.lex"
+#line 39 "bhaskara.lex"
 { yylval.strval = strdup(yytext+1);
                           yylval.strval[yyleng-2] = 0;
                           return VARIAVEL; }
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 42 "bhaskara.lex"
+#line 43 "bhaskara.lex"
 { yylval.strval = strdup(yytext); return STRING; }
 	YY_BREAK
 case 17:
-#line 45 "bhaskara.lex"
-case 18:
 #line 46 "bhaskara.lex"
-case 19:
+case 18:
 #line 47 "bhaskara.lex"
-case 20:
+case 19:
 #line 48 "bhaskara.lex"
+case 20:
+#line 49 "bhaskara.lex"
 case 21:
 YY_RULE_SETUP
-#line 48 "bhaskara.lex"
+#line 49 "bhaskara.lex"
 { yylval.floatval = atof(yytext) ;
                                   return APPROXNUM; }
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 51 "bhaskara.lex"
+#line 52 "bhaskara.lex"
 printf("%s TOKEN DESCONHECIDO\n", yytext);
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 53 "bhaskara.lex"
+#line 54 "bhaskara.lex"
 ECHO;
 	YY_BREAK
 #line 943 "bhaskara.lex.c"
@@ -1937,16 +1937,8 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 53 "bhaskara.lex"
+#line 54 "bhaskara.lex"
 
 
-main(int argc, char *argv[])
 
-{
-  yyin = fopen(argv[1], "r");
-  yylex();
-  fclose(yyin);
-  return 0;
-
-}
 

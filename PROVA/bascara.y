@@ -4,6 +4,12 @@
 #include <stdlib.h>
 %}
 
+%union {
+ double floatval;
+ char *strval;
+}
+
+
 %token <strval> STRING
 %token <strval> VARIAVEL
 %token <floatval> APPROXNUM
@@ -29,16 +35,20 @@
 %start algoritmo_inicio
 
 %%
-algoritmo_inicio:estrutura_cabecalho;
+algoritmo_inicio:{printf("base do algoritmo\n");}
 
+
+
+/*
 estrutura_cabecalho: ALGORITMO STRING QUEBRA_LINHA estrutura_comment QUEBRA_LINHA  VAR QUEBRA_LINHA estrutura_var QUEBRA_LINHA INICIO QUEBRA_LINHA lista_dentro_inicio QUEBRA_LINHA FIMALGORITMO
 ;
 
-estrutura_comment: /*nil*/
+
+estrutura_comment: /*nil*/  /*
   | COMMENT QUEBRA_LINHA estrutura_comment
 ;
 
-estrutura_var: /*nil*/
+estrutura_var: /*nil*/ /*
   | variavel_declaracao  ':' REAL
 ; 
 
@@ -46,7 +56,8 @@ variavel_declaracao: VARIAVEL ',' variavel_declaracao
   | VARIAVEL
 ;
 
-lista_dentro_inicio: /*nil*/
+
+lista_dentro_inicio: /*nil*/  /*
   | lista_escreva lista_dentro_inicio
   | lista_leia lista_dentro_inicio
   | lista_atribuicao lista_dentro_inicio
@@ -79,6 +90,8 @@ expr: expr '+' expr { printf("ADD\n"); }
    | '-' expr %prec UMINUS { printf("NEG\n"); }
    | '('expr')'  
  ;
+
+ */
 
 %%
 

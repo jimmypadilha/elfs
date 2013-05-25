@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <string.h>
 %}
+
 ALGORITMO (algoritmo|ALGORITMO)
 VAR (VAR|var)
 INICIO (inicio|INICIO) 
