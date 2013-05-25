@@ -5,3 +5,6 @@ sql: sqlParser.y sqlScanner.lex
 
 clean:
 	rm -f *.c *.h sql
+
+test: sql
+	./sql
