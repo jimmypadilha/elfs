@@ -73,10 +73,7 @@ stmt_list:  stmt ';'
 stmt: select_stmt  {printf("\n***->De volta ao Simbolo de inicio\n"); } 
 ;
 
-select_stmt: SELECT select_expr_list {printf("Select Vazio %d\n",$2);};
- |  SELECT select_expr_list FROM table_references 
- 	opt_where opt_orderby opt_groupby
-	{printf("Quantidade de campos selecionados: %d, Quantidade de tabelas: %d  ",$2,$4);};
+select_stmt: SELECT select_expr_list FROM table_references opt_where opt_orderby opt_groupby {printf("Quantidade de campos selecionados: %d, Quantidade de tabelas: %d  ",$2,$4);};
 ;
 
 
@@ -161,7 +158,7 @@ int yyerror(char *s) {
 
 int main() {
   if (yyparse())
-     fprintf(stderr, "Sucesso.\n");
+     fprintf(stderr, "---QUERY FINALIZADA---\n");
   else
      fprintf(stderr, "Erros Encontrados.\n");
 }
