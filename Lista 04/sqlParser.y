@@ -107,7 +107,9 @@ expr: expr '+' expr { printf("ADD\n"); }
    | expr OR expr { printf("Usando OR\n"); }
    | expr COMPARISON expr { printf("Tipo de  Comparacao: %d\n", $2); }
    | expr COMPARISON '(' select_stmt ')' { printf("Comparando_SELECT %d ", $2); }
-   ;    
+   | expr AND '('expr')' {printf("Pesquisa contendo AND acompanhado de parenteses\n");}
+   | expr OR '('expr')' {printf("Pesquisa contendo OR acompanhado de parenteses\n");}  
+  ;    
   
 table_references:    table_reference { $$ = 1; }
     | table_references ',' table_reference { $$ = $1 + 1; }
