@@ -18,7 +18,9 @@
 %token ESCREVA
 %token ESCREVAL
 %token CARACTERE
-
+%token SE
+%token SENAO
+%token ENTAO
 
 
 
@@ -38,7 +40,7 @@ estrutura_comentario:/*nil*/
 ;
 
 corpo_algoritmo:area_declaracao_variavel
-  | area_principal
+ | area_principal  
 ;
 
 area_declaracao_variavel:VAR 
@@ -72,6 +74,7 @@ sequencia_principal: sequencia_principal principal
  | principal
 ;
 
+
 principal:lista_escreva principal
  | lista_leia principal
  | abri_principal
@@ -89,6 +92,26 @@ lista_escreva: ESCREVA '('STRING ')'
 lista_leia: LEIA '('VARIAVEL')'
 ;
 
-abri_principal:;
 
-fecha_principal:; 
+abri_principal: abri_principal_estruturas
+;
+
+fecha_principal:fecha_principal_estruturas
+;
+
+
+abri_principal_estruturas:abri_se_principal
+;
+fecha_principal_estruturas:fecha_se_principal
+;
+
+
+abri_se_principal: SE expressao_logica  ENTAO principal
+ | SE expressao_logica  ENTAO fecha_principal SENAO abri_principal
+;
+
+fecha_se_principal:SE expressao_logica  ENTAO fecha_principal SENAO fecha_principal
+;
+
+%%
+
