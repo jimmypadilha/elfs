@@ -21,6 +21,14 @@
 %token SE
 %token SENAO
 %token ENTAO
+%token APPROXNUM
+%token INTNUM
+%token RAIZQ
+%token UMINUS
+%token ATE
+%token DE 
+%token FACA
+%token PARA
 
 
 
@@ -101,8 +109,11 @@ fecha_principal:fecha_principal_estruturas
 
 
 abri_principal_estruturas:abri_se_principal
+ | abri_para_principal
 ;
+
 fecha_principal_estruturas:fecha_se_principal
+ | fecha_para_principal
 ;
 
 
@@ -110,8 +121,34 @@ abri_se_principal: SE expressao_logica  ENTAO principal
  | SE expressao_logica  ENTAO fecha_principal SENAO abri_principal
 ;
 
+abri_para_principal: PARA VARIAVEL DE expr ATE expr FACA abri_principal
+;
+
 fecha_se_principal:SE expressao_logica  ENTAO fecha_principal SENAO fecha_principal
 ;
+
+fecha_para_principal:PARA VARIAVEL DE expr ATE expr FACA fecha_principal
+
+expressao_logica:expr
+;
+
+expr: VARIAVEL     { printf("VARIAVEL:\n"); }
+   | STRING        { printf("STRING\n");}
+   | APPROXNUM     { printf("FLOAT\n");}
+   | INTNUM        { printf("INTEIRO\n");}
+   | RAIZQ '('expr')'   { printf("Funcao Raizq\n");} 
+;
+
+expr: expr '+' expr { printf("ADD\n"); }
+   | expr '-' expr { printf("SUB\n"); }
+   | expr '*' expr { printf("MUL\n"); }
+   | expr '/' expr { printf("DIV\n"); }
+   | expr '^' expr { printf("POWER\n");}
+   | '-' expr %prec UMINUS { printf("NEG\n"); }
+   | '('expr')'   
+;
+
+
 
 %%
 
