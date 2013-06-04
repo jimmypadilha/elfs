@@ -29,6 +29,7 @@
 %token DE 
 %token FACA
 %token PARA
+%token ENQUANTO
 
 
 
@@ -110,10 +111,12 @@ fecha_principal:fecha_principal_estruturas
 
 abri_principal_estruturas:abri_se_principal
  | abri_para_principal
+ | abri_enquanto_principal
 ;
 
 fecha_principal_estruturas:fecha_se_principal
  | fecha_para_principal
+ | fecha_enquanto_principal
 ;
 
 
@@ -124,10 +127,18 @@ abri_se_principal: SE expressao_logica  ENTAO principal
 abri_para_principal: PARA VARIAVEL DE expr ATE expr FACA abri_principal
 ;
 
+abri_enquanto_principal:ENQUANTO expressao_logica FACA abri_principal
+;
+
+
 fecha_se_principal:SE expressao_logica  ENTAO fecha_principal SENAO fecha_principal
 ;
 
 fecha_para_principal:PARA VARIAVEL DE expr ATE expr FACA fecha_principal
+;
+
+fecha_enquanto_principal:ENQUANTO expressao_logica FACA fecha_principal
+;
 
 expressao_logica:expr
 ;
