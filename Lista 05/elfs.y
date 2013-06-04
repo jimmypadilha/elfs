@@ -30,31 +30,36 @@
 %token FACA
 %token PARA
 %token ENQUANTO
+%token REPITA
 
+%left '+' '-'
+%left '*''/'
+%right '^'
+%nonassoc UMINUS
 
+%start algoritmo
 
 %%
 
-arquivo:algoritmo
+
+algoritmo: algoritmo_cabecalho estrutura_comentario area_declaracao_variavel  corpo_algoritmo 
 ;
 
-algoritmo:algoritmo_cabecalho estrutura_comentario  corpo_algoritmo 
+algoritmo_cabecalho: ALGORITMO STRING
 ;
 
-algoritmo_cabecalho:ALGORITMO STRING
-;
-
-estrutura_comentario:/*nil*/
+estrutura_comentario: /*nil*/
   | COMMENT estrutura_comentario
 ;
 
-corpo_algoritmo:area_declaracao_variavel
- | area_principal  
+corpo_algoritmo: area_principal
 ;
 
-area_declaracao_variavel:VAR 
+area_declaracao_variavel: VAR 
   | VAR lista_declaracao_variavel
 ;
+
+
 
 lista_declaracao_variavel:lista_declaracao_variavel  declaracao_variavel
   | declaracao_variavel
@@ -84,10 +89,10 @@ sequencia_principal: sequencia_principal principal
 ;
 
 
-principal:lista_escreva principal
- | lista_leia principal
- | abri_principal
- | fecha_principal
+principal:lista_escreva 
+ | lista_leia
+ | abri_principal 
+ | fecha_principal 
 ;
 
 lista_escreva: ESCREVA '('STRING ')'  
@@ -117,6 +122,7 @@ abri_principal_estruturas:abri_se_principal
 fecha_principal_estruturas:fecha_se_principal
  | fecha_para_principal
  | fecha_enquanto_principal
+ | repita_principal
 ;
 
 
@@ -142,6 +148,14 @@ fecha_enquanto_principal:ENQUANTO expressao_logica FACA fecha_principal
 
 expressao_logica:expr
 ;
+
+repita_principal: REPITA principal_sequencia ATE expressao_logica
+;
+
+principal_sequencia : principal_sequencia principal
+ | principal
+ ;
+
 
 expr: VARIAVEL     { printf("VARIAVEL:\n"); }
    | STRING        { printf("STRING\n");}
