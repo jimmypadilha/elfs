@@ -65,7 +65,7 @@ typedef union YYSTYPE
 {
 
 /* Line 2068 of yacc.c  */
-#line 7 "bascara.y"
+#line 9 "bascara.y"
 
  int intval;
  double floatval;
