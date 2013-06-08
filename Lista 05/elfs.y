@@ -125,7 +125,7 @@ estrutura_algoritmo: ALGORITMO STRING QUEBRA_LINHA estrutura_comentario VAR QUEB
 ;
 
 estrutura_comentario:/*nil*/ 
-  | COMENTARIO QUEBRA_LINHA  estrutura_comentario {printf("Comentarios:\n");}
+  | COMENTARIO QUEBRA_LINHA  estrutura_comentario {printf("Comentarios:\n");}  
 ;
 
 
@@ -133,9 +133,13 @@ estrutura_corpo: INICIO QUEBRA_LINHA corpo_algoritmo FIMALGORITMO
 ;
 
 corpo_algoritmo:
+ COMENTARIO QUEBRA_LINHA corpo_algoritmo
+ | escreva
 ;
 
-
+escreva:
+  ESCREVA APARENTESE STRING FPARENTESE QUEBRA_LINHA
+;
 
 %%
 
