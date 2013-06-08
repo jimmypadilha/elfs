@@ -139,6 +139,8 @@ declaracao_variavel: VARIAVEL VIRGULA  declaracao_variavel
 ;
 
 tipo_variavel: REAL {printf("variavel tipo real...\n");}
+| INTEIRO  {printf("variavel tipo inteiro...\n");}
+| CARACTERE {printf("variavel tipo caractere...\n");}
 ;
 
 estrutura_corpo: INICIO QUEBRA_LINHA corpo_algoritmo FIMALGORITMO
@@ -167,7 +169,7 @@ int main(int argc, char *argv[]) {
   else{
      yyin = fopen(argv[1], "r");
      if (!yyparse())
-        fprintf(stderr, "---QUERY FINALIZADA---\n");
+        fprintf(stderr, "---ALGORITMO FINALIZADO---\n");
      else
         fprintf(stderr, "Erros Encontrados.\n");
   }
