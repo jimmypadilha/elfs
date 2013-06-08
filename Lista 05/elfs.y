@@ -2,178 +2,157 @@
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
+
+extern FILE *yyin;
+extern int yylineno;
+extern char *yytext;
 %}
 
+%union {
+ int intval;
+ double floatval;
+ char *strval;
+}
+
+
+%token <strval> STRING
+%token <floatval> APPROXNUM
+%token <intval> INTNUM
 
 %token ALGORITMO 
 %token VAR
 %token INICIO
+%token COMENTARIO
+%token ESCREVA
 %token FIMALGORITMO
-%token STRING
-%token COMMENT
+
+%token MAIORIGUAL
+%token DIFERENTE
+%token IGUAL
+%token MENOR
+%token MENORIGUAL
+%token MAIOR
+
+%token PONTOPONTO
+%token VIRGULA
+%token FCOLCHETE
+%token ACOLCHETE
+%token FPARENTESE
+%token APARENTESE
+%token ENTREASPAS
+%token DOISPONTOS
+
+%token SOMA
+%token MENOS
+%token MULTIPLICACAO
+%token DIVISAO
+%token RESTO
+%token POTENCIA
+
+%token LEIA
+%token ATRIBUICAO
+%token BRANCO 
+
 %token VARIAVEL
 %token REAL
-%token INTEIRO
-%token LEIA
-%token ESCREVA
-%token ESCREVAL
+%token NUMERO
 %token CARACTERE
+%token INTEIRO
+
 %token SE
+%token FIMSE
 %token SENAO
 %token ENTAO
-%token APPROXNUM
-%token INTNUM
-%token RAIZQ
-%token UMINUS
 %token ATE
 %token DE 
 %token FACA
 %token PARA
+%token FIMPARA
 %token ENQUANTO
+%token FIMENQUANTO
 %token REPITA
+%token FIMREPITA
+%token QUEBRA_LINHA
 
-%left '+' '-'
-%left '*''/'
-%right '^'
-%nonassoc UMINUS
+%token RETORNE
+%token PASSO
+%token VETOR
+%token CASO
+%token FIMFACA
+%token FUNCAO
+%token FIMFUNCAO
+%token OUTROCASO
+%token PROCEDIMENTO
+%token FIMPROCEDIMENTO
 
-%start algoritmo
+
+
+
+
+%left OU
+%left E
+%left MENOR MAIOR DIFERENTE IGUAL MENORIGUAL MAIORIGUAL 
+%left SOMA MENOS
+%left MULTIPLICACAO DIVISAO
+%right POTENCIA RAIZQ
+
+
+
+%start Input
 
 %%
 
 
-algoritmo: algoritmo_cabecalho estrutura_comentario area_declaracao_variavel  corpo_algoritmo 
+Input:
+ 
+ | Input Line
 ;
 
-algoritmo_cabecalho: ALGORITMO STRING
-;
+Line:
+   QUEBRA_LINHA
+  | algoritmo_inicio QUEBRA_LINHA { printf("base do algoritmo\n"); }
 
-estrutura_comentario: /*nil*/
-  | COMMENT estrutura_comentario
-;
-
-corpo_algoritmo: area_principal
-;
-
-area_declaracao_variavel: VAR 
-  | VAR lista_declaracao_variavel
 ;
 
 
-
-lista_declaracao_variavel:lista_declaracao_variavel  declaracao_variavel
-  | declaracao_variavel
-;
-
-declaracao_variavel: lista_variavel ':' tipo_variavel
-;
-
-lista_variavel:
-  | VARIAVEL ',' lista_variavel
-  | VARIAVEL
-;
-
-tipo_variavel:REAL
- | INTEIRO
- | CARACTERE
-;
-
-area_principal:composicao_principal
-;
-
-composicao_principal:INICIO sequencia_principal FIMALGORITMO
-;
-
-sequencia_principal: sequencia_principal principal
- | principal
+algoritmo_inicio:estrutura_algoritmo  {printf("algoritmo realizado com sucesso\n");}
+ | algoritmo_inicio estrutura_algoritmo {printf("ALGORITMO REALIZADO COM SUCESSO\n");} 
 ;
 
 
-principal:lista_escreva 
- | lista_leia
- | abri_principal 
- | fecha_principal 
+
+estrutura_algoritmo: ALGORITMO STRING QUEBRA_LINHA estrutura_comentario VAR QUEBRA_LINHA estrutura_corpo {printf("passando estrutura_cabacalho\n");}
 ;
 
-lista_escreva: ESCREVA '('STRING ')'  
- | ESCREVAL '('STRING ')'
- | ESCREVA '('STRING ',' lista_variavel ')' 
- | ESCREVAL '('STRING ',' lista_variavel ')'  
- | ESCREVA '('lista_variavel ')'
- | ESCREVAL '('lista_variavel')'
-;
-
-lista_leia: LEIA '('VARIAVEL')'
+estrutura_comentario:/*nil*/ 
+  | COMENTARIO QUEBRA_LINHA  estrutura_comentario {printf("Comentarios:\n");}
 ;
 
 
-abri_principal: abri_principal_estruturas
+estrutura_corpo: INICIO QUEBRA_LINHA corpo_algoritmo FIMALGORITMO
 ;
 
-fecha_principal:fecha_principal_estruturas
-;
-
-
-abri_principal_estruturas:abri_se_principal
- | abri_para_principal
- | abri_enquanto_principal
-;
-
-fecha_principal_estruturas:fecha_se_principal
- | fecha_para_principal
- | fecha_enquanto_principal
- | repita_principal
-;
-
-
-abri_se_principal: SE expressao_logica  ENTAO principal
- | SE expressao_logica  ENTAO fecha_principal SENAO abri_principal
-;
-
-abri_para_principal: PARA VARIAVEL DE expr ATE expr FACA abri_principal
-;
-
-abri_enquanto_principal:ENQUANTO expressao_logica FACA abri_principal
-;
-
-
-fecha_se_principal:SE expressao_logica  ENTAO fecha_principal SENAO fecha_principal
-;
-
-fecha_para_principal:PARA VARIAVEL DE expr ATE expr FACA fecha_principal
-;
-
-fecha_enquanto_principal:ENQUANTO expressao_logica FACA fecha_principal
-;
-
-expressao_logica:expr
-;
-
-repita_principal: REPITA principal_sequencia ATE expressao_logica
-;
-
-principal_sequencia : principal_sequencia principal
- | principal
- ;
-
-
-expr: VARIAVEL     { printf("VARIAVEL:\n"); }
-   | STRING        { printf("STRING\n");}
-   | APPROXNUM     { printf("FLOAT\n");}
-   | INTNUM        { printf("INTEIRO\n");}
-   | RAIZQ '('expr')'   { printf("Funcao Raizq\n");} 
-;
-
-expr: expr '+' expr { printf("ADD\n"); }
-   | expr '-' expr { printf("SUB\n"); }
-   | expr '*' expr { printf("MUL\n"); }
-   | expr '/' expr { printf("DIV\n"); }
-   | expr '^' expr { printf("POWER\n");}
-   | '-' expr %prec UMINUS { printf("NEG\n"); }
-   | '('expr')'   
+corpo_algoritmo:
 ;
 
 
 
 %%
 
+int yyerror(char *s) {
+  printf("Erro: %s.Linha: %d. Token nao esperado: %s.\n", s, yylineno, yytext);
+}
+
+int main(int argc, char *argv[]) {
+//tentativa de recebimento de arquivo
+  if (argc < 2){
+     printf("Digite o arquivo\n");
+  } 
+  else{
+     yyin = fopen(argv[1], "r");
+     if (!yyparse())
+        fprintf(stderr, "---QUERY FINALIZADA---\n");
+     else
+        fprintf(stderr, "Erros Encontrados.\n");
+  }
+}
