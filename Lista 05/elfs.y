@@ -123,9 +123,12 @@ algoritmo_inicio:estrutura_algoritmo  {printf("----Em estrutura do algoritmo----
 estrutura_algoritmo: ALGORITMO STRING QUEBRA_LINHA estrutura_comentario VAR QUEBRA_LINHA declaracao_variaveis_lista estrutura_corpo {printf("passando estrutura_cabacalho\n");}
 ;
 
+/*Comentario apos cabecalho algoritmo*/
 estrutura_comentario:/*nil*/ 
   | COMENTARIO QUEBRA_LINHA  estrutura_comentario {printf("Comentarios:\n");}  
 ;
+
+/* declaracao de variaveis */
 
 declaracao_variaveis_lista:declaracao_variaveis_lista QUEBRA_LINHA declaracao_variaveis
  | declaracao_variaveis
@@ -146,12 +149,13 @@ tipo_variavel: REAL {printf("variavel tipo real...\n");}
 estrutura_corpo: INICIO QUEBRA_LINHA corpo_algoritmo FIMALGORITMO
 ;
 
+/* Corpo Algoritmo */
 corpo_algoritmo:
  | COMENTARIO QUEBRA_LINHA corpo_algoritmo
  | lista_escreva QUEBRA_LINHA corpo_algoritmo
 ;
 
-
+/* responsavel pelos escrevas */
 lista_escreva: ESCREVA APARENTESE STRING FPARENTESE  {printf("escreva simples...\n");} 
  | ESCREVA APARENTESE  STRING VIRGULA declaracao_variavel FPARENTESE  {printf("escreva com variaveis\n");}
  | ESCREVA APARENTESE  declaracao_variavel FPARENTESE   {printf("escreva so variaveis...\n");}
