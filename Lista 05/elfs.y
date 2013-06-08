@@ -153,7 +153,7 @@ estrutura_corpo: INICIO QUEBRA_LINHA corpo_algoritmo FIMALGORITMO
 corpo_algoritmo:
  | COMENTARIO QUEBRA_LINHA corpo_algoritmo
  | lista_escreva QUEBRA_LINHA corpo_algoritmo
- | lista_leia QUEBRA_LINHA
+ | lista_leia QUEBRA_LINHA corpo_algoritmo
 ;
 
 /* responsavel pelos escrevas */
