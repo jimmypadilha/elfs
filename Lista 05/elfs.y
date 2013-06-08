@@ -147,12 +147,14 @@ estrutura_corpo: INICIO QUEBRA_LINHA corpo_algoritmo FIMALGORITMO
 ;
 
 corpo_algoritmo:
- COMENTARIO QUEBRA_LINHA corpo_algoritmo
- | escreva
+ | COMENTARIO QUEBRA_LINHA corpo_algoritmo
+ | lista_escreva QUEBRA_LINHA corpo_algoritmo
 ;
 
-escreva:
-  ESCREVA APARENTESE STRING FPARENTESE QUEBRA_LINHA
+
+lista_escreva: ESCREVA APARENTESE STRING FPARENTESE  {printf("escreva simples...\n");} 
+ | ESCREVA APARENTESE  STRING VIRGULA declaracao_variavel FPARENTESE  {printf("escreva com variaveis\n");}
+ | ESCREVA APARENTESE  declaracao_variavel FPARENTESE   {printf("escreva so variaveis...\n");}
 ;
 
 %%
