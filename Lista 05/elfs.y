@@ -130,8 +130,10 @@ estrutura_comentario:/*nil*/
 
 /* declaracao de variaveis */
 
-declaracao_variaveis_lista:declaracao_variaveis_lista QUEBRA_LINHA declaracao_variaveis
+declaracao_variaveis_lista:
+ declaracao_variaveis_lista QUEBRA_LINHA declaracao_variaveis
  | declaracao_variaveis
+;
 
 declaracao_variaveis: declaracao_variavel DOISPONTOS tipo_variavel
  |
@@ -154,15 +156,38 @@ corpo_algoritmo:
  | COMENTARIO QUEBRA_LINHA corpo_algoritmo
  | lista_escreva QUEBRA_LINHA corpo_algoritmo
  | lista_leia QUEBRA_LINHA corpo_algoritmo
+ | lista_atribuicao QUEBRA_LINHA corpo_algoritmo
+ | lista_escreva corpo_algoritmo
+ | lista_leia corpo_algoritmo
+ | lista_atribuicao corpo_algoritmo
 ;
 
 /* responsavel pelos escrevas */
-lista_escreva: ESCREVA APARENTESE STRING FPARENTESE  {printf("escreva simples...\n");} 
+lista_escreva: ESCREVA APARENTESE STRING FPARENTESE {printf("escreva simples...\n");} 
  | ESCREVA APARENTESE  STRING VIRGULA declaracao_variavel FPARENTESE  {printf("escreva com variaveis\n");}
  | ESCREVA APARENTESE  declaracao_variavel FPARENTESE   {printf("escreva so variaveis...\n");}
 ;
 
 lista_leia: LEIA APARENTESE declaracao_variavel FPARENTESE 
+;
+
+lista_atribuicao: VARIAVEL ATRIBUICAO expr
+
+;
+
+expr: VARIAVEL     { printf("VARIAVEL:\n"); }
+   | STRING        { printf("STRING\n");}
+   | APPROXNUM     { printf("FLOAT\n");}
+   | INTNUM        { printf("INTEIRO\n");}
+   | RAIZQ '('expr')'   { printf("Funcao Raizq\n");} 
+;
+
+expr: expr SOMA expr { printf("ADD\n"); }
+   | expr '-' expr { printf("SUB\n"); }
+   | expr MULTIPLICACAO expr { printf("MUL\n"); }
+   | expr DIVISAO expr { printf("DIV\n"); }
+   | expr '^' expr { printf("POWER\n");}
+   | '('expr')'   
 ;
 
 %%
