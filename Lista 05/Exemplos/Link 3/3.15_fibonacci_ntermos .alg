@@ -4,7 +4,7 @@ algoritmo "Serie de Fibonnaci"
 // Data : 7/5/2013
 // Seção de Declarações
 var
-
+// Declaração de variáveis
 cont,n,numero,atual,anterior:inteiro
 
 

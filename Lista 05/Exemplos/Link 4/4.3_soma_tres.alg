@@ -1,4 +1,4 @@
-algoritmo "soma_três"
+algoritmo "função_soma_três"
 // Função : Recebe três argumentos e os soma
 // Autor : grupo 4
 // Data : 7/5/2013
@@ -6,19 +6,29 @@ algoritmo "soma_três"
 
 var
 // Declaração de variáveis
-n1, n2, n3, soma: real
+Valor_1, Valor_2, Valor_3, total, fsoma: real
+
+FUNCAO Soma (Recebe_valor1, Recebe_valor2, Recebe_valor3 :Real):Real
 
 inicio
+
+total <- Recebe_valor1 + Recebe_valor2 + Recebe_valor3
+retorne total
+
+fimfuncao
+
+inicio
+
 // Seção de Comandos
 escreva("Entre com o numero: ") // Imprime na tela o texto
-leia (n1)   // lê o valor digitado
+leia (Valor_1)   // lê o valor digitado
 escreva("Entre com o numero: ") // Imprime na tela o texto
-leia (n2)   // lê o valor digitado
+leia (Valor_2)   // lê o valor digitado
 escreva("Entre com o numero: ") // Imprime na tela o texto
-leia (n3)   // lê o valor digitado
+leia (Valor_3)   // lê o valor digitado
 
-soma <- n1+n2+n3
+fsoma <- Soma (Valor_1,Valor_2,Valor_3)
 
-    escreva("A soma é: ", soma)  // Imprime na tela o texto
+escreva ("A soma é: ", fsoma)  // Imprime na tela o texto
 
 fimalgoritmo
