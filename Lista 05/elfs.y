@@ -84,7 +84,7 @@ extern char *yytext;
 %token OUTROCASO
 %token PROCEDIMENTO
 %token FIMPROCEDIMENTO
-
+%token ESCOLHA
 
 
 
@@ -131,7 +131,8 @@ estrutura_comentario:/*nil*/
 /* declaracao de variaveis */
 
 declaracao_variaveis_lista:
- declaracao_variaveis_lista QUEBRA_LINHA declaracao_variaveis
+ COMENTARIO QUEBRA_LINHA declaracao_variaveis_lista
+ | declaracao_variaveis_lista QUEBRA_LINHA declaracao_variaveis
  | declaracao_variaveis
 ;
 
@@ -160,6 +161,8 @@ corpo_algoritmo:
  | lista_escreva corpo_algoritmo
  | lista_leia corpo_algoritmo
  | lista_atribuicao corpo_algoritmo
+ | lista_se QUEBRA_LINHA corpo_algoritmo
+ | lista_escolha QUEBRA_LINHA corpo_algoritmo
 ;
 
 /* responsavel pelos escrevas */
@@ -187,7 +190,17 @@ expr: expr SOMA expr { printf("ADD\n"); }
    | expr MULTIPLICACAO expr { printf("MUL\n"); }
    | expr DIVISAO expr { printf("DIV\n"); }
    | expr '^' expr { printf("POWER\n");}
-   | '('expr')'   
+   | APARENTESE expr FPARENTESE   
+;
+
+lista_se:
+   SE APARENTESE VARIAVEL MAIOR VARIAVEL FPARENTESE ENTAO
+   | SE APARENTESE VARIAVEL MAIORIGUAL VARIAVEL FPARENTESE ENTAO
+   | SE APARENTESE VARIAVEL MAIORIGUAL INTNUM FPARENTESE ENTAO
+;
+
+lista_escolha:
+   ESCOLHA VARIAVEL COMENTARIO  QUEBRA_LINHA CASO STRING 
 ;
 
 %%
