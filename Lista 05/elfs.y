@@ -110,24 +110,36 @@ Input:
 
 Line:
    QUEBRA_LINHA
-  | algoritmo_inicio QUEBRA_LINHA { printf("base do algoritmo\n"); }
+  | algoritmo_inicio QUEBRA_LINHA { printf("---Base do algoritmo---\n"); }
 
 ;
 
 
-algoritmo_inicio:estrutura_algoritmo  {printf("algoritmo realizado com sucesso\n");}
- | algoritmo_inicio estrutura_algoritmo {printf("ALGORITMO REALIZADO COM SUCESSO\n");} 
+algoritmo_inicio:estrutura_algoritmo  {printf("----Em estrutura do algoritmo----\n");}
+ | algoritmo_inicio estrutura_algoritmo {printf("----Em estrutura algoritmo----\n");} 
 ;
 
 
-
-estrutura_algoritmo: ALGORITMO STRING QUEBRA_LINHA estrutura_comentario VAR QUEBRA_LINHA estrutura_corpo {printf("passando estrutura_cabacalho\n");}
+estrutura_algoritmo: ALGORITMO STRING QUEBRA_LINHA estrutura_comentario VAR QUEBRA_LINHA declaracao_variaveis_lista estrutura_corpo {printf("passando estrutura_cabacalho\n");}
 ;
 
 estrutura_comentario:/*nil*/ 
   | COMENTARIO QUEBRA_LINHA  estrutura_comentario {printf("Comentarios:\n");}  
 ;
 
+declaracao_variaveis_lista:declaracao_variaveis_lista QUEBRA_LINHA declaracao_variaveis
+ | declaracao_variaveis
+
+declaracao_variaveis: declaracao_variavel DOISPONTOS tipo_variavel
+ |
+;
+
+declaracao_variavel: VARIAVEL VIRGULA  declaracao_variavel
+ | VARIAVEL
+;
+
+tipo_variavel: REAL {printf("variavel tipo real...\n");}
+;
 
 estrutura_corpo: INICIO QUEBRA_LINHA corpo_algoritmo FIMALGORITMO
 ;
