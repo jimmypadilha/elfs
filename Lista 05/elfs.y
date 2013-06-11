@@ -73,10 +73,6 @@ extern char *yytext;
 %token REPITA
 %token FIMREPITA
 %token QUEBRA_LINHA
-
-%token RETORNE
-%token PASSO
-%token VETOR
 %token CASO
 %token FIMFACA
 %token FUNCAO
@@ -84,7 +80,10 @@ extern char *yytext;
 %token OUTROCASO
 %token PROCEDIMENTO
 %token FIMPROCEDIMENTO
-%token ESCOLHA
+%token PASSO
+%token VETOR
+%token RETORNE
+
 
 
 
@@ -115,32 +114,32 @@ Line:
 ;
 
 
-algoritmo_inicio:estrutura_algoritmo  {printf("----Em estrutura do algoritmo----\n");}
- | algoritmo_inicio estrutura_algoritmo {printf("----Em estrutura algoritmo----\n");} 
+algoritmo_inicio:estrutura_algoritmo  {printf("***Chamando Estrutura do Algoritmo----\n");}
+ | algoritmo_inicio estrutura_algoritmo {printf("***Chamando Estrutura do Algoritmo----\n");} 
 ;
 
 
-estrutura_algoritmo: ALGORITMO STRING QUEBRA_LINHA estrutura_comentario VAR QUEBRA_LINHA declaracao_variaveis_lista estrutura_corpo {printf("passando estrutura_cabacalho\n");}
+estrutura_algoritmo: ALGORITMO STRING QUEBRA_LINHA estrutura_comentario VAR QUEBRA_LINHA declaracao_variaveis_lista  bloco_intermediario estrutura_corpo {printf("***Estrutura Completa ALGORITMO...\n");}
 ;
 
 /*Comentario apos cabecalho algoritmo*/
 estrutura_comentario:/*nil*/ 
-  | COMENTARIO QUEBRA_LINHA  estrutura_comentario {printf("Comentarios:\n");}  
+  | COMENTARIO QUEBRA_LINHA  estrutura_comentario {printf("***Comentarios...\n");}  
+;
+bloco_intermediario:declaracao_procedimentos_funcoes
+ |
 ;
 
 /* declaracao de variaveis */
 
-declaracao_variaveis_lista:
- COMENTARIO QUEBRA_LINHA declaracao_variaveis_lista
- | declaracao_variaveis_lista QUEBRA_LINHA declaracao_variaveis
+declaracao_variaveis_lista:declaracao_variaveis_lista QUEBRA_LINHA declaracao_variaveis
  | declaracao_variaveis
-;
-
-declaracao_variaveis: declaracao_variavel DOISPONTOS tipo_variavel
  |
 ;
+declaracao_variaveis: declaracao_variavel DOISPONTOS tipo_variavel QUEBRA_LINHA 
+;
 
-declaracao_variavel: VARIAVEL VIRGULA  declaracao_variavel
+declaracao_variavel: declaracao_variavel  VIRGULA VARIAVEL
  | VARIAVEL
 ;
 
@@ -149,59 +148,63 @@ tipo_variavel: REAL {printf("variavel tipo real...\n");}
 | CARACTERE {printf("variavel tipo caractere...\n");}
 ;
 
-estrutura_corpo: INICIO QUEBRA_LINHA corpo_algoritmo FIMALGORITMO
+/* estrutura do corpo do algoritmo */
+estrutura_corpo: INICIO QUEBRA_LINHA corpo_algoritmo FIMALGORITMO{printf("***CORPO ALGORITMO...\n");}
 ;
 
-/* Corpo Algoritmo */
 corpo_algoritmo:
  | COMENTARIO QUEBRA_LINHA corpo_algoritmo
  | lista_escreva QUEBRA_LINHA corpo_algoritmo
  | lista_leia QUEBRA_LINHA corpo_algoritmo
- | lista_atribuicao QUEBRA_LINHA corpo_algoritmo
- | lista_escreva corpo_algoritmo
- | lista_leia corpo_algoritmo
- | lista_atribuicao corpo_algoritmo
- | lista_se QUEBRA_LINHA corpo_algoritmo
- | lista_escolha QUEBRA_LINHA corpo_algoritmo
 ;
 
 /* responsavel pelos escrevas */
-lista_escreva: ESCREVA APARENTESE STRING FPARENTESE {printf("escreva simples...\n");} 
+lista_escreva: ESCREVA APARENTESE STRING FPARENTESE  {printf("escreva simples...\n");} 
  | ESCREVA APARENTESE  STRING VIRGULA declaracao_variavel FPARENTESE  {printf("escreva com variaveis\n");}
  | ESCREVA APARENTESE  declaracao_variavel FPARENTESE   {printf("escreva so variaveis...\n");}
+ | ESCREVA APARENTESE declaracao_variavel VIRGULA STRING FPARENTESE {printf("escreva invertido ...\n");}
 ;
 
+
+
+/*responsavel pelos leias*/
 lista_leia: LEIA APARENTESE declaracao_variavel FPARENTESE 
 ;
 
-lista_atribuicao: VARIAVEL ATRIBUICAO expr
+/* funcoes e procedimentos */
 
+declaracao_procedimentos_funcoes:procedimento_funcoes_lista QUEBRA_LINHA 
 ;
 
-expr: VARIAVEL     { printf("VARIAVEL:\n"); }
-   | STRING        { printf("STRING\n");}
-   | APPROXNUM     { printf("FLOAT\n");}
-   | INTNUM        { printf("INTEIRO\n");}
-   | RAIZQ '('expr')'   { printf("Funcao Raizq\n");} 
+procedimento_funcoes_lista: procedimento_funcoes_lista QUEBRA_LINHA proc_func_declaracao
+ | proc_func_declaracao
 ;
 
-expr: expr SOMA expr { printf("ADD\n"); }
-   | expr '-' expr { printf("SUB\n"); }
-   | expr MULTIPLICACAO expr { printf("MUL\n"); }
-   | expr DIVISAO expr { printf("DIV\n"); }
-   | expr '^' expr { printf("POWER\n");}
-   | APARENTESE expr FPARENTESE   
+proc_func_declaracao: procedimento_declaracao
 ;
 
-lista_se:
-   SE APARENTESE VARIAVEL MAIOR VARIAVEL FPARENTESE ENTAO
-   | SE APARENTESE VARIAVEL MAIORIGUAL VARIAVEL FPARENTESE ENTAO
-   | SE APARENTESE VARIAVEL MAIORIGUAL INTNUM FPARENTESE ENTAO
+procedimento_declaracao:procedimento_cabecalho QUEBRA_LINHA procedimento_variaveis QUEBRA_LINHA corpo_procedimento
 ;
 
-lista_escolha:
-   ESCOLHA VARIAVEL COMENTARIO  QUEBRA_LINHA CASO STRING 
+procedimento_cabecalho: procedimento_identificacao
+ | procedimento_identificacao lista_parametros
 ;
+
+procedimento_identificacao:PROCEDIMENTO VARIAVEL
+;
+
+lista_parametros:APARENTESE procedimento_variaveis FPARENTESE {printf("...\n");} 
+
+;
+ 
+//procedimento_especificacao_parametro: procedimento_cabecalho {printf("indo pra cabcalho procedimento...\n");} 
+;
+
+corpo_procedimento:PROCEDIMENTO  corpo_algoritmo FIMPROCEDIMENTO  {printf("ind pra corpo de procedimento...\n");} 
+;
+
+procedimento_variaveis:declaracao_variaveis
+ |VAR QUEBRA_LINHA declaracao_variaveis
 
 %%
 
