@@ -94,7 +94,7 @@ extern char *yytext;
 %left SOMA MENOS
 %left MULTIPLICACAO DIVISAO
 %right POTENCIA RAIZQ
-
+%nonassoc UMINUS
 
 
 %start Input
@@ -220,8 +220,25 @@ corpo_funcao:INICIO QUEBRA_LINHA corpo_algoritmo  RETORNE VARIAVEL  QUEBRA_LINHA
 ;
 /***************************************************FIM FUNCOES E PROCEDIMENTOS******************************************/
 
+/***************************************************** EXPRESSOES *******************************************************/
 
+expr: VARIAVEL     { printf("VARIAVEL:\n"); }
+   | STRING        { printf("STRING\n");}
+   | APPROXNUM     { printf("FLOAT\n");}
+   | INTNUM        { printf("INTEIRO\n");}
+   | RAIZQ APARENTESE expr FPARENTESE { printf("Funcao Raizq\n");} 
+;
 
+expr: expr SOMA  expr { printf("ADD\n"); }
+   | expr MENOS  expr { printf("SUB\n"); }
+   | expr MULTIPLICACAO expr { printf("MUL\n"); }
+   | expr DIVISAO  expr { printf("DIV\n"); }
+   | expr POTENCIA expr { printf("POWER\n");}
+   | MENOS expr %prec UMINUS { printf("NEG\n"); }
+   | APARENTESE expr FPARENTESE   
+;
+
+/***************************************************** FIM EXPRESSOES*******************************************************/
 %%
 
 int yyerror(char *s) {
