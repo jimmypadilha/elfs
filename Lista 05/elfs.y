@@ -176,7 +176,7 @@ lista_escreva: ESCREVA APARENTESE STRING FPARENTESE  {printf("escreva simples...
 lista_leia: LEIA APARENTESE declaracao_variavel FPARENTESE 
 ;
 
-/* funcoes e procedimentos */
+/****** funcoes e procedimentos ******/
 
 declaracao_procedimentos_funcoes:procedimento_funcoes_lista QUEBRA_LINHA 
 ;
@@ -188,9 +188,10 @@ procedimento_funcoes_lista: procedimento_funcoes_lista QUEBRA_LINHA proc_func_de
 proc_func_declaracao: procedimento_declaracao
 ;
 
-procedimento_declaracao:procedimento_cabecalho QUEBRA_LINHA procedimento_variaveis QUEBRA_LINHA corpo_procedimento
+procedimento_declaracao:procedimento_cabecalho QUEBRA_LINHA VAR QUEBRA_LINHA declaracao_parte corpo_procedimento
 ;
 
+/* procedimento: cabecalho */
 procedimento_cabecalho: procedimento_identificacao
  | procedimento_identificacao lista_parametros
 ;
@@ -198,18 +199,25 @@ procedimento_cabecalho: procedimento_identificacao
 procedimento_identificacao:PROCEDIMENTO VARIAVEL
 ;
 
-lista_parametros:APARENTESE procedimento_variaveis FPARENTESE {printf("...\n");} 
+lista_parametros:APARENTESE procedimento_parametros FPARENTESE {printf("...\n");} 
 
 ;
  
-//procedimento_especificacao_parametro: procedimento_cabecalho {printf("indo pra cabcalho procedimento...\n");} 
-;
-
-corpo_procedimento:PROCEDIMENTO  corpo_algoritmo FIMPROCEDIMENTO  {printf("ind pra corpo de procedimento...\n");} 
-;
-
-procedimento_variaveis:declaracao_variaveis
+procedimento_parametros:declaracao_parametros_lista
  |VAR QUEBRA_LINHA declaracao_variaveis
+
+declaracao_parametros_lista: declaracao_parametros_lista VIRGULA procedimento_declaracao_parametros
+ | procedimento_declaracao_parametros
+
+;
+procedimento_declaracao_parametros: declaracao_variavel DOISPONTOS tipo_variavel  
+ ;
+//fim cabecalho com parametros 
+
+//corpo do procedimento
+corpo_procedimento:INICIO QUEBRA_LINHA  corpo_algoritmo FIMPROCEDIMENTO  {printf("***Corpo PROCEDIMENTO...\n");} 
+ ;
+
 
 %%
 
