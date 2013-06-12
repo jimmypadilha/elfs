@@ -128,7 +128,7 @@ estrutura_comentario:/*nil*/
 ;
 
 /* chama estrutura de procedimentos */
-bloco_intermediario:declaracao_procedimentos_funcoes {printf("***Chama Estrutura Procedimento\n");}
+bloco_intermediario:declaracao_procedimentos_funcoes {printf("***Chama Estrutura Procedimento e funcoes\n");}
 | 
 ;
 
@@ -186,12 +186,15 @@ procedimento_funcoes_lista: procedimento_funcoes_lista QUEBRA_LINHA proc_func_de
 ;
 
 proc_func_declaracao: procedimento_declaracao
+ | funcao_declaracao
 ;
 
 procedimento_declaracao:procedimento_cabecalho QUEBRA_LINHA VAR QUEBRA_LINHA declaracao_parte corpo_procedimento
 ;
 
-/* procedimento: cabecalho */
+funcao_declaracao:funcao_cabecalho QUEBRA_LINHA VAR QUEBRA_LINHA declaracao_parte corpo_funcao
+;
+/* procedimento  cabecalho */
 procedimento_cabecalho: procedimento_identificacao
  | procedimento_identificacao lista_parametros
 ;
@@ -199,18 +202,19 @@ procedimento_cabecalho: procedimento_identificacao
 procedimento_identificacao:PROCEDIMENTO VARIAVEL
 ;
 
-lista_parametros:APARENTESE procedimento_parametros FPARENTESE {printf("...\n");} 
+lista_parametros:APARENTESE procedimento_funcao_parametros FPARENTESE {printf("...\n");} 
 
 ;
  
-procedimento_parametros:declaracao_parametros_lista
+procedimento_funcao_parametros:declaracao_parametros_lista
  |VAR QUEBRA_LINHA declaracao_variaveis
+;
 
-declaracao_parametros_lista: declaracao_parametros_lista VIRGULA procedimento_declaracao_parametros
- | procedimento_declaracao_parametros
+declaracao_parametros_lista: declaracao_parametros_lista VIRGULA procedimento_funcao_declaracao_parametros
+ | procedimento_funcao_declaracao_parametros
 
 ;
-procedimento_declaracao_parametros: declaracao_variavel DOISPONTOS tipo_variavel  
+procedimento_funcao_declaracao_parametros: declaracao_variavel DOISPONTOS tipo_variavel  
  ;
 //fim cabecalho com parametros 
 
@@ -218,6 +222,17 @@ procedimento_declaracao_parametros: declaracao_variavel DOISPONTOS tipo_variavel
 corpo_procedimento:INICIO QUEBRA_LINHA  corpo_algoritmo FIMPROCEDIMENTO  {printf("***Corpo PROCEDIMENTO...\n");} 
  ;
 
+/* funcao cabecalho */
+funcao_cabecalho: funcao_identificacao
+ | funcao_identificacao lista_parametros
+;
+funcao_identificacao:FUNCAO VARIAVEL
+;
+//fim cabecalho com parametros 
+
+//corpo da funcao
+corpo_funcao:INICIO QUEBRA_LINHA corpo_algoritmo  RETORNE VARIAVEL  QUEBRA_LINHA FIMFUNCAO{printf("***Corpo FUNCAO...\n");}
+;
 
 %%
 
