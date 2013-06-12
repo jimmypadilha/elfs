@@ -135,7 +135,7 @@ bloco_intermediario:declaracao_procedimentos_funcoes {printf("***Chama Estrutura
 /* declaracao de variaveis */
 
 declaracao_parte:declaracao_variaveis_lista
- |
+ | estrutura_comentario
 ;
 
 declaracao_variaveis_lista: declaracao_variaveis_lista declaracao_variaveis
