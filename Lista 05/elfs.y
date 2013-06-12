@@ -122,12 +122,12 @@ algoritmo_inicio:estrutura_algoritmo  {printf("***Chamando Estrutura do Algoritm
 estrutura_algoritmo: ALGORITMO STRING QUEBRA_LINHA estrutura_comentario VAR QUEBRA_LINHA declaracao_parte bloco_intermediario estrutura_corpo {printf("***Estrutura Completa ALGORITMO...\n");}
 ;
 
-/* estrutura comentario apos cabecalho */
+                              /* estrutura comentario apos cabecalho */
 estrutura_comentario:/*nil*/ 
   | COMENTARIO QUEBRA_LINHA  estrutura_comentario {printf("***Comentarios...\n");}  
 ;
 
-/* chama estrutura de procedimentos */
+                             /* chama estrutura de procedimentos */
 bloco_intermediario:declaracao_procedimentos_funcoes {printf("***Chama Estrutura Procedimento e funcoes\n");}
 | 
 ;
@@ -135,7 +135,7 @@ bloco_intermediario:declaracao_procedimentos_funcoes {printf("***Chama Estrutura
 /* declaracao de variaveis */
 
 declaracao_parte:declaracao_variaveis_lista
- | estrutura_comentario
+ |
 ;
 
 declaracao_variaveis_lista: declaracao_variaveis_lista declaracao_variaveis
@@ -153,7 +153,7 @@ tipo_variavel: REAL {printf("variavel tipo real...\n");}
 | CARACTERE {printf("variavel tipo caractere...\n");}
 ;
 
-/* estrutura do corpo do algoritmo */
+                                  /* estrutura do corpo do algoritmo */
 estrutura_corpo: INICIO QUEBRA_LINHA corpo_algoritmo FIMALGORITMO{printf("***CORPO ALGORITMO...\n");}
 ;
 
@@ -163,7 +163,7 @@ corpo_algoritmo:
  | lista_leia QUEBRA_LINHA corpo_algoritmo
 ;
 
-/* responsavel pelos escrevas */
+                                       /* responsavel pelos escrevas */
 lista_escreva: ESCREVA APARENTESE STRING FPARENTESE  {printf("escreva simples...\n");} 
  | ESCREVA APARENTESE  STRING VIRGULA declaracao_variavel FPARENTESE  {printf("escreva com variaveis\n");}
  | ESCREVA APARENTESE  declaracao_variavel FPARENTESE   {printf("escreva so variaveis...\n");}
@@ -172,52 +172,39 @@ lista_escreva: ESCREVA APARENTESE STRING FPARENTESE  {printf("escreva simples...
 
 
 
-/*responsavel pelos leias*/
+                                      /*responsavel pelos leias*/
 lista_leia: LEIA APARENTESE declaracao_variavel FPARENTESE 
 ;
 
-/****** funcoes e procedimentos ******/
-
+/****************************************************** FUNCOES E PROCEDIMENTOS ****************************************/
 declaracao_procedimentos_funcoes:procedimento_funcoes_lista QUEBRA_LINHA 
 ;
-
 procedimento_funcoes_lista: procedimento_funcoes_lista QUEBRA_LINHA proc_func_declaracao
  | proc_func_declaracao
 ;
-
 proc_func_declaracao: procedimento_declaracao
  | funcao_declaracao
 ;
-
 procedimento_declaracao:procedimento_cabecalho QUEBRA_LINHA VAR QUEBRA_LINHA declaracao_parte corpo_procedimento
 ;
-
 funcao_declaracao:funcao_cabecalho QUEBRA_LINHA VAR QUEBRA_LINHA declaracao_parte corpo_funcao
 ;
 /* procedimento  cabecalho */
 procedimento_cabecalho: procedimento_identificacao
  | procedimento_identificacao lista_parametros
 ;
-
 procedimento_identificacao:PROCEDIMENTO VARIAVEL
 ;
-
 lista_parametros:APARENTESE procedimento_funcao_parametros FPARENTESE {printf("...\n");} 
-
 ;
- 
 procedimento_funcao_parametros:declaracao_parametros_lista
  |VAR QUEBRA_LINHA declaracao_variaveis
 ;
-
 declaracao_parametros_lista: declaracao_parametros_lista VIRGULA procedimento_funcao_declaracao_parametros
  | procedimento_funcao_declaracao_parametros
-
 ;
 procedimento_funcao_declaracao_parametros: declaracao_variavel DOISPONTOS tipo_variavel  
- ;
-//fim cabecalho com parametros 
-
+ ; 
 //corpo do procedimento
 corpo_procedimento:INICIO QUEBRA_LINHA  corpo_algoritmo FIMPROCEDIMENTO  {printf("***Corpo PROCEDIMENTO...\n");} 
  ;
@@ -228,11 +215,12 @@ funcao_cabecalho: funcao_identificacao
 ;
 funcao_identificacao:FUNCAO VARIAVEL
 ;
-//fim cabecalho com parametros 
-
 //corpo da funcao
 corpo_funcao:INICIO QUEBRA_LINHA corpo_algoritmo  RETORNE VARIAVEL  QUEBRA_LINHA FIMFUNCAO{printf("***Corpo FUNCAO...\n");}
 ;
+/***************************************************FIM FUNCOES E PROCEDIMENTOS******************************************/
+
+
 
 %%
 
