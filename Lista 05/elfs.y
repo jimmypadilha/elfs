@@ -119,28 +119,33 @@ algoritmo_inicio:estrutura_algoritmo  {printf("***Chamando Estrutura do Algoritm
 ;
 
 
-estrutura_algoritmo: ALGORITMO STRING QUEBRA_LINHA estrutura_comentario VAR QUEBRA_LINHA declaracao_variaveis_lista  bloco_intermediario estrutura_corpo {printf("***Estrutura Completa ALGORITMO...\n");}
+estrutura_algoritmo: ALGORITMO STRING QUEBRA_LINHA estrutura_comentario VAR QUEBRA_LINHA declaracao_parte bloco_intermediario estrutura_corpo {printf("***Estrutura Completa ALGORITMO...\n");}
 ;
 
-/*Comentario apos cabecalho algoritmo*/
+/* estrutura comentario apos cabecalho */
 estrutura_comentario:/*nil*/ 
   | COMENTARIO QUEBRA_LINHA  estrutura_comentario {printf("***Comentarios...\n");}  
 ;
-bloco_intermediario:declaracao_procedimentos_funcoes
- |
+
+/* chama estrutura de procedimentos */
+bloco_intermediario:declaracao_procedimentos_funcoes {printf("***Chama Estrutura Procedimento\n");}
+| 
 ;
 
 /* declaracao de variaveis */
 
-declaracao_variaveis_lista:declaracao_variaveis_lista QUEBRA_LINHA declaracao_variaveis
- | declaracao_variaveis
+declaracao_parte:declaracao_variaveis_lista
  |
 ;
-declaracao_variaveis: declaracao_variavel DOISPONTOS tipo_variavel QUEBRA_LINHA 
+
+declaracao_variaveis_lista: declaracao_variaveis_lista declaracao_variaveis
+ | declaracao_variaveis 
+;
+declaracao_variaveis: declaracao_variavel DOISPONTOS tipo_variavel QUEBRA_LINHA  
 ;
 
 declaracao_variavel: declaracao_variavel  VIRGULA VARIAVEL
- | VARIAVEL
+ | VARIAVEL 
 ;
 
 tipo_variavel: REAL {printf("variavel tipo real...\n");}
