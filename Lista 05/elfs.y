@@ -154,14 +154,14 @@ tipo_variavel: REAL {printf("variavel tipo real...\n");}
 ;
 
                                   /* estrutura do corpo do algoritmo */
-estrutura_corpo: INICIO QUEBRA_LINHA corpo_algoritmo FIMALGORITMO{printf("***CORPO ALGORITMO...\n");}
+estrutura_corpo: INICIO QUEBRA_LINHA corpo_algoritmo  FIMALGORITMO{printf("***CORPO ALGORITMO...\n");}
 ;
 
 corpo_algoritmo:
  | COMENTARIO QUEBRA_LINHA corpo_algoritmo
  | lista_escreva QUEBRA_LINHA corpo_algoritmo
  | lista_leia QUEBRA_LINHA corpo_algoritmo
- | estrutura_condicional_repeticao
+ | estrutura_parte QUEBRA_LINHA corpo_algoritmo 
 ;
 
                                        /* responsavel pelos escrevas */
@@ -221,62 +221,50 @@ corpo_funcao:INICIO QUEBRA_LINHA corpo_algoritmo  RETORNE VARIAVEL  QUEBRA_LINHA
 ;
 /***************************************************FIM FUNCOES E PROCEDIMENTOS******************************************/
 
+
+
+// Desvio Condicional
+
+estrutura_parte: estrutura_controle
+;
+
+
+estrutura_controle:abre_tipo_estrutura
+ | fecha_tipo_estrutura
+;
+
+abre_tipo_estrutura: abre_enquanto_estrutura
+ | abre_se_estrutura
+;
+
+fecha_tipo_estrutura: fecha_enquanto_estrutura
+ | fecha_se_estrutura 
+ | VARIAVEL
+;
+
+abre_se_estrutura:SE ENTAO estrutura_controle
+ | SE  ENTAO fecha_tipo_estrutura SENAO abre_tipo_estrutura
+;
+
+
+fecha_se_estrutura: SE ENTAO fecha_tipo_estrutura SENAO fecha_tipo_estrutura
+;
+
+abre_enquanto_estrutura: ENQUANTO FACA abre_tipo_estrutura FIMENQUANTO
+;
+
+
+fecha_enquanto_estrutura: ENQUANTO  FACA fecha_tipo_estrutura  FIMENQUANTO
+;
+
+
 /***************************************************** EXPRESSOES *******************************************************/
 
-expr: VARIAVEL     { printf("VARIAVEL:\n"); }
-   | STRING        { printf("STRING\n");}
-   | APPROXNUM     { printf("FLOAT\n");}
-   | INTNUM        { printf("INTEIRO\n");}
-   | RAIZQ APARENTESE expr FPARENTESE { printf("Funcao Raizq\n");} 
-;
-
-expr: expr SOMA  expr { printf("ADD\n"); }
-   | expr MENOS  expr { printf("SUB\n"); }
-   | expr MULTIPLICACAO expr { printf("MUL\n"); }
-   | expr DIVISAO  expr { printf("DIV\n"); }
-   | expr POTENCIA expr { printf("POWER\n");}
-   | MENOS expr %prec UMINUS { printf("NEG\n"); }
-   | APARENTESE expr FPARENTESE
-   | expr RESTO expr
-   | expr E expr
-   | expr OU expr
-   | expr IGUAL expr
-   | expr MAIORIGUAL expr
-   | expr MENORIGUAL expr
-   | expr MAIOR expr
-   | expr MENOR expr
-   | expr DIFERENTE expr
-   | APARENTESE expr FPARENTESE  
-;
 
 /***************************************************** FIM EXPRESSOES*******************************************************/
 
 
 
-// Desvio Condicional
-
-estrutura_condicional_repeticao:abre_estrutura
- | fecha_estrutura
-;
-
-abre_estrutura:abre_tipo_estrutura
-;
-
-fecha_estrutura:fecha_tipo_estrutura
-;
-
-abre_tipo_estrutura:abre_se_estrutura
-;
-
-fecha_tipo_estrutura:fecha_se_estrutura
-;
-
-abre_se_estrutura:SE expr ENTAO estrutura_condicional_repeticao
- | SE expr ENTAO fecha_estrutura SENAO abre_estrutura
-;
-
-fecha_se_estrutura: SE expr ENTAO fecha_estrutura SENAO fecha_estrutura
-;
 
 
 %%
