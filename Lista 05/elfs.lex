@@ -74,7 +74,8 @@ Z [zZ]
 "<-"   				           return(ATRIBUICAO);
 [\n\t\r]+  			           return(QUEBRA_LINHA);
 
-"/" | {D}{I}{V}   	return(DIVISAO);
+"/" |
+ {D}{I}{V}   	        return(DIVISAO);
 "%" | {M}{O}{D}   	return(RESTO);
 "*"  			return(MULTIPLICACAO);
 "+" 			return(SOMA);
