@@ -161,6 +161,7 @@ corpo_algoritmo:
  | COMENTARIO QUEBRA_LINHA corpo_algoritmo
  | lista_escreva QUEBRA_LINHA corpo_algoritmo
  | lista_leia QUEBRA_LINHA corpo_algoritmo
+ | atribuicao QUEBRA_LINHA corpo_algoritmo
 ;
 
 /* responsavel pelos escrevas */
@@ -174,6 +175,28 @@ lista_escreva: ESCREVA APARENTESE STRING FPARENTESE  {printf("escreva simples...
 
 /*responsavel pelos leias*/
 lista_leia: LEIA APARENTESE declaracao_variavel FPARENTESE 
+;
+
+/*responsavel pelas atribuicoes*/
+atribuicao:
+ VARIAVEL ATRIBUICAO lista_expr
+;
+
+lista_expr:
+ expr
+ | expr lista_expr
+;
+
+expr:
+ VARIAVEL {printf("VARIAVEL\n");}
+ | INTNUM        { printf("INTEIRO\n");}
+ | APPROXNUM     { printf("FLOAT\n");}
+ | expr SOMA expr { printf("ADD\n"); }
+ | expr MULTIPLICACAO expr { printf("MUL\n"); }
+ | expr DIVISAO expr { printf("DIV\n"); }
+ | APARENTESE expr FPARENTESE
+ | expr MAIOR expr
+ | expr MAIORIGUAL expr 
 ;
 
 /****** funcoes e procedimentos ******/
