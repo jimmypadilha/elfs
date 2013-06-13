@@ -240,8 +240,9 @@ declaracao_parametros_lista: declaracao_parametros_lista VIRGULA procedimento_fu
  | procedimento_funcao_declaracao_parametros
 ;
 
-procedimento_funcao_declaracao_parametros: DOISPONTOS  
- ;
+procedimento_funcao_declaracao_parametros: declaracao_variavel DOISPONTOS tipo_variavel  
+;  
+
 */ 
 //corpo do procedimento
 /*
