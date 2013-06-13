@@ -201,7 +201,8 @@ expr:
  | expr MULTIPLICACAO expr { printf("MUL\n"); }
  | expr DIVISAO expr { printf("DIV\n"); }
  | APARENTESE expr FPARENTESE
- | expr MAIOR expr 
+ | expr MAIOR expr
+ | expr MAIORIGUAL expr 
 ;
 
 se:
