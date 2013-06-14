@@ -103,28 +103,17 @@ extern char *yytext;
 
 
 Input:
- 
- | Input Line
+
+ | Input estrutura_algoritmo QUEBRA_LINHA { printf("---Base do algoritmo---\n"); }
 ;
 
-Line:
-   QUEBRA_LINHA
-  | algoritmo_inicio QUEBRA_LINHA { printf("---Base do algoritmo---\n"); }
-
-;
-
-
-algoritmo_inicio:estrutura_algoritmo  {printf("***Chamando Estrutura do Algoritmo----\n");}
- | algoritmo_inicio estrutura_algoritmo {printf("***Chamando Estrutura do Algoritmo----\n");} 
-;
-
-
-estrutura_algoritmo: ALGORITMO STRING QUEBRA_LINHA estrutura_comentario VAR QUEBRA_LINHA declaracao_parte bloco_intermediario estrutura_corpo {printf("***Estrutura Completa ALGORITMO...\n");}
-;
-
-/* estrutura comentario apos cabecalho */
-estrutura_comentario:/*nil*/ 
-  | COMENTARIO QUEBRA_LINHA  estrutura_comentario {printf("***Comentarios...\n");}  
+estrutura_algoritmo:
+ ALGORITMO STRING
+ | COMENTARIO {printf("comentario\n");}
+ | VAR
+ | declaracao_parte
+ | bloco_intermediario
+ | estrutura_corpo {printf("***Estrutura Completa ALGORITMO...\n");}
 ;
 
 /* chama estrutura de procedimentos */
@@ -134,14 +123,14 @@ bloco_intermediario:declaracao_procedimentos_funcoes {printf("***Chama Estrutura
 
 /* declaracao de variaveis */
 
-declaracao_parte:declaracao_variaveis_lista
- |
+declaracao_parte:
+ declaracao_variaveis_lista 
 ;
 
 declaracao_variaveis_lista: declaracao_variaveis_lista declaracao_variaveis
  | declaracao_variaveis 
 ;
-declaracao_variaveis: declaracao_variavel DOISPONTOS tipo_variavel QUEBRA_LINHA  
+declaracao_variaveis: declaracao_variavel DOISPONTOS tipo_variavel 
 ;
 
 declaracao_variavel: declaracao_variavel  VIRGULA VARIAVEL
@@ -154,16 +143,31 @@ tipo_variavel: REAL {printf("variavel tipo real...\n");}
 ;
 
 /* estrutura do corpo do algoritmo */
-estrutura_corpo: INICIO QUEBRA_LINHA corpo_algoritmo FIMALGORITMO{printf("***CORPO ALGORITMO...\n");}
+estrutura_corpo:
+ INICIO {printf("INICIO\n");}
+ | comandos {printf("CORPO ALGORITMO\n");}
+ | FIMALGORITMO{printf("FIM ALGORITMO...\n");}
 ;
 
+comandos:
+ comando
+ | comandos comando QUEBRA_LINHA
+ | comando COMENTARIO
+;
+
+comando:
+ lista_escreva
+ | lista_leia
+ | atribuicao
+;
+/*
 corpo_algoritmo:
  | COMENTARIO QUEBRA_LINHA corpo_algoritmo
  | lista_escreva QUEBRA_LINHA corpo_algoritmo
  | lista_leia QUEBRA_LINHA corpo_algoritmo
  | atribuicao QUEBRA_LINHA corpo_algoritmo
 ;
-
+*/
 /* responsavel pelos escrevas */
 lista_escreva: ESCREVA APARENTESE STRING FPARENTESE  {printf("escreva simples...\n");} 
  | ESCREVA APARENTESE  STRING VIRGULA declaracao_variavel FPARENTESE  {printf("escreva com variaveis\n");}
@@ -242,7 +246,7 @@ procedimento_funcao_declaracao_parametros: declaracao_variavel DOISPONTOS tipo_v
 //fim cabecalho com parametros 
 
 //corpo do procedimento
-corpo_procedimento:INICIO QUEBRA_LINHA  corpo_algoritmo FIMPROCEDIMENTO  {printf("***Corpo PROCEDIMENTO...\n");} 
+corpo_procedimento:INICIO QUEBRA_LINHA  comandos FIMPROCEDIMENTO  {printf("***Corpo PROCEDIMENTO...\n");} 
  ;
 
 /* funcao cabecalho */
@@ -254,7 +258,7 @@ funcao_identificacao:FUNCAO VARIAVEL
 //fim cabecalho com parametros 
 
 //corpo da funcao
-corpo_funcao:INICIO QUEBRA_LINHA corpo_algoritmo  RETORNE VARIAVEL  QUEBRA_LINHA FIMFUNCAO{printf("***Corpo FUNCAO...\n");}
+corpo_funcao:INICIO QUEBRA_LINHA comandos  RETORNE VARIAVEL  QUEBRA_LINHA FIMFUNCAO{printf("***Corpo FUNCAO...\n");}
 ;
 
 %%
