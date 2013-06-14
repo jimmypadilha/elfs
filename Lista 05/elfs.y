@@ -196,7 +196,8 @@ expr:
  | expr DIVISAO expr { printf("DIV\n"); }
  | APARENTESE expr FPARENTESE
  | expr MAIOR expr
- | expr MAIORIGUAL expr 
+ | expr MAIORIGUAL expr
+ | expr IGUAL expr  
 ;
 
 se:
