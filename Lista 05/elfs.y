@@ -154,7 +154,6 @@ estrutura_corpo:
 
 comandos:
  comando
- | comandos comando QUEBRA_LINHA
  | comando COMENTARIO
 ;
 
@@ -200,6 +199,7 @@ lista_expr:
 expr:
  VARIAVEL {printf("VARIAVEL\n");}
  | INTNUM        { printf("INTEIRO\n");}
+ |VARIAVEL RESTO VARIAVEL
  | APPROXNUM     { printf("FLOAT\n");}
  | expr SOMA expr { printf("ADD\n"); }
  | expr MENOS expr { printf("SUB\n"); }
