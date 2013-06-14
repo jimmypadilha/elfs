@@ -126,10 +126,13 @@ declaracao_parte:
  declaracao_variaveis_lista 
 ;
 
-declaracao_variaveis_lista: declaracao_variaveis_lista declaracao_variaveis
+declaracao_variaveis_lista:
+ declaracao_variaveis_lista declaracao_variaveis
  | declaracao_variaveis 
 ;
-declaracao_variaveis: declaracao_variavel DOISPONTOS tipo_variavel 
+
+declaracao_variaveis:
+ declaracao_variavel DOISPONTOS tipo_variavel 
 ;
 
 declaracao_variavel:
