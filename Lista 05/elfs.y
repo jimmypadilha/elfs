@@ -211,18 +211,17 @@ se:
  | FIMSE {printf("FIMSE\n");}
 ;
 
+strings:
+ STRING
+ | strings VIRGULA STRING
+;
+
 escolha:
  ESCOLHA VARIAVEL {printf("ESCOLHA\n");}
  | CASO strings {printf("CASO\n");}
  | OUTROCASO {printf("OUTROCASO\n");}
  | FIMESCOLHA
 ;
-
-strings:
- strings STRING VIRGULA
- | STRING
-;
-
 
 /****** funcoes e procedimentos ******/
 
