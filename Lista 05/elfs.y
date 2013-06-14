@@ -162,6 +162,7 @@ comando:
  | atribuicao
  | se
  | escolha
+ | repita
 ;
 
 /* responsavel pelos escrevas */
@@ -169,7 +170,8 @@ lista_escreva: ESCREVA APARENTESE STRING FPARENTESE  {printf("escreva simples...
  | ESCREVA APARENTESE  STRING VIRGULA declaracao_variavel FPARENTESE  {printf("escreva com variaveis\n");}
  | ESCREVA APARENTESE  declaracao_variavel FPARENTESE   {printf("escreva so variaveis...\n");}
  | ESCREVA APARENTESE declaracao_variavel VIRGULA STRING FPARENTESE {printf("escreva invertido ...\n");}
- | ESCREVA APARENTESE declaracao_variavel VIRGULA STRING VIRGULA declaracao_variavel FPARENTESE {printf("variavel, string, variavel");}
+ | ESCREVA APARENTESE declaracao_variavel VIRGULA STRING VIRGULA declaracao_variavel FPARENTESE {printf("variavel string...\n");}
+ | ESCREVA APARENTESE STRING VIRGULA declaracao_variavel VIRGULA STRING FPARENTESE {printf("string variavel...\n");}
 ;
 
 
@@ -193,14 +195,15 @@ expr:
  | INTNUM        { printf("INTEIRO\n");}
  | APPROXNUM     { printf("FLOAT\n");}
  | expr SOMA expr { printf("ADD\n"); }
+ | expr MENOS expr { printf("SUB\n"); }
  | expr MULTIPLICACAO expr { printf("MUL\n"); }
  | expr DIVISAO expr { printf("DIV\n"); }
  | APARENTESE expr FPARENTESE
  | expr MAIOR expr {printf("MAIOR\n");}
  | expr MAIORIGUAL expr {printf("MAIOR IGUAL\n");}
- | expr IGUAL expr  {printf("IGUAL");}
- | expr MENOR expr {printf("MENOR");}
- | expr MENORIGUAL expr {printf("MENORIGUAL");}
+ | expr IGUAL expr  {printf("IGUAL\n");}
+ | expr MENOR expr {printf("MENOR\n");}
+ | expr MENORIGUAL expr {printf("MENORIGUAL\n");}
  | expr E expr {printf("E\n");}
  | expr OU expr {printf("OU\n");}
 ;
@@ -221,6 +224,11 @@ escolha:
  | CASO strings {printf("CASO\n");}
  | OUTROCASO {printf("OUTROCASO\n");}
  | FIMESCOLHA
+;
+
+repita:
+ REPITA
+ | ATE lista_expr
 ;
 
 /****** funcoes e procedimentos ******/
