@@ -163,15 +163,19 @@ comando:
  | se
  | escolha
  | repita
+ | para
 ;
 
 /* responsavel pelos escrevas */
-lista_escreva: ESCREVA APARENTESE STRING FPARENTESE  {printf("escreva simples...\n");} 
+lista_escreva:
+ ESCREVA APARENTESE STRING FPARENTESE  {printf("escreva simples...\n");} 
  | ESCREVA APARENTESE  STRING VIRGULA declaracao_variavel FPARENTESE  {printf("escreva com variaveis\n");}
  | ESCREVA APARENTESE  declaracao_variavel FPARENTESE   {printf("escreva so variaveis...\n");}
  | ESCREVA APARENTESE declaracao_variavel VIRGULA STRING FPARENTESE {printf("escreva invertido ...\n");}
  | ESCREVA APARENTESE declaracao_variavel VIRGULA STRING VIRGULA declaracao_variavel FPARENTESE {printf("variavel string...\n");}
  | ESCREVA APARENTESE STRING VIRGULA declaracao_variavel VIRGULA STRING FPARENTESE {printf("string variavel...\n");}
+ | ESCREVA APARENTESE STRING VIRGULA declaracao_variavel VIRGULA STRING VIRGULA declaracao_variavel FPARENTESE {printf("escreva 4...\n");}
+ | ESCREVA APARENTESE declaracao_variavel VIRGULA STRING VIRGULA declaracao_variavel VIRGULA STRING VIRGULA declaracao_variavel FPARENTESE {printf("escreva 5...\n");}
 ;
 
 
@@ -229,6 +233,11 @@ escolha:
 repita:
  REPITA
  | ATE lista_expr
+;
+
+para:
+ PARA VARIAVEL DE INTNUM ATE expr FACA {printf("PARA\n");}
+ | FIMPARA
 ;
 
 /****** funcoes e procedimentos ******/
