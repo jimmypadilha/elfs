@@ -66,7 +66,7 @@ Z [zZ]
 {V}{A}{R}   				  return(VAR);
 {A}{T}{E}   				  return(ATE);
 {E}{N}{Q}{U}{A}{N}{T}{O}   		  return(ENQUANTO);
-{F}{I}{M}{E}{N}{Q}{U}{A}{N}{T}{O}         return(ENQUANTO);
+{F}{I}{M}{E}{N}{Q}{U}{A}{N}{T}{O}         return(FIMENQUANTO);
 {P}{R}{O}{C}{E}{D}{I}{M}{E}{N}{T}{O}      return(PROCEDIMENTO);
 {F}{I}{M}{P}{R}{O}{C}{E}{D}{I}{M}{E}{N}{T}{O}  return(FIMPROCEDIMENTO);
 {E}{S}{C}{O}{L}{H}{A}                     return(ESCOLHA);
