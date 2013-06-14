@@ -199,6 +199,7 @@ expr:
  | expr MAIOR expr {printf("MAIOR\n");}
  | expr MAIORIGUAL expr {printf("MAIOR IGUAL\n");}
  | expr IGUAL expr  {printf("IGUAL");}
+ | expr MENOR expr {printf("MENOR");}
  | expr MENORIGUAL expr {printf("MENORIGUAL");}
 ;
 
