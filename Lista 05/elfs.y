@@ -201,6 +201,8 @@ expr:
  | expr IGUAL expr  {printf("IGUAL");}
  | expr MENOR expr {printf("MENOR");}
  | expr MENORIGUAL expr {printf("MENORIGUAL");}
+ | expr E expr {printf("E\n");}
+ | expr OU expr {printf("OU\n");}
 ;
 
 se:
