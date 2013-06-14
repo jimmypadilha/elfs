@@ -87,7 +87,6 @@ extern char *yytext;
 %token FIMESCOLHA
 
 
-
 %left OU
 %left E
 %left MENOR MAIOR DIFERENTE IGUAL MENORIGUAL MAIORIGUAL 
@@ -164,6 +163,7 @@ comando:
  | escolha
  | repita
  | para
+ | enquanto
 ;
 
 /* responsavel pelos escrevas */
@@ -238,6 +238,11 @@ repita:
 para:
  PARA VARIAVEL DE INTNUM ATE expr FACA {printf("PARA\n");}
  | FIMPARA
+;
+
+enquanto:
+ ENQUANTO expr FACA
+ | FIMENQUANTO
 ;
 
 /****** funcoes e procedimentos ******/
