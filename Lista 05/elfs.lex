@@ -40,7 +40,7 @@ Z [zZ]
 {E}    					  return(E);
 {R}{E}{A}{L}  				  return(REAL);
 {I}{N}{T}{E}{I}{R}{O}  			  return(INTEIRO);
-{C}{A}{R}{A}{C}{T}{E}{R}{E}  		  return(CARACTERE);
+{C}{A}{R}{A}{C}{T}{E}{R}  		  return(CARACTER);
 {V}{E}{T}{O}{R}   			  return(VETOR);
 {C}{A}{S}{O}   				  return(CASO);
 {O}{U}    		  		  return(OU);

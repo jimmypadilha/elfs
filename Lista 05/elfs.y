@@ -56,7 +56,7 @@ extern char *yytext;
 %token VARIAVEL
 %token REAL
 %token NUMERO
-%token CARACTERE
+%token CARACTER
 %token INTEIRO
 
 %token SE
@@ -139,7 +139,7 @@ declaracao_variavel: declaracao_variavel  VIRGULA VARIAVEL
 
 tipo_variavel: REAL {printf("variavel tipo real...\n");}
 | INTEIRO  {printf("variavel tipo inteiro...\n");}
-| CARACTERE {printf("variavel tipo caractere...\n");}
+| CARACTER {printf("variavel tipo caractere...\n");}
 ;
 
 /* estrutura do corpo do algoritmo */
@@ -159,31 +159,26 @@ comando:
  lista_escreva
  | lista_leia
  | atribuicao
+ | se
 ;
-/*
-corpo_algoritmo:
- | COMENTARIO QUEBRA_LINHA corpo_algoritmo
- | lista_escreva QUEBRA_LINHA corpo_algoritmo
- | lista_leia QUEBRA_LINHA corpo_algoritmo
- | atribuicao QUEBRA_LINHA corpo_algoritmo
-;
-*/
+
 /* responsavel pelos escrevas */
 lista_escreva: ESCREVA APARENTESE STRING FPARENTESE  {printf("escreva simples...\n");} 
  | ESCREVA APARENTESE  STRING VIRGULA declaracao_variavel FPARENTESE  {printf("escreva com variaveis\n");}
  | ESCREVA APARENTESE  declaracao_variavel FPARENTESE   {printf("escreva so variaveis...\n");}
  | ESCREVA APARENTESE declaracao_variavel VIRGULA STRING FPARENTESE {printf("escreva invertido ...\n");}
+ | ESCREVA APARENTESE declaracao_variavel VIRGULA STRING VIRGULA declaracao_variavel FPARENTESE {printf("variavel, string, variavel");}
 ;
 
 
 
 /*responsavel pelos leias*/
-lista_leia: LEIA APARENTESE declaracao_variavel FPARENTESE 
+lista_leia: LEIA APARENTESE declaracao_variavel FPARENTESE {printf("leia\n");}
 ;
 
 /*responsavel pelas atribuicoes*/
 atribuicao:
- VARIAVEL ATRIBUICAO lista_expr
+ VARIAVEL ATRIBUICAO lista_expr {printf("atribuicao\n");}
 ;
 
 lista_expr:
@@ -201,6 +196,13 @@ expr:
  | APARENTESE expr FPARENTESE
  | expr MAIOR expr
  | expr MAIORIGUAL expr 
+;
+
+se:
+ SE APARENTESE expr FPARENTESE ENTAO
+ | comandos
+ | SENAO
+ | FIMSE
 ;
 
 /****** funcoes e procedimentos ******/
