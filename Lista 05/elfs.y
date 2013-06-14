@@ -140,9 +140,10 @@ declaracao_variavel:
  | VARIAVEL 
 ;
 
-tipo_variavel: REAL {printf("variavel tipo real...\n");}
-| INTEIRO  {printf("variavel tipo inteiro...\n");}
-| CARACTER {printf("variavel tipo caractere...\n");}
+tipo_variavel:
+ REAL {printf("variavel tipo real...\n");}
+ | INTEIRO  {printf("variavel tipo inteiro...\n");}
+ | CARACTER {printf("variavel tipo caractere...\n");}
 ;
 
 /* estrutura do corpo do algoritmo */
@@ -153,8 +154,8 @@ estrutura_corpo:
 ;
 
 comandos:
- comando
- | comando COMENTARIO
+ comando {printf("UM COMANDO APENAS\n");}
+ | comando COMENTARIO {printf("COMANDO COMENTARIO\n");}
 ;
 
 comando:
