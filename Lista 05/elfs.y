@@ -105,17 +105,17 @@ extern yylineno, yytext;
 
 
 Input:
- Input estrutura_algoritmo QUEBRA_LINHA
- | error {erros++; yyerror ("SEM ENTRADA", yylineno, yytext);};
+ 
+ | Input estrutura_algoritmo QUEBRA_LINHA
 ;
 
 estrutura_algoritmo:
  ALGORITMO STRING
- | COMENTARIO {printf("comentario\n");}
+ | COMENTARIO
  | VAR
  | declaracao_parte
  | bloco_intermediario
- | estrutura_corpo {printf("CORPO\n");}
+ | estrutura_corpo
  | error {erros++; yyerror ("PROBLEMA NA ESTRUTURA DO ALGORITMO", yylineno, yytext);};
 ;
 
@@ -159,8 +159,8 @@ estrutura_corpo:
 ;
 
 comandos:
- comando {printf("UM COMANDO APENAS\n");}
- | comando COMENTARIO {printf("COMANDO COMENTARIO\n");}
+ comando
+ | comando COMENTARIO
 ;
 
 comando:
@@ -176,25 +176,29 @@ comando:
 
 /* responsavel pelos escrevas */
 lista_escreva:
- ESCREVA APARENTESE STRING FPARENTESE  {printf("escreva simples...\n");} 
- | ESCREVA APARENTESE  STRING VIRGULA declaracao_variavel FPARENTESE  {printf("escreva com variaveis\n");}
- | ESCREVA APARENTESE  declaracao_variavel FPARENTESE   {printf("escreva so variaveis...\n");}
- | ESCREVA APARENTESE declaracao_variavel VIRGULA STRING FPARENTESE {printf("escreva invertido ...\n");}
- | ESCREVA APARENTESE declaracao_variavel VIRGULA STRING VIRGULA declaracao_variavel FPARENTESE {printf("variavel string...\n");}
- | ESCREVA APARENTESE STRING VIRGULA declaracao_variavel VIRGULA STRING FPARENTESE {printf("string variavel...\n");}
- | ESCREVA APARENTESE STRING VIRGULA declaracao_variavel VIRGULA STRING VIRGULA declaracao_variavel FPARENTESE {printf("escreva 4...\n");}
- | ESCREVA APARENTESE declaracao_variavel VIRGULA STRING VIRGULA declaracao_variavel VIRGULA STRING VIRGULA declaracao_variavel FPARENTESE {printf("escreva 5...\n");}
+ ESCREVA APARENTESE STRING FPARENTESE
+ | ESCREVA APARENTESE  STRING VIRGULA declaracao_variavel FPARENTESE
+ | ESCREVA APARENTESE  declaracao_variavel FPARENTESE
+ | ESCREVA APARENTESE declaracao_variavel VIRGULA STRING FPARENTESE
+ | ESCREVA APARENTESE declaracao_variavel VIRGULA STRING VIRGULA declaracao_variavel FPARENTESE
+ | ESCREVA APARENTESE STRING VIRGULA declaracao_variavel VIRGULA STRING FPARENTESE
+ | ESCREVA APARENTESE STRING VIRGULA declaracao_variavel VIRGULA STRING VIRGULA declaracao_variavel FPARENTESE
+ | ESCREVA APARENTESE declaracao_variavel VIRGULA STRING VIRGULA declaracao_variavel VIRGULA STRING VIRGULA declaracao_variavel FPARENTESE
+ /*| error {erros++; yyerror("COMANDO ESCREVA INCORRETO", yylineno, yytext);} ;*/
 ;
 
 
 
 /*responsavel pelos leias*/
-lista_leia: LEIA APARENTESE declaracao_variavel FPARENTESE {printf("leia\n");}
+lista_leia:
+ LEIA APARENTESE declaracao_variavel FPARENTESE
+ /*| error {erros++; yyerror("COMANDO LEIA INCORRETO", yylineno, yytext);} ;*/
 ;
 
 /*responsavel pelas atribuicoes*/
 atribuicao:
- VARIAVEL ATRIBUICAO lista_expr {printf("atribuicao\n");}
+ VARIAVEL ATRIBUICAO lista_expr
+ /*| error {erros++; yyerror("ATRIBUICAO INCORRETA", yylineno, yytext);} ;*/
 ;
 
 lista_expr:
@@ -203,55 +207,62 @@ lista_expr:
 ;
 
 expr:
- VARIAVEL {printf("VARIAVEL\n");}
- | INTNUM        { printf("INTEIRO\n");}
- | VARIAVEL RESTO VARIAVEL {printf("RESTO\n");}
- | APPROXNUM     { printf("FLOAT\n");}
- | expr SOMA expr { printf("ADD\n"); }
- | expr MENOS expr { printf("SUB\n"); }
- | expr MULTIPLICACAO expr { printf("MUL\n"); }
- | expr DIVISAO expr { printf("DIV\n"); }
+ VARIAVEL
+ | INTNUM      
+ | VARIAVEL RESTO VARIAVEL
+ | APPROXNUM    
+ | expr SOMA expr
+ | expr MENOS expr 
+ | expr MULTIPLICACAO expr 
+ | expr DIVISAO expr 
  | APARENTESE expr FPARENTESE
- | expr MAIOR expr {printf("MAIOR\n");}
- | expr MAIORIGUAL expr {printf("MAIOR IGUAL\n");}
- | expr IGUAL expr  {printf("IGUAL\n");}
- | expr MENOR expr {printf("MENOR\n");}
- | expr MENORIGUAL expr {printf("MENORIGUAL\n");}
- | expr E expr {printf("E\n");}
- | expr OU expr {printf("OU\n");}
+ | expr MAIOR expr 
+ | expr MAIORIGUAL expr 
+ | expr IGUAL expr  
+ | expr MENOR expr 
+ | expr MENORIGUAL expr 
+ | expr E expr 
+ | expr OU expr 
+ | error {erros++; yyerror("EXPRESSAO INVALIDA", yylineno, yytext);} ;
 ;
 
 se:
- SE expr ENTAO {printf("SE\n");}
+ SE expr ENTAO
  | SENAO
- | FIMSE {printf("FIMSE\n");}
+ | FIMSE
+ /*| error {erros++; yyerror("SE INVALIDO", yylineno, yytext);} ;*/
 ;
 
 strings:
  STRING
  | strings VIRGULA STRING
+ | error {erros++; yyerror("STRING INVALIDA", yylineno, yytext);} ;
 ;
 
 escolha:
- ESCOLHA VARIAVEL {printf("ESCOLHA\n");}
- | CASO strings {printf("CASO\n");}
- | OUTROCASO {printf("OUTROCASO\n");}
+ ESCOLHA VARIAVEL
+ | CASO strings
+ | OUTROCASO
  | FIMESCOLHA
+/* | error {erros++; yyerror("ESCOLHA INVALIDO", yylineno, yytext);} ;*/
 ;
 
 repita:
  REPITA
  | ATE lista_expr
+/* | error {erros++; yyerror("REPITA INVALIDO", yylineno, yytext);} ;*/
 ;
 
 para:
- PARA VARIAVEL DE INTNUM ATE expr FACA {printf("PARA\n");}
+ PARA VARIAVEL DE INTNUM ATE expr FACA
  | FIMPARA
+/* | error {erros++; yyerror("PARA INVALIDO", yylineno, yytext);} ;*/
 ;
 
 enquanto:
  ENQUANTO expr FACA
  | FIMENQUANTO
+ /*| error {erros++; yyerror("ENQUANTO INVALIDO", yylineno, yytext);} ;*/
 ;
 
 /****** funcoes e procedimentos ******/
@@ -330,7 +341,6 @@ int main(int argc, char *argv[]) {
 }
 
 int yyerror(char *s, int line, char *msg) {
-  //printf("Erro: %s.Linha: %d. Token nao esperado: %s.\n", s, yylineno, yytext);
   printf("ERRO->%d%s%s\n", line, s, msg);
   return 0;
 }
