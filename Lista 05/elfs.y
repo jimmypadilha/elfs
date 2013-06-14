@@ -83,8 +83,8 @@ extern char *yytext;
 %token PASSO
 %token VETOR
 %token RETORNE
-
-
+%token ESCOLHA
+%token FIMESCOLHA
 
 
 
@@ -113,7 +113,7 @@ estrutura_algoritmo:
  | VAR
  | declaracao_parte
  | bloco_intermediario
- | estrutura_corpo {printf("***Estrutura Completa ALGORITMO...\n");}
+ | estrutura_corpo {printf("CORPO\n");}
 ;
 
 /* chama estrutura de procedimentos */
@@ -160,6 +160,7 @@ comando:
  | lista_leia
  | atribuicao
  | se
+ | escolha
 ;
 
 /* responsavel pelos escrevas */
@@ -199,11 +200,24 @@ expr:
 ;
 
 se:
- SE APARENTESE expr FPARENTESE ENTAO
+ SE APARENTESE expr FPARENTESE ENTAO {printf("SE\n");}
  | comandos
  | SENAO
- | FIMSE
+ | FIMSE {printf("FIMSE\n");}
 ;
+
+escolha:
+ ESCOLHA VARIAVEL {printf("ESCOLHA\n");}
+ | CASO strings {printf("CASO\n");}
+ | OUTROCASO {printf("OUTROCASO\n");}
+ | FIMESCOLHA
+;
+
+strings:
+ strings STRING VIRGULA
+ | STRING
+;
+
 
 /****** funcoes e procedimentos ******/
 
