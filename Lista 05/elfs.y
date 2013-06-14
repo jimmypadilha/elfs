@@ -200,7 +200,7 @@ lista_expr:
 expr:
  VARIAVEL {printf("VARIAVEL\n");}
  | INTNUM        { printf("INTEIRO\n");}
- |VARIAVEL RESTO VARIAVEL
+ | VARIAVEL RESTO VARIAVEL {printf("RESTO\n");}
  | APPROXNUM     { printf("FLOAT\n");}
  | expr SOMA expr { printf("ADD\n"); }
  | expr MENOS expr { printf("SUB\n"); }
