@@ -133,7 +133,8 @@ declaracao_variaveis_lista: declaracao_variaveis_lista declaracao_variaveis
 declaracao_variaveis: declaracao_variavel DOISPONTOS tipo_variavel 
 ;
 
-declaracao_variavel: declaracao_variavel  VIRGULA VARIAVEL
+declaracao_variavel:
+ declaracao_variavel VIRGULA VARIAVEL
  | VARIAVEL 
 ;
 
@@ -195,14 +196,14 @@ expr:
  | expr MULTIPLICACAO expr { printf("MUL\n"); }
  | expr DIVISAO expr { printf("DIV\n"); }
  | APARENTESE expr FPARENTESE
- | expr MAIOR expr
- | expr MAIORIGUAL expr
- | expr IGUAL expr  
+ | expr MAIOR expr {printf("MAIOR\n");}
+ | expr MAIORIGUAL expr {printf("MAIOR IGUAL\n");}
+ | expr IGUAL expr  {printf("IGUAL");}
+ | expr MENORIGUAL expr {printf("MENORIGUAL");}
 ;
 
 se:
- SE APARENTESE expr FPARENTESE ENTAO {printf("SE\n");}
- | comandos
+ SE expr ENTAO {printf("SE\n");}
  | SENAO
  | FIMSE {printf("FIMSE\n");}
 ;
