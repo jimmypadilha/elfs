@@ -4,8 +4,11 @@
 #include <stdlib.h>
 
 extern FILE *yyin;
-extern int yylineno;
-extern char *yytext;
+//extern int yylineno;
+//extern char *yytext;
+
+int erros;
+extern yylineno, yytext;
 %}
 
 %union {
@@ -102,8 +105,8 @@ extern char *yytext;
 
 
 Input:
-
- | Input estrutura_algoritmo QUEBRA_LINHA { printf("---Base do algoritmo---\n"); }
+ Input estrutura_algoritmo QUEBRA_LINHA
+ | error {erros++; yyerror ("SEM ENTRADA", yylineno, yytext);};
 ;
 
 estrutura_algoritmo:
@@ -113,6 +116,7 @@ estrutura_algoritmo:
  | declaracao_parte
  | bloco_intermediario
  | estrutura_corpo {printf("CORPO\n");}
+ | error {erros++; yyerror ("PROBLEMA NA ESTRUTURA DO ALGORITMO", yylineno, yytext);};
 ;
 
 /* chama estrutura de procedimentos */
@@ -141,16 +145,17 @@ declaracao_variavel:
 ;
 
 tipo_variavel:
- REAL {printf("variavel tipo real...\n");}
- | INTEIRO  {printf("variavel tipo inteiro...\n");}
- | CARACTER {printf("variavel tipo caractere...\n");}
+ REAL
+ | INTEIRO
+ | CARACTER
+ | error {erros++; yyerror("TIPO INVALIDO", yylineno, yytext);} ;
 ;
 
 /* estrutura do corpo do algoritmo */
 estrutura_corpo:
- INICIO {printf("INICIO\n");}
- | comandos {printf("CORPO ALGORITMO\n");}
- | FIMALGORITMO{printf("FIM ALGORITMO...\n");}
+ INICIO
+ | comandos
+ | FIMALGORITMO
 ;
 
 comandos:
@@ -309,20 +314,28 @@ corpo_funcao:INICIO QUEBRA_LINHA comandos  RETORNE VARIAVEL  QUEBRA_LINHA FIMFUN
 
 %%
 
-int yyerror(char *s) {
-  printf("Erro: %s.Linha: %d. Token nao esperado: %s.\n", s, yylineno, yytext);
-}
-
 int main(int argc, char *argv[]) {
-//tentativa de recebimento de arquivo
   if (argc < 2){
      printf("Digite o arquivo\n");
   } 
   else{
      yyin = fopen(argv[1], "r");
-     if (!yyparse())
-        fprintf(stderr, "---ALGORITMO FINALIZADO---\n");
-     else
-        fprintf(stderr, "Erros Encontrados.\n");
+     printf("Compilando...\n");
+     yyparse();
+
+     if (erros == 0)
+        printf("Sucesso!\n");
+     return 0;
   }
 }
+
+int yyerror(char *s, int line, char *msg) {
+  //printf("Erro: %s.Linha: %d. Token nao esperado: %s.\n", s, yylineno, yytext);
+  printf("ERRO->%d%s%s\n", line, s, msg);
+  return 0;
+}
+
+int yywrap(void){
+  return 1;
+}
+
