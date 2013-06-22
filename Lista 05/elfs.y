@@ -78,6 +78,7 @@ extern yylineno, yytext;
 %token QUEBRA_LINHA
 %token CASO
 %token FIMFACA
+%token INTERROMPA 
 %token FUNCAO
 %token FIMFUNCAO
 %token OUTROCASO
@@ -243,6 +244,7 @@ escolha:
  ESCOLHA VARIAVEL
  | CASO strings
  | OUTROCASO
+ | INTERROMPA
  | FIMESCOLHA
 /* | error {erros++; yyerror("ESCOLHA INVALIDO", yylineno, yytext);} ;*/
 ;

@@ -36,7 +36,7 @@ inicio
           anterior<- atual
           atual<-numero
           cont<-cont + 1
-        ate(cont = n - 2)
+        ate(cont = n -2)
       fimse
     fimse
    fimse

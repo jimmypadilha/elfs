@@ -33,7 +33,7 @@ Y [yY]
 Z [zZ]
 
 %%
-
+{I}{N}{T}{E}{R}{R}{O}{M}{P}{A}            return(INTERROMPA);
 {R}{E}{T}{O}{R}{N}{E}			  return(RETORNE);
 {P}{A}{S}{S}{O}  			  return(PASSO); 
 {R}{A}{I}{Z}{Q}  			  return(RAIZQ);
