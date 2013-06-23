@@ -6,32 +6,36 @@ algoritmo "compara_string"
 
 var
 // Declaração de variáveis
-
-tamanho1, tamanho2, cont:inteiro
-string_1, string_2:caracter
-
+string1, string2: caractere
+tam1, tam2:inteiro
 inicio
+escreva("Digite uma string: ")
+leia(string1)
+escreva("Digite outra string: ")
+leia(string2)
 
-// Seção de Comandos
-escreva("Entre com a sttring: ") // Imprime na tela o texto
-leia (string_1)   // lê o valor digitado
-escreva("Entre com a sttring: ") // Imprime na tela o texto
-leia (string_2)   // lê o valor digitado
+// Imprime as strings
+escreval("String 1: ", string1)
+escreval("String 2: ", string2)
 
-escreval ("string1: ", string_1)
-tamanho1 <- compr(string_1)
-escreval ("Tamanho: ", tamanho1)
+tam1 <- compr(string1)
+tam2 <- compr(string2)
 
-escreval ("string2: ", string_2)
-tamanho2 <- compr(string_2)
-escreval ("Tamanho: ", tamanho2)
+// Impressão do número de caracteres de cada string.
+escreval("O tamanho de '",string1,"':",tam1," caracteres.")
+escreval("O tamanho de '",string2,"':",tam2," caracteres.")
 
-se (tamanho1 = tamanho2) entao
-escreval ("String tem o mesmo tamanho")
+// verifica se as strings são do mesmo tamanho
+se (tam1 <> tam2) entao
+   escreval("As duas strings são de tamanhos diferentes.")
 senao
-escreval ("Strings com tamanhos diferentes")
+     escreval("As duas strings são do mesmo tamanho.")
 fimse
 
-// escreval("O valor é: ", func)  // Imprime na tela o texto
-
+// verifica se as strings possuem o mesmo conteudo
+se (string1 <> string2) entao
+   escreval("As duas strings possuem conteúdo diferente.")
+senao
+     escreval("As duas strings possuem o mesmo conteúdo.")
+fimse
 fimalgoritmo
