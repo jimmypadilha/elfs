@@ -103,137 +103,183 @@ extern char *yytext;
 
 
 Input:
- 
- | Input Line
+	| Input Line
 ;
 
 Line:
-   QUEBRA_LINHA
-  | algoritmo_inicio QUEBRA_LINHA { printf("---Base do algoritmo---\n"); }
+	QUEBRA_LINHA
+ 	| algoritmo_inicio QUEBRA_LINHA { printf("---Base do algoritmo---\n"); }
+;
 
+algoritmo_inicio:
+	estrutura_algoritmo  {printf("***Chamando Estrutura do Algoritmo----\n");}
+
+
+estrutura_algoritmo: 
+	ALGORITMO STRING QUEBRA_LINHA estrutura_comentario VAR  QUEBRA_LINHA declaracao_parte bloco_intermediario estrutura_corpo {printf("***Estrutura Completa ALGORITMO...\n");}
+;
+
+/************************************************ESTRUTURA COMENTARIO**************************************************************/
+			/*comentario geral*/
+estrutura_comentario:
+	/*nil*/ 
+  	| comentario  estrutura_comentario {printf("***Comentarios...\n");}     
+;
+
+  			/*Comentario especifico para comentario: estrutura + comentario */
+comentario:
+	 COMENTARIO QUEBRA_LINHA
+ 	| QUEBRA_LINHA
+;
+/**********************************************************************************************************************************/
+
+                                            /* chama estrutura de procedimentos */
+bloco_intermediario:
+	declaracao_procedimentos_funcoes {printf("***Chama Estrutura Procedimento e funcoes\n");}
+	| 
 ;
 
 
-algoritmo_inicio:estrutura_algoritmo  {printf("***Chamando Estrutura do Algoritmo----\n");}
-
-
-estrutura_algoritmo: ALGORITMO STRING QUEBRA_LINHA estrutura_comentario VAR  QUEBRA_LINHA declaracao_parte bloco_intermediario estrutura_corpo {printf("***Estrutura Completa ALGORITMO...\n");}
-;
-
-                              /* estrutura comentario apos cabecalho */
-estrutura_comentario:/*nil*/ 
-  | comentario  estrutura_comentario {printf("***Comentarios...\n");}  
-   
-;
-
-
-comentario: COMENTARIO QUEBRA_LINHA
- | QUEBRA_LINHA
-;
-
-                             /* chama estrutura de procedimentos */
-bloco_intermediario:declaracao_procedimentos_funcoes {printf("***Chama Estrutura Procedimento e funcoes\n");}
-| 
-;
+/************************************************ESTRUTURA DECLARACAO VARIAVEIS***********************************************************/
 
 /* declaracao de variaveis */
 
-declaracao_parte:declaracao_variaveis_lista
- | comentario declaracao_parte
- |
+declaracao_parte:
+	declaracao_variaveis_lista
+	| comentario declaracao_parte
+	|
 ;
  
-
-declaracao_variaveis_lista : declaracao_variaveis_lista  declaracao_variaveis
- | declaracao_variaveis
+declaracao_variaveis_lista : 
+	declaracao_variaveis_lista  declaracao_variaveis
+ 	|declaracao_variaveis
 ;
 
-declaracao_variaveis: declaracao_variavel DOISPONTOS tipo_variavel QUEBRA_LINHA  
+declaracao_variaveis: 
+	declaracao_variavel DOISPONTOS tipo_variavel QUEBRA_LINHA  
 ;
 
-declaracao_variavel: declaracao_variavel  VIRGULA VARIAVEL
- | VARIAVEL 
+declaracao_variavel: 
+	declaracao_variavel  VIRGULA VARIAVEL
+	| VARIAVEL 
 ;
 
-tipo_variavel: REAL {printf("variavel tipo real...\n");}
-| INTEIRO  {printf("variavel tipo inteiro...\n");}
-| CARACTERE {printf("variavel tipo caractere...\n");}
+tipo_variavel: 
+	REAL {printf("variavel tipo real...\n");}
+	| INTEIRO  {printf("variavel tipo inteiro...\n");}
+	| CARACTERE {printf("variavel tipo caractere...\n");}
 ;
 
+/********************************************************************************************************************************/
                                   /* estrutura do corpo do algoritmo */
-estrutura_corpo: INICIO QUEBRA_LINHA corpo_algoritmo  FIMALGORITMO{printf("***CORPO ALGORITMO...\n");}
+estrutura_corpo: 
+	INICIO QUEBRA_LINHA corpo_algoritmo  FIMALGORITMO{printf("***CORPO ALGORITMO...\n");}
+	
 ;
 
 corpo_algoritmo:
- | COMENTARIO QUEBRA_LINHA  corpo_algoritmo
- | lista_escreva comentario corpo_algoritmo
- | lista_leia comentario  corpo_algoritmo
- | estrutura_parte QUEBRA_LINHA corpo_algoritmo
- | lista_atribuicao comentario corpo_algoritmo 
+	| COMENTARIO QUEBRA_LINHA  corpo_algoritmo
+	| lista_escreva comentario corpo_algoritmo
+	| lista_leia comentario  corpo_algoritmo
+  	| estrutura_parte QUEBRA_LINHA corpo_algoritmo
+	| lista_atribuicao comentario corpo_algoritmo 
+  //      | abre_se_estrutura corpo_algoritmo
+ 
 ;
 
 
 
                                        /* responsavel pelos escrevas */
-lista_escreva: ESCREVA APARENTESE STRING FPARENTESE  {printf("escreva simples...\n");} 
- | ESCREVA APARENTESE  STRING VIRGULA declaracao_variavel FPARENTESE  {printf("escreva com variaveis\n");}
- | ESCREVA APARENTESE  declaracao_variavel FPARENTESE   {printf("escreva so variaveis...\n");}
- | ESCREVA APARENTESE declaracao_variavel VIRGULA STRING FPARENTESE {printf("escreva invertido ...\n");}
+lista_escreva:
+	ESCREVA APARENTESE STRING FPARENTESE  {printf("escreva simples...\n");} 
+ 	| ESCREVA APARENTESE  STRING VIRGULA declaracao_variavel FPARENTESE  {printf("escreva com variaveis\n");}
+	| ESCREVA APARENTESE  declaracao_variavel FPARENTESE   {printf("escreva so variaveis...\n");}
+ 	| ESCREVA APARENTESE declaracao_variavel VIRGULA STRING FPARENTESE {printf("escreva invertido ...\n");}
+  	| ESCREVA APARENTESE declaracao_variavel VIRGULA STRING VIRGULA declaracao_variavel FPARENTESE {printf("escreva invertido ...\n");}
+
 ;
-
-
-
                                       /*responsavel pelos leias*/
-lista_leia: LEIA APARENTESE declaracao_variavel FPARENTESE 
+lista_leia:
+	 LEIA APARENTESE declaracao_variavel FPARENTESE 
 ;
 
 /****************************************************** FUNCOES E PROCEDIMENTOS ****************************************/
-declaracao_procedimentos_funcoes:procedimento_funcoes_lista QUEBRA_LINHA 
+declaracao_procedimentos_funcoes:
+	procedimento_funcoes_lista QUEBRA_LINHA 
 ;
-procedimento_funcoes_lista: procedimento_funcoes_lista QUEBRA_LINHA proc_func_declaracao
- | proc_func_declaracao
+
+procedimento_funcoes_lista: 
+	procedimento_funcoes_lista QUEBRA_LINHA proc_func_declaracao
+	| proc_func_declaracao
 ;
-proc_func_declaracao: procedimento_declaracao
- | funcao_declaracao
+
+proc_func_declaracao:
+	procedimento_declaracao
+	| funcao_declaracao
 ;
-procedimento_declaracao:procedimento_cabecalho QUEBRA_LINHA VAR QUEBRA_LINHA declaracao_parte corpo_procedimento
+
+procedimento_declaracao:
+	procedimento_cabecalho QUEBRA_LINHA VAR QUEBRA_LINHA declaracao_parte corpo_procedimento
 ;
-funcao_declaracao:funcao_cabecalho QUEBRA_LINHA VAR QUEBRA_LINHA declaracao_parte corpo_funcao
+
+funcao_declaracao:
+	funcao_cabecalho QUEBRA_LINHA VAR QUEBRA_LINHA declaracao_parte corpo_funcao
 ;
-/* procedimento  cabecalho */
-procedimento_cabecalho: procedimento_identificacao
- | procedimento_identificacao lista_parametros
+
+		/* procedimento  cabecalho */
+procedimento_cabecalho: 
+	procedimento_identificacao
+	| procedimento_identificacao lista_parametros
 ;
-procedimento_identificacao:PROCEDIMENTO VARIAVEL
+
+procedimento_identificacao:
+	PROCEDIMENTO VARIAVEL
 ;
-lista_parametros:APARENTESE procedimento_funcao_parametros FPARENTESE {printf("...\n");} 
+
+lista_parametros:
+	APARENTESE procedimento_funcao_parametros FPARENTESE {printf("...\n");} 
 ;
-procedimento_funcao_parametros:declaracao_parametros_lista
- |VAR QUEBRA_LINHA declaracao_variaveis
+
+procedimento_funcao_parametros:
+	declaracao_parametros_lista
+ 	|VAR QUEBRA_LINHA declaracao_variaveis
 ;
-declaracao_parametros_lista: declaracao_parametros_lista VIRGULA procedimento_funcao_declaracao_parametros
- | procedimento_funcao_declaracao_parametros
+
+declaracao_parametros_lista:
+	 declaracao_parametros_lista VIRGULA procedimento_funcao_declaracao_parametros
+	 | procedimento_funcao_declaracao_parametros
 ;
-procedimento_funcao_declaracao_parametros: declaracao_variavel DOISPONTOS tipo_variavel  
- ; 
-//corpo do procedimento
-corpo_procedimento:INICIO QUEBRA_LINHA  corpo_algoritmo FIMPROCEDIMENTO  {printf("***Corpo PROCEDIMENTO...\n");} 
+
+procedimento_funcao_declaracao_parametros:
+	 declaracao_variavel DOISPONTOS tipo_variavel  
+; 
+
+	//corpo do procedimento
+corpo_procedimento:
+	INICIO QUEBRA_LINHA  corpo_algoritmo FIMPROCEDIMENTO  {printf("***Corpo PROCEDIMENTO...\n");} 
  ;
 
-/* funcao cabecalho */
-funcao_cabecalho: funcao_identificacao
- | funcao_identificacao lista_parametros
+	/* funcao cabecalho */
+funcao_cabecalho: 
+	funcao_identificacao
+ 	| funcao_identificacao lista_parametros
 ;
-funcao_identificacao:FUNCAO VARIAVEL
+
+funcao_identificacao:
+	FUNCAO VARIAVEL
 ;
-//corpo da funcao
-corpo_funcao:INICIO QUEBRA_LINHA corpo_algoritmo  RETORNE VARIAVEL  QUEBRA_LINHA FIMFUNCAO{printf("***Corpo FUNCAO...\n");}
+
+	/* corpo da funcao */
+corpo_funcao:
+	INICIO QUEBRA_LINHA corpo_algoritmo  RETORNE VARIAVEL  QUEBRA_LINHA FIMFUNCAO{printf("***Corpo FUNCAO...\n");}
 ;
-/***************************************************FIM FUNCOES E PROCEDIMENTOS******************************************/
+
+/**************************************************INICIO COMANDOS DE DESVIOS**************************************************************/
 
 
 
 // Desvio Condicional
+
 
 estrutura_parte: estrutura_controle
 ;
@@ -241,25 +287,30 @@ estrutura_parte: estrutura_controle
 
 estrutura_controle:abre_tipo_estrutura
  | fecha_tipo_estrutura
+
 ;
+
 
 abre_tipo_estrutura: abre_enquanto_estrutura
  | abre_se_estrutura
- | abre_for_estrutura
+ | abre_for_estrutura 
 ;
 
 fecha_tipo_estrutura: fecha_enquanto_estrutura
  | fecha_se_estrutura
  | fecha_for_estrutura 
- | 
+ |   
+ 
+  
 ;
 
-abre_se_estrutura:SE ENTAO estrutura_controle
- | SE  ENTAO fecha_tipo_estrutura SENAO abre_tipo_estrutura
+abre_se_estrutura:
+	SE expr  ENTAO comentario estrutura_controle  {printf("*** ESTRUTURA SE...\n");} 
+	| SE expr  ENTAO  fecha_tipo_estrutura SENAO abre_tipo_estrutura {printf("***ESTRUTURRA SE 2...\n");} 
 ;
 
 
-fecha_se_estrutura: SE ENTAO fecha_tipo_estrutura SENAO fecha_tipo_estrutura
+fecha_se_estrutura: SE expr ENTAO fecha_tipo_estrutura SENAO fecha_tipo_estrutura
 ;
 
 abre_enquanto_estrutura: ENQUANTO FACA abre_tipo_estrutura FIMENQUANTO
@@ -294,7 +345,7 @@ expr: VARIAVEL     { printf("VARIAVEL:\n"); }
 	|expr MULTIPLICACAO expr { printf("MUL\n"); }
 	| APARENTESE expr FPARENTESE
  	| expr MENOS  expr { printf("SUB\n"); }
-
+        | expr MAIOR expr
 
 /*
     | expr MENOS  expr { printf("SUB\n"); }
