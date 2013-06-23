@@ -115,16 +115,20 @@ Line:
 
 
 algoritmo_inicio:estrutura_algoritmo  {printf("***Chamando Estrutura do Algoritmo----\n");}
- | algoritmo_inicio estrutura_algoritmo {printf("***Chamando Estrutura do Algoritmo----\n");} 
-;
 
 
-estrutura_algoritmo: ALGORITMO STRING QUEBRA_LINHA estrutura_comentario VAR QUEBRA_LINHA declaracao_parte bloco_intermediario estrutura_corpo {printf("***Estrutura Completa ALGORITMO...\n");}
+estrutura_algoritmo: ALGORITMO STRING QUEBRA_LINHA estrutura_comentario VAR  QUEBRA_LINHA declaracao_parte bloco_intermediario estrutura_corpo {printf("***Estrutura Completa ALGORITMO...\n");}
 ;
 
                               /* estrutura comentario apos cabecalho */
 estrutura_comentario:/*nil*/ 
-  | COMENTARIO QUEBRA_LINHA  estrutura_comentario {printf("***Comentarios...\n");}  
+  | comentario  estrutura_comentario {printf("***Comentarios...\n");}  
+   
+;
+
+
+comentario: COMENTARIO QUEBRA_LINHA
+ | QUEBRA_LINHA
 ;
 
                              /* chama estrutura de procedimentos */
@@ -135,12 +139,15 @@ bloco_intermediario:declaracao_procedimentos_funcoes {printf("***Chama Estrutura
 /* declaracao de variaveis */
 
 declaracao_parte:declaracao_variaveis_lista
+ | comentario declaracao_parte
  |
 ;
+ 
 
-declaracao_variaveis_lista: declaracao_variaveis_lista declaracao_variaveis
- | declaracao_variaveis 
+declaracao_variaveis_lista : declaracao_variaveis_lista  declaracao_variaveis
+ | declaracao_variaveis
 ;
+
 declaracao_variaveis: declaracao_variavel DOISPONTOS tipo_variavel QUEBRA_LINHA  
 ;
 
@@ -158,11 +165,14 @@ estrutura_corpo: INICIO QUEBRA_LINHA corpo_algoritmo  FIMALGORITMO{printf("***CO
 ;
 
 corpo_algoritmo:
- | COMENTARIO QUEBRA_LINHA corpo_algoritmo
- | lista_escreva QUEBRA_LINHA corpo_algoritmo
- | lista_leia QUEBRA_LINHA corpo_algoritmo
- | estrutura_parte QUEBRA_LINHA corpo_algoritmo 
+ | COMENTARIO QUEBRA_LINHA  corpo_algoritmo
+ | lista_escreva comentario corpo_algoritmo
+ | lista_leia comentario  corpo_algoritmo
+ | estrutura_parte QUEBRA_LINHA corpo_algoritmo
+ | lista_atribuicao comentario corpo_algoritmo 
 ;
+
+
 
                                        /* responsavel pelos escrevas */
 lista_escreva: ESCREVA APARENTESE STRING FPARENTESE  {printf("escreva simples...\n");} 
@@ -264,7 +274,43 @@ abre_for_estrutura: PARA VARIAVEL DE ATE FACA abre_tipo_estrutura FIMPARA
 fecha_for_estrutura: PARA VARIAVEL DE ATE FACA fecha_tipo_estrutura FIMPARA  
 ; 
 
+lista_atribuicao: VARIAVEL ATRIBUICAO expr  { printf("aaaaaa\n");} 
+ | lista_atribuicao VARIAVEL ATRIBUICAO expr  {printf("bbbbbb\n");} 
+;
+
 /***************************************************** EXPRESSOES *******************************************************/
+
+expr: VARIAVEL     { printf("VARIAVEL:\n"); }
+    | STRING        { printf("STRING\n");}
+    | APPROXNUM     { printf("FLOAT\n");}
+    | INTNUM        { printf("INTEIRO\n");}
+    | RAIZQ APARENTESE expr FPARENTESE { printf("Funcao Raizq\n");} 
+
+
+ 
+ expr: 
+	expr SOMA  expr { printf("ADD\n"); }
+	|expr DIVISAO  expr { printf("DIV\n"); }
+	|expr MULTIPLICACAO expr { printf("MUL\n"); }
+
+/*
+    | expr MENOS  expr { printf("SUB\n"); }
+    | expr MULTIPLICACAO expr { printf("MUL\n"); }
+    | expr DIVISAO  expr { printf("DIV\n"); }
+    | expr POTENCIA expr { printf("POWER\n");}
+    | MENOS expr %prec UMINUS { printf("NEG\n"); }
+    | APARENTESE expr FPARENTESE
+    | expr RESTO expr
+    | expr E expr
+    | expr OU expr
+    | expr IGUAL expr
+    | expr MAIORIGUAL expr
+    | expr MENORIGUAL expr
+    | expr MAIOR expr
+    | expr MENOR expr
+    | expr DIFERENTE expr 
+*/
+ ;
 
 
 /***************************************************** FIM EXPRESSOES*******************************************************/
