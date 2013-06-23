@@ -4,11 +4,8 @@
 #include <stdlib.h>
 
 extern FILE *yyin;
-//extern int yylineno;
-//extern char *yytext;
-
-int erros;
-extern yylineno, yytext;
+extern int yylineno;
+extern char *yytext;
 %}
 
 %union {
@@ -59,7 +56,7 @@ extern yylineno, yytext;
 %token VARIAVEL
 %token REAL
 %token NUMERO
-%token CARACTER
+%token CARACTERE
 %token INTEIRO
 
 %token SE
@@ -78,7 +75,6 @@ extern yylineno, yytext;
 %token QUEBRA_LINHA
 %token CASO
 %token FIMFACA
-%token INTERROMPA 
 %token FUNCAO
 %token FIMFUNCAO
 %token OUTROCASO
@@ -87,8 +83,9 @@ extern yylineno, yytext;
 %token PASSO
 %token VETOR
 %token RETORNE
-%token ESCOLHA
-%token FIMESCOLHA
+
+
+
 
 
 %left OU
@@ -97,7 +94,7 @@ extern yylineno, yytext;
 %left SOMA MENOS
 %left MULTIPLICACAO DIVISAO
 %right POTENCIA RAIZQ
-
+%nonassoc UMINUS
 
 
 %start Input
@@ -107,210 +104,110 @@ extern yylineno, yytext;
 
 Input:
  
- | Input estrutura_algoritmo QUEBRA_LINHA
+ | Input Line
 ;
 
-estrutura_algoritmo:
- ALGORITMO STRING
- | COMENTARIO
- | VAR
- | declaracao_parte
- | bloco_intermediario
- | estrutura_corpo
- | error {erros++; yyerror ("PROBLEMA NA ESTRUTURA DO ALGORITMO", yylineno, yytext);};
+Line:
+   QUEBRA_LINHA
+  | algoritmo_inicio QUEBRA_LINHA { printf("---Base do algoritmo---\n"); }
+
 ;
 
-/* chama estrutura de procedimentos */
+
+algoritmo_inicio:estrutura_algoritmo  {printf("***Chamando Estrutura do Algoritmo----\n");}
+ | algoritmo_inicio estrutura_algoritmo {printf("***Chamando Estrutura do Algoritmo----\n");} 
+;
+
+
+estrutura_algoritmo: ALGORITMO STRING QUEBRA_LINHA estrutura_comentario VAR QUEBRA_LINHA declaracao_parte bloco_intermediario estrutura_corpo {printf("***Estrutura Completa ALGORITMO...\n");}
+;
+
+                              /* estrutura comentario apos cabecalho */
+estrutura_comentario:/*nil*/ 
+  | COMENTARIO QUEBRA_LINHA  estrutura_comentario {printf("***Comentarios...\n");}  
+;
+
+                             /* chama estrutura de procedimentos */
 bloco_intermediario:declaracao_procedimentos_funcoes {printf("***Chama Estrutura Procedimento e funcoes\n");}
 | 
 ;
 
 /* declaracao de variaveis */
 
-declaracao_parte:
- declaracao_variaveis_lista 
+declaracao_parte:declaracao_variaveis_lista
+ |
 ;
 
-declaracao_variaveis_lista:
- declaracao_variaveis_lista declaracao_variaveis
+declaracao_variaveis_lista: declaracao_variaveis_lista declaracao_variaveis
  | declaracao_variaveis 
 ;
-
-declaracao_variaveis:
- declaracao_variavel DOISPONTOS tipo_variavel 
+declaracao_variaveis: declaracao_variavel DOISPONTOS tipo_variavel QUEBRA_LINHA  
 ;
 
-declaracao_variavel:
- declaracao_variavel VIRGULA VARIAVEL
+declaracao_variavel: declaracao_variavel  VIRGULA VARIAVEL
  | VARIAVEL 
 ;
 
-tipo_variavel:
- REAL
- | INTEIRO
- | CARACTER
- | error {erros++; yyerror("TIPO INVALIDO", yylineno, yytext);} ;
+tipo_variavel: REAL {printf("variavel tipo real...\n");}
+| INTEIRO  {printf("variavel tipo inteiro...\n");}
+| CARACTERE {printf("variavel tipo caractere...\n");}
 ;
 
-/* estrutura do corpo do algoritmo */
-estrutura_corpo:
- INICIO
- | comandos
- | FIMALGORITMO
+                                  /* estrutura do corpo do algoritmo */
+estrutura_corpo: INICIO QUEBRA_LINHA corpo_algoritmo  FIMALGORITMO{printf("***CORPO ALGORITMO...\n");}
 ;
 
-comandos:
- comando
- | comando COMENTARIO
+corpo_algoritmo:
+ | COMENTARIO QUEBRA_LINHA corpo_algoritmo
+ | lista_escreva QUEBRA_LINHA corpo_algoritmo
+ | lista_leia QUEBRA_LINHA corpo_algoritmo
+ | estrutura_parte QUEBRA_LINHA corpo_algoritmo 
 ;
 
-comando:
- lista_escreva
- | lista_leia
- | atribuicao
- | se
- | escolha
- | repita
- | para
- | enquanto
-;
-
-/* responsavel pelos escrevas */
-lista_escreva:
- ESCREVA APARENTESE STRING FPARENTESE
- | ESCREVA APARENTESE  STRING VIRGULA declaracao_variavel FPARENTESE
- | ESCREVA APARENTESE  declaracao_variavel FPARENTESE
- | ESCREVA APARENTESE declaracao_variavel VIRGULA STRING FPARENTESE
- | ESCREVA APARENTESE declaracao_variavel VIRGULA STRING VIRGULA declaracao_variavel FPARENTESE
- | ESCREVA APARENTESE STRING VIRGULA declaracao_variavel VIRGULA STRING FPARENTESE
- | ESCREVA APARENTESE STRING VIRGULA declaracao_variavel VIRGULA STRING VIRGULA declaracao_variavel FPARENTESE
- | ESCREVA APARENTESE declaracao_variavel VIRGULA STRING VIRGULA declaracao_variavel VIRGULA STRING VIRGULA declaracao_variavel FPARENTESE
- /*| error {erros++; yyerror("COMANDO ESCREVA INCORRETO", yylineno, yytext);} ;*/
+                                       /* responsavel pelos escrevas */
+lista_escreva: ESCREVA APARENTESE STRING FPARENTESE  {printf("escreva simples...\n");} 
+ | ESCREVA APARENTESE  STRING VIRGULA declaracao_variavel FPARENTESE  {printf("escreva com variaveis\n");}
+ | ESCREVA APARENTESE  declaracao_variavel FPARENTESE   {printf("escreva so variaveis...\n");}
+ | ESCREVA APARENTESE declaracao_variavel VIRGULA STRING FPARENTESE {printf("escreva invertido ...\n");}
 ;
 
 
 
-/*responsavel pelos leias*/
-lista_leia:
- LEIA APARENTESE declaracao_variavel FPARENTESE
- /*| error {erros++; yyerror("COMANDO LEIA INCORRETO", yylineno, yytext);} ;*/
+                                      /*responsavel pelos leias*/
+lista_leia: LEIA APARENTESE declaracao_variavel FPARENTESE 
 ;
 
-/*responsavel pelas atribuicoes*/
-atribuicao:
- VARIAVEL ATRIBUICAO lista_expr
- /*| error {erros++; yyerror("ATRIBUICAO INCORRETA", yylineno, yytext);} ;*/
-;
-
-lista_expr:
- expr
- | expr lista_expr
-;
-
-expr:
- VARIAVEL
- | INTNUM      
- | VARIAVEL RESTO VARIAVEL
- | APPROXNUM    
- | expr SOMA expr
- | expr MENOS expr 
- | expr MULTIPLICACAO expr 
- | expr DIVISAO expr 
- | APARENTESE expr FPARENTESE
- | expr MAIOR expr 
- | expr MAIORIGUAL expr 
- | expr IGUAL expr  
- | expr MENOR expr 
- | expr MENORIGUAL expr 
- | expr E expr 
- | expr OU expr 
- | error {erros++; yyerror("EXPRESSAO INVALIDA", yylineno, yytext);} ;
-;
-
-se:
- SE expr ENTAO
- | SENAO
- | FIMSE
- /*| error {erros++; yyerror("SE INVALIDO", yylineno, yytext);} ;*/
-;
-
-strings:
- STRING
- | strings VIRGULA STRING
- | error {erros++; yyerror("STRING INVALIDA", yylineno, yytext);} ;
-;
-
-escolha:
- ESCOLHA VARIAVEL
- | CASO strings
- | OUTROCASO
- | INTERROMPA
- | FIMESCOLHA
-/* | error {erros++; yyerror("ESCOLHA INVALIDO", yylineno, yytext);} ;*/
-;
-
-repita:
- REPITA
- | ATE lista_expr
-/* | error {erros++; yyerror("REPITA INVALIDO", yylineno, yytext);} ;*/
-;
-
-para:
- PARA VARIAVEL DE INTNUM ATE expr FACA
- | FIMPARA
-/* | error {erros++; yyerror("PARA INVALIDO", yylineno, yytext);} ;*/
-;
-
-enquanto:
- ENQUANTO expr FACA
- | FIMENQUANTO
- /*| error {erros++; yyerror("ENQUANTO INVALIDO", yylineno, yytext);} ;*/
-;
-
-/****** funcoes e procedimentos ******/
-
+/****************************************************** FUNCOES E PROCEDIMENTOS ****************************************/
 declaracao_procedimentos_funcoes:procedimento_funcoes_lista QUEBRA_LINHA 
 ;
-
 procedimento_funcoes_lista: procedimento_funcoes_lista QUEBRA_LINHA proc_func_declaracao
  | proc_func_declaracao
 ;
-
 proc_func_declaracao: procedimento_declaracao
  | funcao_declaracao
 ;
-
 procedimento_declaracao:procedimento_cabecalho QUEBRA_LINHA VAR QUEBRA_LINHA declaracao_parte corpo_procedimento
 ;
-
 funcao_declaracao:funcao_cabecalho QUEBRA_LINHA VAR QUEBRA_LINHA declaracao_parte corpo_funcao
 ;
 /* procedimento  cabecalho */
 procedimento_cabecalho: procedimento_identificacao
  | procedimento_identificacao lista_parametros
 ;
-
 procedimento_identificacao:PROCEDIMENTO VARIAVEL
 ;
-
 lista_parametros:APARENTESE procedimento_funcao_parametros FPARENTESE {printf("...\n");} 
-
 ;
- 
 procedimento_funcao_parametros:declaracao_parametros_lista
  |VAR QUEBRA_LINHA declaracao_variaveis
 ;
-
 declaracao_parametros_lista: declaracao_parametros_lista VIRGULA procedimento_funcao_declaracao_parametros
  | procedimento_funcao_declaracao_parametros
-
 ;
 procedimento_funcao_declaracao_parametros: declaracao_variavel DOISPONTOS tipo_variavel  
- ;
-//fim cabecalho com parametros 
-
+ ; 
 //corpo do procedimento
-corpo_procedimento:INICIO QUEBRA_LINHA  comandos FIMPROCEDIMENTO  {printf("***Corpo PROCEDIMENTO...\n");} 
+corpo_procedimento:INICIO QUEBRA_LINHA  corpo_algoritmo FIMPROCEDIMENTO  {printf("***Corpo PROCEDIMENTO...\n");} 
  ;
 
 /* funcao cabecalho */
@@ -319,35 +216,79 @@ funcao_cabecalho: funcao_identificacao
 ;
 funcao_identificacao:FUNCAO VARIAVEL
 ;
-//fim cabecalho com parametros 
-
 //corpo da funcao
-corpo_funcao:INICIO QUEBRA_LINHA comandos  RETORNE VARIAVEL  QUEBRA_LINHA FIMFUNCAO{printf("***Corpo FUNCAO...\n");}
+corpo_funcao:INICIO QUEBRA_LINHA corpo_algoritmo  RETORNE VARIAVEL  QUEBRA_LINHA FIMFUNCAO{printf("***Corpo FUNCAO...\n");}
 ;
+/***************************************************FIM FUNCOES E PROCEDIMENTOS******************************************/
+
+
+
+// Desvio Condicional
+
+estrutura_parte: estrutura_controle
+;
+
+
+estrutura_controle:abre_tipo_estrutura
+ | fecha_tipo_estrutura
+;
+
+abre_tipo_estrutura: abre_enquanto_estrutura
+ | abre_se_estrutura
+ | abre_for_estrutura
+;
+
+fecha_tipo_estrutura: fecha_enquanto_estrutura
+ | fecha_se_estrutura
+ | fecha_for_estrutura 
+ | 
+;
+
+abre_se_estrutura:SE ENTAO estrutura_controle
+ | SE  ENTAO fecha_tipo_estrutura SENAO abre_tipo_estrutura
+;
+
+
+fecha_se_estrutura: SE ENTAO fecha_tipo_estrutura SENAO fecha_tipo_estrutura
+;
+
+abre_enquanto_estrutura: ENQUANTO FACA abre_tipo_estrutura FIMENQUANTO
+;
+
+
+fecha_enquanto_estrutura: ENQUANTO  FACA fecha_tipo_estrutura  FIMENQUANTO
+;
+
+abre_for_estrutura: PARA VARIAVEL DE ATE FACA abre_tipo_estrutura FIMPARA 
+;
+fecha_for_estrutura: PARA VARIAVEL DE ATE FACA fecha_tipo_estrutura FIMPARA  
+; 
+
+/***************************************************** EXPRESSOES *******************************************************/
+
+
+/***************************************************** FIM EXPRESSOES*******************************************************/
+
+
+
+
 
 %%
 
+int yyerror(char *s) {
+  printf("Erro: %s.Linha: %d. Token nao esperado: %s.\n", s, yylineno, yytext);
+}
+
 int main(int argc, char *argv[]) {
+//tentativa de recebimento de arquivo
   if (argc < 2){
      printf("Digite o arquivo\n");
   } 
   else{
      yyin = fopen(argv[1], "r");
-     printf("Compilando...\n");
-     yyparse();
-
-     if (erros == 0)
-        printf("Sucesso!\n");
-     return 0;
+     if (!yyparse())
+        fprintf(stderr, "---ALGORITMO FINALIZADO---\n");
+     else
+        fprintf(stderr, "Erros Encontrados.\n");
   }
 }
-
-int yyerror(char *s, int line, char *msg) {
-  printf("ERRO->%d%s%s\n", line, s, msg);
-  return 0;
-}
-
-int yywrap(void){
-  return 1;
-}
-

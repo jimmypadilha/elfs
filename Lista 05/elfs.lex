@@ -33,14 +33,14 @@ Y [yY]
 Z [zZ]
 
 %%
-{I}{N}{T}{E}{R}{R}{O}{M}{P}{A}            return(INTERROMPA);
+
 {R}{E}{T}{O}{R}{N}{E}			  return(RETORNE);
 {P}{A}{S}{S}{O}  			  return(PASSO); 
 {R}{A}{I}{Z}{Q}  			  return(RAIZQ);
 {E}    					  return(E);
 {R}{E}{A}{L}  				  return(REAL);
 {I}{N}{T}{E}{I}{R}{O}  			  return(INTEIRO);
-{C}{A}{R}{A}{C}{T}{E}{R}  		  return(CARACTER);
+{C}{A}{R}{A}{C}{T}{E}{R}{E}  		  return(CARACTERE);
 {V}{E}{T}{O}{R}   			  return(VETOR);
 {C}{A}{S}{O}   				  return(CASO);
 {O}{U}    		  		  return(OU);
@@ -48,7 +48,6 @@ Z [zZ]
 {E}{S}{C}{R}{E}{V}{A} |
  {E}{S}{C}{R}{E}{V}{A}{L} 	          return(ESCREVA);
 {P}{A}{R}{A}      			  return(PARA);
-{F}{I}{M}{P}{A}{R}{A}                     return(FIMPARA);
 {F}{A}{C}{A}   				  return(FACA);
 {F}{I}{M}{F}{A}{C}{A}   		  return(FIMFACA);
 {L}{E}{I}{A}   				  return(LEIA);
@@ -66,11 +65,10 @@ Z [zZ]
 {V}{A}{R}   				  return(VAR);
 {A}{T}{E}   				  return(ATE);
 {E}{N}{Q}{U}{A}{N}{T}{O}   		  return(ENQUANTO);
-{F}{I}{M}{E}{N}{Q}{U}{A}{N}{T}{O}         return(FIMENQUANTO);
+{F}{I}{M}{E}{N}{Q}{U}{A}{N}{T}{O}         return(ENQUANTO);
 {P}{R}{O}{C}{E}{D}{I}{M}{E}{N}{T}{O}      return(PROCEDIMENTO);
 {F}{I}{M}{P}{R}{O}{C}{E}{D}{I}{M}{E}{N}{T}{O}  return(FIMPROCEDIMENTO);
-{E}{S}{C}{O}{L}{H}{A}                     return(ESCOLHA);
-{F}{I}{M}{E}{S}{C}{O}{L}{H}{A}            return(FIMESCOLHA);
+
 
 [/][/].*		        	   return(COMENTARIO);
 "<-"   				           return(ATRIBUICAO);
@@ -78,8 +76,7 @@ Z [zZ]
 
 "/" |
  {D}{I}{V}   	        return(DIVISAO);
-"%" |
- {M}{O}{D}       	return(RESTO);
+"%" | {M}{O}{D}   	return(RESTO);
 "*"  			return(MULTIPLICACAO);
 "+" 			return(SOMA);
 "-" 			return(MENOS);
