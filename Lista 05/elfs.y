@@ -292,6 +292,9 @@ expr: VARIAVEL     { printf("VARIAVEL:\n"); }
 	expr SOMA  expr { printf("ADD\n"); }
 	|expr DIVISAO  expr { printf("DIV\n"); }
 	|expr MULTIPLICACAO expr { printf("MUL\n"); }
+	| APARENTESE expr FPARENTESE
+ 	| expr MENOS  expr { printf("SUB\n"); }
+
 
 /*
     | expr MENOS  expr { printf("SUB\n"); }
