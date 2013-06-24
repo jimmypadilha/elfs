@@ -69,6 +69,8 @@ Z [zZ]
 {F}{I}{M}{E}{N}{Q}{U}{A}{N}{T}{O}         return(ENQUANTO);
 {P}{R}{O}{C}{E}{D}{I}{M}{E}{N}{T}{O}      return(PROCEDIMENTO);
 {F}{I}{M}{P}{R}{O}{C}{E}{D}{I}{M}{E}{N}{T}{O}  return(FIMPROCEDIMENTO);
+{E}{S}{C}{O}{L}{H}{A}			  return(ESCOLHA);
+{F}{I}{M}{E}{S}{C}{O}{L}{H}{A}            return(FIMESCOLHA);
 
 
 [/][/].*		        	   return(COMENTARIO);
