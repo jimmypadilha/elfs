@@ -104,6 +104,7 @@ extern yylineno, yytext;
 
 Programa:
 	Algoritmo NomeAlgoritmo Var Inicio Comandos FimAlgoritmo
+	|  Algoritmo NomeAlgoritmo Var Funcao Inicio Comandos FimAlgoritmo
 ;
 
 Algoritmo:
@@ -122,9 +123,18 @@ Var:
 	| error {erros++; yyerror("Falta a palavra var", yylineno, yytext);}
 ;
 
+Funcao:
+	DeclFuncao Var Inicio Comandos RETORNE VARIAVEL FIMFUNCAO TerminaLinha
+;
+
+DeclFuncao:
+	FUNCAO VARIAVEL APARENTESE DeclVar FPARENTESE DOISPONTOS TipoVar TerminaLinha
+;
+
 DeclVar:
 	DeclVarList DOISPONTOS TipoVar TerminaLinha
 	| DeclVar DeclVarList DOISPONTOS TipoVar TerminaLinha
+  	| DeclVarList DOISPONTOS TipoVar
 ;
 
 TipoVar:
@@ -150,32 +160,31 @@ Inicio:
 	INICIO TerminaLinha
 	| error {erros++; yyerror("Falta a palavra inicio", yylineno, yytext);}
 ;
-/*
-Comandos:
-	Comando
-	| Comandos Comando
-;
-*/
+
 Comandos:
 	
 	| Escreva Comandos
 	| Leia Comandos
 	| Atribuicao Comandos
 	| Se Comandos
-	| Escolha
-	| Repita
-	| Para
+	| Escolha Comandos
+	| Repita Comandos
+	| Para Comandos
+	| Enquanto Comandos
 	| error {erros++; yyerror("Comando invalido", yylineno, yytext);}
 ;
 
 Escreva:
 	ESCREVA APARENTESE STRING FPARENTESE TerminaLinha
-	| ESCREVA APARENTESE STRING VIRGULA DeclVarList FPARENTESE TerminaLinha
+	| ESCREVA APARENTESE STRING VIRGULA VARIAVEL FPARENTESE TerminaLinha
 	| ESCREVA APARENTESE STRING VIRGULA VARIAVEL VIRGULA STRING FPARENTESE TerminaLinha
 	| ESCREVA APARENTESE STRING VIRGULA VARIAVEL VIRGULA STRING VIRGULA VARIAVEL FPARENTESE TerminaLinha
-	| ESCREVA APARENTESE VARIAVEL VIRGULA STRING FPARENTESE TerminaLinha
+	| ESCREVA APARENTESE STRING VIRGULA VARIAVEL VIRGULA VARIAVEL VIRGULA VARIAVEL FPARENTESE TerminaLinha
+	| ESCREVA APARENTESE VARIAVEL FPARENTESE TerminaLinha
+	| ESCREVA APARENTESE VARIAVEL VIRGULA STRING FPARENTESE TerminaLinha {printf("Escreva var string\n");}
         | ESCREVA APARENTESE VARIAVEL VIRGULA STRING VIRGULA VARIAVEL FPARENTESE TerminaLinha
 	| ESCREVA APARENTESE VARIAVEL VIRGULA STRING VIRGULA VARIAVEL VIRGULA STRING VIRGULA VARIAVEL FPARENTESE TerminaLinha
+	| ESCREVA APARENTESE VARIAVEL APARENTESE VARIAVEL FPARENTESE FPARENTESE TerminaLinha
 	| error {erros++; yyerror("Problema no escreva", yylineno, yytext);}
 ;
 /*
@@ -230,19 +239,10 @@ Repita:
 
 Para:
 	PARA VARIAVEL DE INTNUM ATE VARIAVEL FACA TerminaLinha Comandos FIMPARA TerminaLinha {printf("PARA....\n");}
-	
-	/*PARA {printf("PARA\n");}
-	| VARIAVEL {printf("VAR PARA\n");}
-	| DE {printf("DE\n");}
-	| INTNUM
-	| ATE {printf("ATE\n");}
-	| FACA {printf("FACA\n");}
-	| TerminaLinha
-	| Comandos
-	| FIMPARA{printf("FIMPARA\n");}*/
 ;
 
-
+Enquanto:
+	ENQUANTO Expr FACA TerminaLinha Comandos FIMENQUANTO TerminaLinha {printf("ENQUANTO...........\n");}
 ;
 
 Expr:
@@ -264,6 +264,7 @@ Expr:
 	| Expr IGUAL Expr
 	| Expr MENORIGUAL Expr
 	| Expr MENOR Expr
+	| Expr RESTO Expr
 ;
 
 Expr:
@@ -286,23 +287,12 @@ TerminaLinha:
 
 
 
-/**********************************************************************************************************************************/
-
-                                            /* chama estrutura de procedimentos */
-bloco_intermediariosta_escreva:
-        ESCREVA APARENTESE STRING FPARENTESE  {printf("escreva simples...\n");} 
-        | ESCREVA APARENTESE  STRING VIRGULA declaracao_variavel FPARENTESE  {printf("escreva com variaveis\n");}
-        | ESCREVA APARENTESE  declaracao_variavel FPARENTESE   {printf("escreva so variaveis...\n");}
-        | ESCREVA APARENTESE declaracao_variavel VIRGULA STRING FPARENTESE {printf("escreva invertido ...\n");}
-        | ESCREVA APARENTESE declaracao_variavel VIRGULA STRING VIRGULA declaracao_variavel FPARENTESE {printf("escreva invertido ...\n");}
-
-;
-
 
 
 
 
 /****************************************************** FUNCOES E PROCEDIMENTOS ****************************************/
+/*
 declaracao_procedimentos_funcoes:
 	procedimento_funcoes_lista QUEBRA_LINHA 
 ;
@@ -325,7 +315,6 @@ funcao_declaracao:
 	funcao_cabecalho QUEBRA_LINHA VAR QUEBRA_LINHA declaracao_parte corpo_funcao
 ;
 
-		/* procedimento  cabecalho */
 procedimento_cabecalho: 
 	procedimento_identificacao
 	| procedimento_identificacao lista_parametros
@@ -353,12 +342,10 @@ procedimento_funcao_declaracao_parametros:
 	 declaracao_variavel DOISPONTOS tipo_variavel  
 ; 
 
-	//corpo do procedimento
 corpo_procedimento:
 	INICIO QUEBRA_LINHA  corpo_algoritmo FIMPROCEDIMENTO  {printf("***Corpo PROCEDIMENTO...\n");} 
  ;
 
-	/* funcao cabecalho */
 funcao_cabecalho: 
 	funcao_identificacao
  	| funcao_identificacao lista_parametros
@@ -368,12 +355,11 @@ funcao_identificacao:
 	FUNCAO VARIAVEL
 ;
 
-	/* corpo da funcao */
 corpo_funcao:
 	INICIO QUEBRA_LINHA corpo_algoritmo  RETORNE VARIAVEL  QUEBRA_LINHA FIMFUNCAO{printf("***Corpo FUNCAO...\n");}
 ;
 
-
+*/
 
 
 
