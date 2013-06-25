@@ -76,6 +76,7 @@ Z [zZ]
 {C}{O}{M}{P}{R}				  return(COMPR);
 {C}{O}{P}{I}{A}				  return(COPIA);
 {M}{A}{I}{U}{S}{C}			  return(MAIUSC);
+{I}{N}{T}{E}{R}{R}{O}{M}{P}{A}		  return(INTERROMPA);
 
 [/][/].*		        	   return(COMENTARIO);
 "<-"   				           return(ATRIBUICAO);
