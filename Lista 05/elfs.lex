@@ -75,7 +75,7 @@ Z [zZ]
 {F}{I}{M}{E}{S}{C}{O}{L}{H}{A}            return(FIMESCOLHA);
 {C}{O}{M}{P}{R}				  return(COMPR);
 {C}{O}{P}{I}{A}				  return(COPIA);
-
+{M}{A}{I}{U}{S}{C}			  return(MAIUSC);
 
 [/][/].*		        	   return(COMENTARIO);
 "<-"   				           return(ATRIBUICAO);
