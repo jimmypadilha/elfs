@@ -200,7 +200,7 @@ Comandos:
 	| Enquanto Comandos
 	| Proc Comandos
 	| Interrompa Comandos
-	| error {erros++; yyerror("Comando invalido", yylineno, yytext);}
+	/*| error {erros++; yyerror("Comando invalido", yylineno, yytext);}*/
 ;
 
 Escreva:
@@ -354,6 +354,8 @@ int main(int argc, char *argv[]) {
 
 		if (erros == 0)
 			printf("  Arquivo compilado com sucesso!\n");
+		else
+			printf("  Arquivo não compilado.");
      	return 0;
   }
 }
@@ -361,10 +363,12 @@ int main(int argc, char *argv[]) {
 int yyerror(char *s, int line, char *msg) {
   	//printf("ERRO->%d %s %s\n", line, s, msg);
 	erros++;
-	//printf("\nLinha %d: %s %s", line, msg, s);
+	/*
+	printf("Erro: %s \n", s);
+	printf("\t %d ", line);
+	printf("%s \n",msg);*/
+	printf("Erro: %s \n\t%d %s\n", s, line, msg);
 
-	printf("%d: %s at %s in this line:\n%s\n",
-               lineno, s, yytext, linebuf);
 
 	return 0;
 }
