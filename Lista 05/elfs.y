@@ -132,7 +132,7 @@ VarFuncao:
 
         | VAR TerminaLinha
         | VAR TerminaLinha DeclVar
-        | error {erros++; yyerror("Falta a palavra var", yylineno, yytext);}
+        | error {erros++; yyerror("Problema no var da funcao", yylineno, yytext);}
 ;
 
 
@@ -323,7 +323,7 @@ Expr:
 CopiaList:
         INTNUM
         | VARIAVEL VIRGULA CopiaList
-        | error {erros++; yyerror("Problema na lista de variaveis", yylineno, yytext);}
+        | error {erros++; yyerror("Problema na lista de variaveis do copia", yylineno, yytext);}
 ;
 
 
@@ -343,26 +343,33 @@ TerminaLinha:
 %%
 
 int main(int argc, char *argv[]) {
-  if (argc < 2){
-     printf("Digite o arquivo\n");
-  }
-  else{
-     yyin = fopen(argv[1], "r");
-     printf("Compilando...\n");
-     yyparse();
+  	if (argc < 2){
+     		printf("Digite o arquivo\n");
+  	}
+	else{
+    		yyin = fopen(argv[1], "r");
+		erros = 0;
+		yyparse();
+		printf("Verificação finalizada.\n");
 
-     if (erros == 0)
-        printf("Sucesso!\n");
-     return 0;
+		if (erros == 0)
+			printf("  Arquivo compilado com sucesso!\n");
+     	return 0;
   }
 }
 
 int yyerror(char *s, int line, char *msg) {
-  printf("ERRO->%d %s %s\n", line, s, msg);
-  return 0;
+  	//printf("ERRO->%d %s %s\n", line, s, msg);
+	erros++;
+	//printf("\nLinha %d: %s %s", line, msg, s);
+
+	printf("%d: %s at %s in this line:\n%s\n",
+               lineno, s, yytext, linebuf);
+
+	return 0;
 }
 
 int yywrap(void){
-  return 1;
+	return 1;
 }
 
