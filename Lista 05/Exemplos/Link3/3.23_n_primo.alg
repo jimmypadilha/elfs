@@ -39,6 +39,6 @@ inicio
              j <- 1
              cont <- 0
     fimenquanto
-    divcont <- divcont -1
+    divcont <- divcont - 1
     escreval (divcont, ", foram o numero de divisões realizadas")
 fimalgoritmo

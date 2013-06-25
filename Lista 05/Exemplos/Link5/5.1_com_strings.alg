@@ -22,8 +22,8 @@ tam1 <- compr(string1)
 tam2 <- compr(string2)
 
 // Impressão do número de caracteres de cada string.
-escreval("O tamanho de '",string1,"':",tam1," caracteres.")
-escreval("O tamanho de '",string2,"':",tam2," caracteres.")
+escreval("O tamanho de ",string1,":",tam1," caracteres.")
+escreval("O tamanho de ",string2,":",tam2," caracteres.")
 
 // verifica se as strings são do mesmo tamanho
 se (tam1 <> tam2) entao
