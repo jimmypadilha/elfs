@@ -13,7 +13,7 @@ inicio
 escreval ("Insira o nome: ")
 leia(nome)
 para i de 1 ate compr(nome) faca
-      escreval
+      escreval("")
       para j de 1 ate i faca
         escreva(copia(nome,j,1))
       fimpara

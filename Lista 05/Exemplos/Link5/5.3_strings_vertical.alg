@@ -15,6 +15,6 @@ inicio
 escreval ("Digite o nome: ")
 leia(nome)
 para i de 1 ate compr(nome) faca
-     escreval(copia(nome;i,1))
+     escreval(copia(nome,i,1))
 fimpara
 fimalgoritmo
