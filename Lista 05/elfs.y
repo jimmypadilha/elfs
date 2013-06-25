@@ -107,9 +107,7 @@ extern yylineno, yytext;
 
 
 Programa:
-	Algoritmo NomeAlgoritmo Var Inicio Comandos FimAlgoritmo
-	| Algoritmo NomeAlgoritmo Var Funcao Inicio Comandos FimAlgoritmo
-	| Algoritmo NomeAlgoritmo Var Procedimento Inicio Comandos FimAlgoritmo
+	Algoritmo NomeAlgoritmo Var Funcao Procedimento Inicio Comandos FimAlgoritmo
 ;
 
 Algoritmo:
@@ -129,7 +127,7 @@ Var:
 ;
 
 VarFuncao:
-
+	
         | VAR TerminaLinha
         | VAR TerminaLinha DeclVar
         | error {erros++; yyerror("Problema no var da funcao", yylineno, yytext);}
@@ -137,11 +135,16 @@ VarFuncao:
 
 
 Funcao:
-	DeclFuncao VarFuncao Inicio Comandos RETORNE TipoRetorno TerminaLinha FIMFUNCAO TerminaLinha
+	
+	| DeclFuncao VarFuncao Inicio Comandos RetorneFuncao FimFuncao
 ;
 
 DeclFuncao:
 	FUNCAO VARIAVEL APARENTESE DeclVar FPARENTESE DOISPONTOS TipoVar TerminaLinha
+;
+
+RetorneFuncao:
+	RETORNE TipoRetorno TerminaLinha
 ;
 
 TipoRetorno:
@@ -150,8 +153,13 @@ TipoRetorno:
 	| error {erros++; yyerror("Tipo de retorno desconhecido", yylineno, yytext);}
 ;
 
+FimFuncao:
+	FIMFUNCAO TerminaLinha
+;
+
 Procedimento:
-	DeclProc Inicio Comandos FIMPROCEDIMENTO TerminaLinha
+
+	| DeclProc Inicio Comandos FIMPROCEDIMENTO TerminaLinha
 ; 
 
 DeclProc:
@@ -160,7 +168,7 @@ DeclProc:
 
 DeclVar:
 	DeclVarList DOISPONTOS TipoVar TerminaLinha
-	| DeclVar DeclVarList DOISPONTOS TipoVar TerminaLinha
+	| DeclVarList DOISPONTOS TipoVar TerminaLinha DeclVar
   	| DeclVarList DOISPONTOS TipoVar
 ;
 
@@ -179,7 +187,7 @@ DeclVarList:
 
 DeclStringList:
         STRING
-        | DeclStringList VIRGULA STRING
+        | STRING VIRGULA DeclStringList
         | error {erros++; yyerror("Problema na lista de strings", yylineno, yytext);}
 ;
 
@@ -190,38 +198,35 @@ Inicio:
 
 Comandos:
 	
-	| Escreva Comandos
-	| Leia Comandos
-	| Atribuicao Comandos
-	| Se Comandos
-	| Escolha Comandos
-	| Repita Comandos
-	| Para Comandos
-	| Enquanto Comandos
-	| Proc Comandos
-	| Interrompa Comandos
+	| Comandos Escreva
+	| Comandos Leia
+	| Comandos Atribuicao
+	| Comandos Se
+	| Comandos Escolha
+	| Comandos Repita
+	| Comandos Para
+	| Comandos Enquanto
+	| Comandos Proc
+	| Comandos Interrompa
 	/*| error {erros++; yyerror("Comando invalido", yylineno, yytext);}*/
 ;
 
 Escreva:
-	ESCREVA APARENTESE STRING FPARENTESE TerminaLinha
-	| ESCREVA APARENTESE STRING VIRGULA VARIAVEL FPARENTESE TerminaLinha
-	| ESCREVA APARENTESE STRING VIRGULA VARIAVEL VIRGULA STRING FPARENTESE TerminaLinha
-	| ESCREVA APARENTESE STRING VIRGULA VARIAVEL VIRGULA STRING VIRGULA VARIAVEL FPARENTESE TerminaLinha
-	| ESCREVA APARENTESE STRING VIRGULA VARIAVEL VIRGULA STRING VIRGULA VARIAVEL VIRGULA STRING FPARENTESE TerminaLinha
-	| ESCREVA APARENTESE STRING VIRGULA VARIAVEL VIRGULA VARIAVEL VIRGULA VARIAVEL FPARENTESE TerminaLinha
-	| ESCREVA APARENTESE VARIAVEL FPARENTESE TerminaLinha
-	| ESCREVA APARENTESE VARIAVEL VIRGULA STRING FPARENTESE TerminaLinha
-        | ESCREVA APARENTESE VARIAVEL VIRGULA STRING VIRGULA VARIAVEL FPARENTESE TerminaLinha
-	| ESCREVA APARENTESE VARIAVEL VIRGULA STRING VIRGULA VARIAVEL VIRGULA STRING VIRGULA VARIAVEL FPARENTESE TerminaLinha
-	| ESCREVA APARENTESE VARIAVEL APARENTESE VARIAVEL FPARENTESE FPARENTESE TerminaLinha
-	| ESCREVA APARENTESE COPIA APARENTESE CopiaList FPARENTESE FPARENTESE TerminaLinha
-	| error {erros++; yyerror("Problema no escreva", yylineno, yytext);}
+	ESCREVA EscrevaList TerminaLinha
+;
+
+EscrevaList:
+	STRING
+	| APARENTESE EscrevaList FPARENTESE
+	| STRING VIRGULA EscrevaList
+	| VARIAVEL
+	| VARIAVEL EscrevaList
+	| VARIAVEL VIRGULA EscrevaList
+	| COPIA APARENTESE CopiaList FPARENTESE
 ;
 
 Leia:
 	LEIA APARENTESE VARIAVEL FPARENTESE TerminaLinha
-	| error {erros++; yyerror("Problema no leia", yylineno, yytext);}
 ;
 
 Atribuicao:
@@ -230,13 +235,17 @@ Atribuicao:
 ;
 
 Se:
-	SE Expr Entao TerminaLinha Comandos FimSe
-	| SE Expr Entao TerminaLinha Comandos SENAO TerminaLinha Comandos FimSe
+	SE Expr Entao Comandos Senao FimSe
 	| error {erros++; yyerror("Problema no se", yylineno, yytext);}
 ;
 
+Senao:
+	
+	| SENAO TerminaLinha Comandos
+;
+
 Entao:
-	ENTAO
+	ENTAO TerminaLinha
 	| error {erros++; yyerror("Falta a palavra entao", yylineno, yytext);}
 ;
 
@@ -251,7 +260,7 @@ Escolha:
 
 CasoList:
 	CASO DeclStringList TerminaLinha Comandos
-	| CasoList CASO STRING TerminaLinha Comandos
+	| CASO DeclStringList TerminaLinha Comandos CasoList
 ;
 
 OutroCaso:
@@ -260,13 +269,16 @@ OutroCaso:
 ;
 
 Repita:
-	REPITA TerminaLinha Comandos ATE Expr TerminaLinha
-	| REPITA TerminaLinha Comandos FIMREPITA TerminaLinha
+	REPITA TerminaLinha Comandos LimiteRepita
+;
+
+LimiteRepita:
+	ATE Expr TerminaLinha
+	| FIMREPITA TerminaLinha
 ;
 
 Para:
 	PARA VARIAVEL DE LimitePara ATE LimitePara PassoPara FACA TerminaLinha Comandos FIMPARA TerminaLinha
-	| error {erros++; yyerror("Problema no para", yylineno, yytext);}
 ;
 
 LimitePara:
@@ -275,7 +287,7 @@ LimitePara:
 ;
 
 PassoPara:
-	
+		
 	| PASSO INTNUM
 ;
 
@@ -298,7 +310,7 @@ Expr:
 ;
  
 Expr: 
-        Expr SOMA Expr
+	Expr SOMA Expr
 	| Expr DIVISAO Expr
 	| Expr MULTIPLICACAO Expr
 	| APARENTESE Expr FPARENTESE
@@ -328,15 +340,15 @@ CopiaList:
 
 
 FimAlgoritmo:
-	FIMALGORITMO QUEBRA_LINHA
+	FIMALGORITMO TerminaLinha
 	| error {erros++; yyerror("Falta a palavra fimalgoritmo", yylineno, yytext);}
 ;
 
 TerminaLinha:
         QUEBRA_LINHA
-	| TerminaLinha QUEBRA_LINHA
+	| QUEBRA_LINHA TerminaLinha
         | COMENTARIO QUEBRA_LINHA
-        | TerminaLinha COMENTARIO QUEBRA_LINHA
+        | COMENTARIO QUEBRA_LINHA TerminaLinha
         | error {erros++; yyerror("Comentario",yylineno, yytext);}
 ;
 
@@ -350,12 +362,11 @@ int main(int argc, char *argv[]) {
     		yyin = fopen(argv[1], "r");
 		erros = 0;
 		yyparse();
-		printf("Verificação finalizada.\n");
 
 		if (erros == 0)
 			printf("  Arquivo compilado com sucesso!\n");
 		else
-			printf("  Arquivo não compilado.");
+			printf("  Arquivo não compilado.\n");
      	return 0;
   }
 }
