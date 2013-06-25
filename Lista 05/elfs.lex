@@ -79,7 +79,8 @@ Z [zZ]
 
 "/" |
  {D}{I}{V}   	        return(DIVISAO);
-"%" | {M}{O}{D}   	return(RESTO);
+"%" |
+ {M}{O}{D}   	        return(RESTO);
 "*"  			return(MULTIPLICACAO);
 "+" 			return(SOMA);
 "-" 			return(MENOS);
