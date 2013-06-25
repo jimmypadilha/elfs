@@ -211,7 +211,7 @@ Escreva:
 	| ESCREVA APARENTESE STRING VIRGULA VARIAVEL VIRGULA STRING VIRGULA VARIAVEL VIRGULA STRING FPARENTESE TerminaLinha
 	| ESCREVA APARENTESE STRING VIRGULA VARIAVEL VIRGULA VARIAVEL VIRGULA VARIAVEL FPARENTESE TerminaLinha
 	| ESCREVA APARENTESE VARIAVEL FPARENTESE TerminaLinha
-	| ESCREVA APARENTESE VARIAVEL VIRGULA STRING FPARENTESE TerminaLinha {printf("Escreva var string\n");}
+	| ESCREVA APARENTESE VARIAVEL VIRGULA STRING FPARENTESE TerminaLinha
         | ESCREVA APARENTESE VARIAVEL VIRGULA STRING VIRGULA VARIAVEL FPARENTESE TerminaLinha
 	| ESCREVA APARENTESE VARIAVEL VIRGULA STRING VIRGULA VARIAVEL VIRGULA STRING VIRGULA VARIAVEL FPARENTESE TerminaLinha
 	| ESCREVA APARENTESE VARIAVEL APARENTESE VARIAVEL FPARENTESE FPARENTESE TerminaLinha
@@ -220,18 +220,18 @@ Escreva:
 ;
 
 Leia:
-	LEIA APARENTESE VARIAVEL FPARENTESE TerminaLinha {printf("LEIAAAA\n");}
+	LEIA APARENTESE VARIAVEL FPARENTESE TerminaLinha
 	| error {erros++; yyerror("Problema no leia", yylineno, yytext);}
 ;
 
 Atribuicao:
-	VARIAVEL ATRIBUICAO Expr TerminaLinha {printf("ATRIBUICAO ....\n");}
+	VARIAVEL ATRIBUICAO Expr TerminaLinha
 	| VARIAVEL ATRIBUICAO VARIAVEL APARENTESE DeclVarList FPARENTESE TerminaLinha
 ;
 
 Se:
-	SE Expr Entao TerminaLinha Comandos FimSe {printf("NO PRIMEIRO SE\n");}
-	| SE Expr Entao TerminaLinha Comandos SENAO TerminaLinha Comandos FimSe {printf("SEEEEE....\n");}
+	SE Expr Entao TerminaLinha Comandos FimSe
+	| SE Expr Entao TerminaLinha Comandos SENAO TerminaLinha Comandos FimSe
 	| error {erros++; yyerror("Problema no se", yylineno, yytext);}
 ;
 
@@ -246,7 +246,7 @@ FimSe:
 ;
 
 Escolha:
-	ESCOLHA VARIAVEL TerminaLinha CasoList OutroCaso Comandos FIMESCOLHA TerminaLinha {printf("ESCOLHA...\n");}
+	ESCOLHA VARIAVEL TerminaLinha CasoList OutroCaso Comandos FIMESCOLHA TerminaLinha
 ;
 
 CasoList:
@@ -265,7 +265,7 @@ Repita:
 ;
 
 Para:
-	PARA VARIAVEL DE LimitePara ATE LimitePara PassoPara FACA TerminaLinha Comandos FIMPARA TerminaLinha {printf("PARA....\n");}
+	PARA VARIAVEL DE LimitePara ATE LimitePara PassoPara FACA TerminaLinha Comandos FIMPARA TerminaLinha
 	| error {erros++; yyerror("Problema no para", yylineno, yytext);}
 ;
 
@@ -280,7 +280,7 @@ PassoPara:
 ;
 
 Enquanto:
-	ENQUANTO Expr FACA TerminaLinha Comandos FIMENQUANTO TerminaLinha {printf("ENQUANTO...........\n");}
+	ENQUANTO Expr FACA TerminaLinha Comandos FIMENQUANTO TerminaLinha
 ;
 
 Proc:
