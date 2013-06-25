@@ -49,6 +49,7 @@ Z [zZ]
 {E}{S}{C}{R}{E}{V}{A} |
  {E}{S}{C}{R}{E}{V}{A}{L} 	          return(ESCREVA);
 {P}{A}{R}{A}      			  return(PARA);
+{F}{I}{M}{P}{A}{R}{A}                     return(FIMPARA);
 {F}{A}{C}{A}   				  return(FACA);
 {F}{I}{M}{F}{A}{C}{A}   		  return(FIMFACA);
 {L}{E}{I}{A}   				  return(LEIA);
