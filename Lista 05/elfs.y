@@ -4,9 +4,10 @@
 #include <stdlib.h>
 
 extern FILE *yyin;
-extern int yylineno;
-extern char *yytext;
+int erros;
+extern yylineno, yytext;
 %}
+
 
 %union {
  int intval;
@@ -56,7 +57,7 @@ extern char *yytext;
 %token VARIAVEL
 %token REAL
 %token NUMERO
-%token CARACTERE
+%token CARACTER
 %token INTEIRO
 
 %token SE
@@ -83,9 +84,12 @@ extern char *yytext;
 %token PASSO
 %token VETOR
 %token RETORNE
-
-
-
+%token ESCOLHA
+%token FIMESCOLHA
+%token COMPR
+%token COPIA
+%token MAIUSC
+%token INTERROMPA
 
 
 %left OU
@@ -97,298 +101,268 @@ extern char *yytext;
 %nonassoc UMINUS
 
 
-%start Input
+%start Programa
 
 %%
 
 
-Input:
-	| Input Line
+Programa:
+	Algoritmo NomeAlgoritmo Var Inicio Comandos FimAlgoritmo
+	| Algoritmo NomeAlgoritmo Var Funcao Inicio Comandos FimAlgoritmo
+	| Algoritmo NomeAlgoritmo Var Procedimento Inicio Comandos FimAlgoritmo
 ;
 
-Line:
-	QUEBRA_LINHA
- 	| algoritmo_inicio QUEBRA_LINHA { printf("---Base do algoritmo---\n"); }
+Algoritmo:
+	ALGORITMO
+	| error {erros++; yyerror("Falta a palavra algoritmo", yylineno, yytext);}
 ;
 
-algoritmo_inicio:
-	estrutura_algoritmo  {printf("***Chamando Estrutura do Algoritmo----\n");}
-
-
-estrutura_algoritmo: 
-	ALGORITMO STRING QUEBRA_LINHA estrutura_comentario VAR  QUEBRA_LINHA declaracao_parte bloco_intermediario estrutura_corpo {printf("***Estrutura Completa ALGORITMO...\n");}
+NomeAlgoritmo:
+	STRING TerminaLinha 
+	| error {erros++; yyerror("Falta o nome do algoritmo", yylineno, yytext);}
 ;
 
-/************************************************ESTRUTURA COMENTARIO**************************************************************/
-			/*comentario geral*/
-estrutura_comentario:
-	/*nil*/ 
-  	| comentario  estrutura_comentario {printf("***Comentarios...\n");}     
+Var:
+	VAR TerminaLinha
+	| VAR TerminaLinha DeclVar
+	| error {erros++; yyerror("Falta a palavra var", yylineno, yytext);}
 ;
 
-  			/*Comentario especifico para comentario: estrutura + comentario */
-comentario:
-	 COMENTARIO QUEBRA_LINHA
- 	| QUEBRA_LINHA
-;
-/**********************************************************************************************************************************/
+VarFuncao:
 
-                                            /* chama estrutura de procedimentos */
-bloco_intermediario:
-	declaracao_procedimentos_funcoes {printf("***Chama Estrutura Procedimento e funcoes\n");}
-	| 
+        | VAR TerminaLinha
+        | VAR TerminaLinha DeclVar
+        | error {erros++; yyerror("Falta a palavra var", yylineno, yytext);}
 ;
 
 
-/************************************************ESTRUTURA DECLARACAO VARIAVEIS***********************************************************/
-
-/* declaracao de variaveis */
-
-declaracao_parte:
-	declaracao_variaveis_lista
-	| comentario declaracao_parte
-	|
-;
- 
-declaracao_variaveis_lista : 
-	declaracao_variaveis_lista  declaracao_variaveis
- 	|declaracao_variaveis
+Funcao:
+	DeclFuncao VarFuncao Inicio Comandos RETORNE TipoRetorno TerminaLinha FIMFUNCAO TerminaLinha
 ;
 
-declaracao_variaveis: 
-	declaracao_variavel DOISPONTOS tipo_variavel QUEBRA_LINHA  
+DeclFuncao:
+	FUNCAO VARIAVEL APARENTESE DeclVar FPARENTESE DOISPONTOS TipoVar TerminaLinha
 ;
 
-declaracao_variavel: 
-	declaracao_variavel  VIRGULA VARIAVEL
-	| VARIAVEL 
+TipoRetorno:
+	STRING
+	| VARIAVEL
+	| error {erros++; yyerror("Tipo de retorno desconhecido", yylineno, yytext);}
 ;
 
-tipo_variavel: 
-	REAL {printf("variavel tipo real...\n");}
-	| INTEIRO  {printf("variavel tipo inteiro...\n");}
-	| CARACTERE {printf("variavel tipo caractere...\n");}
+Procedimento:
+	DeclProc Inicio Comandos FIMPROCEDIMENTO TerminaLinha
+; 
+
+DeclProc:
+	PROCEDIMENTO VARIAVEL TerminaLinha
 ;
 
-/********************************************************************************************************************************/
-                                  /* estrutura do corpo do algoritmo */
-estrutura_corpo: 
-	INICIO QUEBRA_LINHA corpo_algoritmo  FIMALGORITMO{printf("***CORPO ALGORITMO...\n");}
+DeclVar:
+	DeclVarList DOISPONTOS TipoVar TerminaLinha
+	| DeclVar DeclVarList DOISPONTOS TipoVar TerminaLinha
+  	| DeclVarList DOISPONTOS TipoVar
+;
+
+TipoVar:
+	INTEIRO
+	| REAL
+	| CARACTER
+	| error {erros++; yyerror("Tipo invalido", yylineno, yytext);}
+;
+
+DeclVarList:
+	VARIAVEL
+	| VARIAVEL VIRGULA DeclVarList
+	| error {erros++; yyerror("Problema na lista de variaveis", yylineno, yytext);}
+;
+
+DeclStringList:
+        STRING
+        | DeclStringList VIRGULA STRING
+        | error {erros++; yyerror("Problema na lista de strings", yylineno, yytext);}
+;
+
+Inicio:
+	INICIO TerminaLinha
+	| error {erros++; yyerror("Falta a palavra inicio", yylineno, yytext);}
+;
+
+Comandos:
 	
+	| Escreva Comandos
+	| Leia Comandos
+	| Atribuicao Comandos
+	| Se Comandos
+	| Escolha Comandos
+	| Repita Comandos
+	| Para Comandos
+	| Enquanto Comandos
+	| Proc Comandos
+	| Interrompa Comandos
+	| error {erros++; yyerror("Comando invalido", yylineno, yytext);}
 ;
 
-corpo_algoritmo:
-	| COMENTARIO QUEBRA_LINHA  corpo_algoritmo
-	| lista_escreva comentario corpo_algoritmo
-	| lista_leia comentario  corpo_algoritmo
-  	| estrutura_parte QUEBRA_LINHA corpo_algoritmo
-	| lista_atribuicao comentario corpo_algoritmo 
-  //      | abre_se_estrutura corpo_algoritmo
+Escreva:
+	ESCREVA APARENTESE STRING FPARENTESE TerminaLinha
+	| ESCREVA APARENTESE STRING VIRGULA VARIAVEL FPARENTESE TerminaLinha
+	| ESCREVA APARENTESE STRING VIRGULA VARIAVEL VIRGULA STRING FPARENTESE TerminaLinha
+	| ESCREVA APARENTESE STRING VIRGULA VARIAVEL VIRGULA STRING VIRGULA VARIAVEL FPARENTESE TerminaLinha
+	| ESCREVA APARENTESE STRING VIRGULA VARIAVEL VIRGULA STRING VIRGULA VARIAVEL VIRGULA STRING FPARENTESE TerminaLinha
+	| ESCREVA APARENTESE STRING VIRGULA VARIAVEL VIRGULA VARIAVEL VIRGULA VARIAVEL FPARENTESE TerminaLinha
+	| ESCREVA APARENTESE VARIAVEL FPARENTESE TerminaLinha
+	| ESCREVA APARENTESE VARIAVEL VIRGULA STRING FPARENTESE TerminaLinha {printf("Escreva var string\n");}
+        | ESCREVA APARENTESE VARIAVEL VIRGULA STRING VIRGULA VARIAVEL FPARENTESE TerminaLinha
+	| ESCREVA APARENTESE VARIAVEL VIRGULA STRING VIRGULA VARIAVEL VIRGULA STRING VIRGULA VARIAVEL FPARENTESE TerminaLinha
+	| ESCREVA APARENTESE VARIAVEL APARENTESE VARIAVEL FPARENTESE FPARENTESE TerminaLinha
+	| ESCREVA APARENTESE COPIA APARENTESE CopiaList FPARENTESE FPARENTESE TerminaLinha
+	| error {erros++; yyerror("Problema no escreva", yylineno, yytext);}
+;
+
+Leia:
+	LEIA APARENTESE VARIAVEL FPARENTESE TerminaLinha {printf("LEIAAAA\n");}
+	| error {erros++; yyerror("Problema no leia", yylineno, yytext);}
+;
+
+Atribuicao:
+	VARIAVEL ATRIBUICAO Expr TerminaLinha {printf("ATRIBUICAO ....\n");}
+	| VARIAVEL ATRIBUICAO VARIAVEL APARENTESE DeclVarList FPARENTESE TerminaLinha
+;
+
+Se:
+	SE Expr Entao TerminaLinha Comandos FimSe {printf("NO PRIMEIRO SE\n");}
+	| SE Expr Entao TerminaLinha Comandos SENAO TerminaLinha Comandos FimSe {printf("SEEEEE....\n");}
+	| error {erros++; yyerror("Problema no se", yylineno, yytext);}
+;
+
+Entao:
+	ENTAO
+	| error {erros++; yyerror("Falta a palavra entao", yylineno, yytext);}
+;
+
+FimSe:
+	FIMSE TerminaLinha
+	| error {erros++; yyerror("Falta a palavra fimse", yylineno, yytext);}
+;
+
+Escolha:
+	ESCOLHA VARIAVEL TerminaLinha CasoList OutroCaso Comandos FIMESCOLHA TerminaLinha {printf("ESCOLHA...\n");}
+;
+
+CasoList:
+	CASO DeclStringList TerminaLinha Comandos
+	| CasoList CASO STRING TerminaLinha Comandos
+;
+
+OutroCaso:
+	
+	| OUTROCASO TerminaLinha
+;
+
+Repita:
+	REPITA TerminaLinha Comandos ATE Expr TerminaLinha
+	| REPITA TerminaLinha Comandos FIMREPITA TerminaLinha
+;
+
+Para:
+	PARA VARIAVEL DE LimitePara ATE LimitePara PassoPara FACA TerminaLinha Comandos FIMPARA TerminaLinha {printf("PARA....\n");}
+	| error {erros++; yyerror("Problema no para", yylineno, yytext);}
+;
+
+LimitePara:
+	COMPR APARENTESE VARIAVEL FPARENTESE
+	| Expr
+;
+
+PassoPara:
+	
+	| PASSO INTNUM
+;
+
+Enquanto:
+	ENQUANTO Expr FACA TerminaLinha Comandos FIMENQUANTO TerminaLinha {printf("ENQUANTO...........\n");}
+;
+
+Proc:
+	VARIAVEL APARENTESE FPARENTESE TerminaLinha
+;
+
+Interrompa:
+	INTERROMPA TerminaLinha
+;
+
+Expr:
+	VARIAVEL
+	| INTNUM
+	| APPROXNUM
+;
  
+Expr: 
+        Expr SOMA Expr
+	| Expr DIVISAO Expr
+	| Expr MULTIPLICACAO Expr
+	| APARENTESE Expr FPARENTESE
+	| Expr MENOS Expr
+	| Expr MAIOR Expr
+	| Expr MAIORIGUAL Expr
+	| Expr IGUAL Expr
+	| Expr MENORIGUAL Expr
+	| Expr MENOR Expr
+	| Expr RESTO Expr
+	| Expr DIFERENTE Expr
+	| MAIUSC Expr
+	| COPIA APARENTESE CopiaList FPARENTESE
+	| COMPR APARENTESE Expr FPARENTESE
+;
+
+Expr:
+	Expr OU Expr
+	| Expr E Expr
+;
+
+CopiaList:
+        INTNUM
+        | VARIAVEL VIRGULA CopiaList
+        | error {erros++; yyerror("Problema na lista de variaveis", yylineno, yytext);}
 ;
 
 
-
-                                       /* responsavel pelos escrevas */
-lista_escreva:
-	ESCREVA APARENTESE STRING FPARENTESE  {printf("escreva simples...\n");} 
- 	| ESCREVA APARENTESE  STRING VIRGULA declaracao_variavel FPARENTESE  {printf("escreva com variaveis\n");}
-	| ESCREVA APARENTESE  declaracao_variavel FPARENTESE   {printf("escreva so variaveis...\n");}
- 	| ESCREVA APARENTESE declaracao_variavel VIRGULA STRING FPARENTESE {printf("escreva invertido ...\n");}
-  	| ESCREVA APARENTESE declaracao_variavel VIRGULA STRING VIRGULA declaracao_variavel FPARENTESE {printf("escreva invertido ...\n");}
-
-;
-                                      /*responsavel pelos leias*/
-lista_leia:
-	 LEIA APARENTESE declaracao_variavel FPARENTESE 
+FimAlgoritmo:
+	FIMALGORITMO QUEBRA_LINHA
+	| error {erros++; yyerror("Falta a palavra fimalgoritmo", yylineno, yytext);}
 ;
 
-/****************************************************** FUNCOES E PROCEDIMENTOS ****************************************/
-declaracao_procedimentos_funcoes:
-	procedimento_funcoes_lista QUEBRA_LINHA 
+TerminaLinha:
+        QUEBRA_LINHA
+	| TerminaLinha QUEBRA_LINHA
+        | COMENTARIO QUEBRA_LINHA
+        | TerminaLinha COMENTARIO QUEBRA_LINHA
+        | error {erros++; yyerror("Comentario",yylineno, yytext);}
 ;
-
-procedimento_funcoes_lista: 
-	procedimento_funcoes_lista QUEBRA_LINHA proc_func_declaracao
-	| proc_func_declaracao
-;
-
-proc_func_declaracao:
-	procedimento_declaracao
-	| funcao_declaracao
-;
-
-procedimento_declaracao:
-	procedimento_cabecalho QUEBRA_LINHA VAR QUEBRA_LINHA declaracao_parte corpo_procedimento
-;
-
-funcao_declaracao:
-	funcao_cabecalho QUEBRA_LINHA VAR QUEBRA_LINHA declaracao_parte corpo_funcao
-;
-
-		/* procedimento  cabecalho */
-procedimento_cabecalho: 
-	procedimento_identificacao
-	| procedimento_identificacao lista_parametros
-;
-
-procedimento_identificacao:
-	PROCEDIMENTO VARIAVEL
-;
-
-lista_parametros:
-	APARENTESE procedimento_funcao_parametros FPARENTESE {printf("...\n");} 
-;
-
-procedimento_funcao_parametros:
-	declaracao_parametros_lista
- 	|VAR QUEBRA_LINHA declaracao_variaveis
-;
-
-declaracao_parametros_lista:
-	 declaracao_parametros_lista VIRGULA procedimento_funcao_declaracao_parametros
-	 | procedimento_funcao_declaracao_parametros
-;
-
-procedimento_funcao_declaracao_parametros:
-	 declaracao_variavel DOISPONTOS tipo_variavel  
-; 
-
-	//corpo do procedimento
-corpo_procedimento:
-	INICIO QUEBRA_LINHA  corpo_algoritmo FIMPROCEDIMENTO  {printf("***Corpo PROCEDIMENTO...\n");} 
- ;
-
-	/* funcao cabecalho */
-funcao_cabecalho: 
-	funcao_identificacao
- 	| funcao_identificacao lista_parametros
-;
-
-funcao_identificacao:
-	FUNCAO VARIAVEL
-;
-
-	/* corpo da funcao */
-corpo_funcao:
-	INICIO QUEBRA_LINHA corpo_algoritmo  RETORNE VARIAVEL  QUEBRA_LINHA FIMFUNCAO{printf("***Corpo FUNCAO...\n");}
-;
-
-/**************************************************INICIO COMANDOS DE DESVIOS**************************************************************/
-
-
-
-// Desvio Condicional
-
-
-estrutura_parte: estrutura_controle
-;
-
-
-estrutura_controle:abre_tipo_estrutura
- | fecha_tipo_estrutura
-
-;
-
-
-abre_tipo_estrutura: abre_enquanto_estrutura
- | abre_se_estrutura
- | abre_for_estrutura 
-;
-
-fecha_tipo_estrutura: fecha_enquanto_estrutura
- | fecha_se_estrutura
- | fecha_for_estrutura 
- |   
- 
-  
-;
-
-abre_se_estrutura:
-	SE expr  ENTAO comentario estrutura_controle  {printf("*** ESTRUTURA SE...\n");} 
-	| SE expr  ENTAO  fecha_tipo_estrutura SENAO abre_tipo_estrutura {printf("***ESTRUTURRA SE 2...\n");} 
-;
-
-
-fecha_se_estrutura: SE expr ENTAO fecha_tipo_estrutura SENAO fecha_tipo_estrutura
-;
-
-abre_enquanto_estrutura: ENQUANTO FACA abre_tipo_estrutura FIMENQUANTO
-;
-
-
-fecha_enquanto_estrutura: ENQUANTO  FACA fecha_tipo_estrutura  FIMENQUANTO
-;
-
-abre_for_estrutura: PARA VARIAVEL DE ATE FACA abre_tipo_estrutura FIMPARA 
-;
-fecha_for_estrutura: PARA VARIAVEL DE ATE FACA fecha_tipo_estrutura FIMPARA  
-; 
-
-lista_atribuicao: VARIAVEL ATRIBUICAO expr  { printf("aaaaaa\n");} 
- | lista_atribuicao VARIAVEL ATRIBUICAO expr  {printf("bbbbbb\n");} 
-;
-
-/***************************************************** EXPRESSOES *******************************************************/
-
-expr: VARIAVEL     { printf("VARIAVEL:\n"); }
-    | STRING        { printf("STRING\n");}
-    | APPROXNUM     { printf("FLOAT\n");}
-    | INTNUM        { printf("INTEIRO\n");}
-    | RAIZQ APARENTESE expr FPARENTESE { printf("Funcao Raizq\n");} 
-
-
- 
- expr: 
-	expr SOMA  expr { printf("ADD\n"); }
-	|expr DIVISAO  expr { printf("DIV\n"); }
-	|expr MULTIPLICACAO expr { printf("MUL\n"); }
-	| APARENTESE expr FPARENTESE
- 	| expr MENOS  expr { printf("SUB\n"); }
-        | expr MAIOR expr
-
-/*
-    | expr MENOS  expr { printf("SUB\n"); }
-    | expr MULTIPLICACAO expr { printf("MUL\n"); }
-    | expr DIVISAO  expr { printf("DIV\n"); }
-    | expr POTENCIA expr { printf("POWER\n");}
-    | MENOS expr %prec UMINUS { printf("NEG\n"); }
-    | APARENTESE expr FPARENTESE
-    | expr RESTO expr
-    | expr E expr
-    | expr OU expr
-    | expr IGUAL expr
-    | expr MAIORIGUAL expr
-    | expr MENORIGUAL expr
-    | expr MAIOR expr
-    | expr MENOR expr
-    | expr DIFERENTE expr 
-*/
- ;
-
-
-/***************************************************** FIM EXPRESSOES*******************************************************/
-
-
-
-
 
 %%
-
-int yyerror(char *s) {
-  printf("Erro: %s.Linha: %d. Token nao esperado: %s.\n", s, yylineno, yytext);
-}
 
 int main(int argc, char *argv[]) {
-//tentativa de recebimento de arquivo
   if (argc < 2){
      printf("Digite o arquivo\n");
-  } 
+  }
   else{
      yyin = fopen(argv[1], "r");
-     if (!yyparse())
-        fprintf(stderr, "---ALGORITMO FINALIZADO---\n");
-     else
-        fprintf(stderr, "Erros Encontrados.\n");
+     printf("Compilando...\n");
+     yyparse();
+
+     if (erros == 0)
+        printf("Sucesso!\n");
+     return 0;
   }
 }
+
+int yyerror(char *s, int line, char *msg) {
+  printf("ERRO->%d %s %s\n", line, s, msg);
+  return 0;
+}
+
+int yywrap(void){
+  return 1;
+}
+
