@@ -2,95 +2,32 @@
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
-
 extern FILE *yyin;
 int erros;
 extern yylineno, yytext;
 %}
-
-
 %union {
  int intval;
  double floatval;
  char *strval;
 }
-
-
 %token <strval> STRING
 %token <floatval> APPROXNUM
 %token <intval> INTNUM
 
-%token ALGORITMO 
-%token VAR
-%token INICIO
-%token COMENTARIO
-%token ESCREVA
-%token FIMALGORITMO
+%token ALGORITMO VAR INICIO COMENTARIO ESCREVA FIMALGORITMO
 
-%token MAIORIGUAL
-%token DIFERENTE
-%token IGUAL
-%token MENOR
-%token MENORIGUAL
-%token MAIOR
+%token MAIORIGUAL DIFERENTE IGUAL MENOR MENORIGUAL MAIOR
 
-%token PONTOPONTO
-%token VIRGULA
-%token FCOLCHETE
-%token ACOLCHETE
-%token FPARENTESE
-%token APARENTESE
-%token ENTREASPAS
-%token DOISPONTOS
+%token PONTOPONTO VIRGULA FCOLCHETE ACOLCHETE FPARENTESE APARENTESE ENTREASPAS DOISPONTOS
 
-%token SOMA
-%token MENOS
-%token MULTIPLICACAO
-%token DIVISAO
-%token RESTO
-%token POTENCIA
+%token SOMA MENOS MULTIPLICACAO DIVISAO RESTO POTENCIA
 
-%token LEIA
-%token ATRIBUICAO
-%token BRANCO 
+%token LEIA ATRIBUICAO BRANCO VARIAVEL REAL NUMERO CARACTER INTEIRO
 
-%token VARIAVEL
-%token REAL
-%token NUMERO
-%token CARACTER
-%token INTEIRO
-
-%token SE
-%token FIMSE
-%token SENAO
-%token ENTAO
-%token ATE
-%token DE 
-%token FACA
-%token PARA
-%token FIMPARA
-%token ENQUANTO
-%token FIMENQUANTO
-%token REPITA
-%token FIMREPITA
-%token QUEBRA_LINHA
-%token CASO
-%token FIMFACA
-%token FUNCAO
-%token FIMFUNCAO
-%token OUTROCASO
-%token PROCEDIMENTO
-%token FIMPROCEDIMENTO
-%token PASSO
-%token VETOR
-%token RETORNE
-%token ESCOLHA
-%token FIMESCOLHA
-%token COMPR
-%token COPIA
-%token MAIUSC
-%token INTERROMPA
-
+%token SE FIMSE SENAO ENTAO ATE DE FACA PARA FIMPARA ENQUANTO FIMENQUANTO
+%token REPITA FIMREPITA QUEBRA_LINHA CASO FIMFACA FUNCAO FIMFUNCAO OUTROCASO PROCEDIMENTO
+%token FIMPROCEDIMENTO PASSO VETOR RETORNE ESCOLHA FIMESCOLHA COMPR COPIA MAIUSC INTERROMPA
 
 %left OU
 %left E
@@ -99,7 +36,6 @@ extern yylineno, yytext;
 %left MULTIPLICACAO DIVISAO
 %right POTENCIA RAIZQ
 %nonassoc UMINUS
-
 
 %start Programa
 
