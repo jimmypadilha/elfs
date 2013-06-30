@@ -107,44 +107,39 @@ extern yylineno, yytext;
 
 
 Programa:
-	Algoritmo NomeAlgoritmo Var Funcao Procedimento Inicio Comandos FimAlgoritmo
+	DeclAlgoritmo Var /*Funcao Procedimento Inicio Comandos FimAlgoritmo*/
 ;
 
-Algoritmo:
-	ALGORITMO
+DeclAlgoritmo:
+	ALGORITMO STRING TerminaLinha
 	| error {erros++; yyerror("Falta a palavra algoritmo", yylineno, yytext);}
 ;
 
-NomeAlgoritmo:
-	STRING TerminaLinha 
-	| error {erros++; yyerror("Falta o nome do algoritmo", yylineno, yytext);}
-;
-
 Var:
-	VAR TerminaLinha
-	| VAR TerminaLinha DeclVar
+	VAR TerminaLinha DeclVar Funcao Procedimento Inicio
 	| error {erros++; yyerror("Falta a palavra var", yylineno, yytext);}
 ;
 
 VarFuncao:
 	
-        | VAR TerminaLinha
-        | VAR TerminaLinha DeclVar
-        | error {erros++; yyerror("Problema no var da funcao", yylineno, yytext);}
+	| VAR TerminaLinha DeclVar
 ;
 
 
 Funcao:
 	
-	| DeclFuncao VarFuncao Inicio Comandos RetorneFuncao FimFuncao
+	| DeclFuncao VarFuncao InicioFuncao
+	/*| error {erros++; yyerror("Problema na estrutura da funcao", yylineno, yytext);}*/
 ;
 
 DeclFuncao:
 	FUNCAO VARIAVEL APARENTESE DeclVar FPARENTESE DOISPONTOS TipoVar TerminaLinha
+	| error {erros++; yyerror("Problema na declaracao da funcao", yylineno, yytext);}
 ;
 
 RetorneFuncao:
 	RETORNE TipoRetorno TerminaLinha
+	| error {erros++; yyerror("Esperada a palavra retorne", yylineno, yytext);}
 ;
 
 TipoRetorno:
@@ -155,11 +150,17 @@ TipoRetorno:
 
 FimFuncao:
 	FIMFUNCAO TerminaLinha
+	| error {erros++; yyerror("Esperada a palavra fimfuncao", yylineno, yytext);}
 ;
 
 Procedimento:
 
-	| DeclProc Inicio Comandos FIMPROCEDIMENTO TerminaLinha
+	| DeclProc InicioProcedimento
+;
+
+FimProcedimento:
+        FIMPROCEDIMENTO TerminaLinha
+        | error {erros++; yyerror("Esperada a palavra fimprocedimento", yylineno, yytext);}
 ; 
 
 DeclProc:
@@ -167,7 +168,7 @@ DeclProc:
 ;
 
 DeclVar:
-	DeclVarList DOISPONTOS TipoVar TerminaLinha
+	
 	| DeclVarList DOISPONTOS TipoVar TerminaLinha DeclVar
   	| DeclVarList DOISPONTOS TipoVar
 ;
@@ -192,8 +193,21 @@ DeclStringList:
 ;
 
 Inicio:
-	INICIO TerminaLinha
+	INICIO TerminaLinha FimAlgoritmo
+	| INICIO TerminaLinha Comandos FimAlgoritmo
 	| error {erros++; yyerror("Falta a palavra inicio", yylineno, yytext);}
+;
+
+InicioFuncao:
+        INICIO TerminaLinha RetorneFuncao FimFuncao
+        | INICIO TerminaLinha Comandos RetorneFuncao FimFuncao
+        | error {erros++; yyerror("Esperada a palavra inicio na funcao", yylineno, yytext);}
+;
+
+InicioProcedimento:
+        INICIO TerminaLinha FimProcedimento
+        | INICIO TerminaLinha Comandos FimProcedimento
+        | error {erros++; yyerror("Esperada a palavra inicio no procedimento", yylineno, yytext);}
 ;
 
 Comandos:
