@@ -107,7 +107,7 @@ extern yylineno, yytext;
 
 
 Programa:
-	DeclAlgoritmo Var /*Funcao Procedimento Inicio Comandos FimAlgoritmo*/
+	DeclAlgoritmo Var
 ;
 
 DeclAlgoritmo:
@@ -129,7 +129,6 @@ VarFuncao:
 Funcao:
 	
 	| DeclFuncao VarFuncao InicioFuncao
-	/*| error {erros++; yyerror("Problema na estrutura da funcao", yylineno, yytext);}*/
 ;
 
 DeclFuncao:
@@ -222,7 +221,6 @@ Comandos:
 	| Comandos Enquanto
 	| Comandos Proc
 	| Comandos Interrompa
-	/*| error {erros++; yyerror("Comando invalido", yylineno, yytext);}*/
 ;
 
 Escreva:
