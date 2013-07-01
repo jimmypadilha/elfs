@@ -13,7 +13,7 @@ extern yylineno;
 extern char *yytext;
 
 void inserir(tab_hash *t, char *var, char *escopo) {
-if (!buscar(t, var, escopo))
+if (!Pesquisa(t, var, escopo))
 insere(t, var, escopo);
 else {
 erros++;
@@ -22,7 +22,7 @@ printf(" ERRO: variável %s declarada mais de uma vez\n", var);
 }
 
 void checar_variavel(tab_hash *t, char *var, char *escopo) {
-if (!buscar(t, var, escopo)) {
+if (!Pesquisa(t, var, escopo)) {
 erros++;
 printf("ERRO: variável %s não declarada no escopo %s\n", var, escopo );
     }
@@ -389,7 +389,7 @@ int main(int argc, char *argv[]) {
     		yyin = fopen(argv[1], "r");
 		erros = 0;
 		yyparse();
-		t = cria_hash();
+		t = IniciaHash();
 		if (erros == 0)
 			printf("  Arquivo compilado com sucesso!\n");
 		else
