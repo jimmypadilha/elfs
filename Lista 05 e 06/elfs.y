@@ -2,11 +2,41 @@
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+#include "tab_hash.c"
+#define YYSTYPE char*
 
 extern FILE *yyin;
+extern char *yytext;
 int erros;
-extern yylineno, yytext;
+tab_hash *t;
+char escopo_var[30];
+char nome_var[30];
+extern yylineno;
+
+
+void inserir(tab_hash *t, char *nome_var, char *escopo_var, int linha) {
+	if (!buscar(t, nome_var, escopo_var))
+		insere(t, nome_var, escopo_var);
+	else {
+		erros++;
+		printf("ERRO: variável '%s' declarada mais de uma vez! LINHA: %d\n", nome_var, linha);
+	}
+}
+
+void checar_variavel(tab_hash *t, char *nome_var, char *escopo_var, int linha) {
+	if (!buscar(t, nome_var, escopo_var)) {
+		erros++;
+		printf("ERRO: variável '%s' não declarada no escopo %s! LINHA: %d\n", nome_var, escopo_var, linha);
+   	}
+}
+
+
 %}
+
+%locations
+
+%error-verbose
 
 
 %union {
@@ -105,40 +135,56 @@ extern yylineno, yytext;
 
 %%
 
+/*Entrada:
+Algoritmo Nome_Algoritmo Fim_Linha Var Inicio Fim_Linha {strcpy(escopo,"global");} Comandos Fim
+| Algoritmo Nome_Algoritmo Fim_Linha Var Estrutura_Funcao Inicio Fim_Linha {strcpy(escopo,"global");} Comandos Fim
+;
+*/
 
 Programa:
-	DeclAlgoritmo Var
+	Algoritmo NomeAlgoritmo Var Funcao Procedimento Inicio /*{strcpy(escopo,"global");}*/ Comandos FimAlgoritmo
 ;
 
-DeclAlgoritmo:
-	ALGORITMO STRING TerminaLinha
+Algoritmo:
+	ALGORITMO
 	| error {erros++; yyerror("Falta a palavra algoritmo", yylineno, yytext);}
 ;
 
+NomeAlgoritmo:
+	STRING TerminaLinha
+	| STRING //{$1 = strdup(yytext); printf("Nome: %s\n", $1);} 
+	| error {erros++; yyerror("Falta o nome do algoritmo", yylineno, yytext);}
+;
+
 Var:
-	VAR TerminaLinha DeclVar Funcao Procedimento Inicio
+	VAR TerminaLinha //{strcpy(escopo,"local");} {strcpy(escopo,"global");}
+	| VAR TerminaLinha DeclVar //{strcpy(escopo,"local");} {strcpy(escopo,"global");}
 	| error {erros++; yyerror("Falta a palavra var", yylineno, yytext);}
+;
+
+VarUtil: 
+	VARIAVEL //{$1 = strdup(yytext); printf("Nome: %s\n", $1);}
+	| error {erros++; yyerror("Falta a variavel", yylineno, yytext);}	
 ;
 
 VarFuncao:
 	
-	| VAR TerminaLinha DeclVar
+        | VAR TerminaLinha //{strcpy(escopo,"local");} {strcpy(escopo,"global");}
+        | VAR TerminaLinha DeclVar //{strcpy(escopo,"local");} {strcpy(escopo,"global");}
+        | error {erros++; yyerror("Problema no var da funcao", yylineno, yytext);}
 ;
-
 
 Funcao:
 	
-	| DeclFuncao VarFuncao InicioFuncao
+	| DeclFuncao VarFuncao Inicio /*{strcpy(escopo,"local");}*/ Comandos RetorneFuncao FimFuncao
 ;
 
 DeclFuncao:
-	FUNCAO VARIAVEL APARENTESE DeclVar FPARENTESE DOISPONTOS TipoVar TerminaLinha
-	| error {erros++; yyerror("Problema na declaracao da funcao", yylineno, yytext);}
+	FUNCAO VARIAVEL APARENTESE /*{strcpy(escopo,"local");}*/ DeclVar FPARENTESE DOISPONTOS TipoVar TerminaLinha
 ;
 
 RetorneFuncao:
 	RETORNE TipoRetorno TerminaLinha
-	| error {erros++; yyerror("Esperada a palavra retorne", yylineno, yytext);}
 ;
 
 TipoRetorno:
@@ -149,17 +195,11 @@ TipoRetorno:
 
 FimFuncao:
 	FIMFUNCAO TerminaLinha
-	| error {erros++; yyerror("Esperada a palavra fimfuncao", yylineno, yytext);}
 ;
 
 Procedimento:
 
-	| DeclProc InicioProcedimento
-;
-
-FimProcedimento:
-        FIMPROCEDIMENTO TerminaLinha
-        | error {erros++; yyerror("Esperada a palavra fimprocedimento", yylineno, yytext);}
+	| DeclProc Inicio Comandos FIMPROCEDIMENTO TerminaLinha
 ; 
 
 DeclProc:
@@ -167,7 +207,7 @@ DeclProc:
 ;
 
 DeclVar:
-	
+	DeclVarList DOISPONTOS TipoVar TerminaLinha
 	| DeclVarList DOISPONTOS TipoVar TerminaLinha DeclVar
   	| DeclVarList DOISPONTOS TipoVar
 ;
@@ -180,8 +220,8 @@ TipoVar:
 ;
 
 DeclVarList:
-	VARIAVEL
-	| VARIAVEL VIRGULA DeclVarList
+	VARIAVEL //{$1 = strdup(yytext); inserir(t, $1, escopo);}
+	| VARIAVEL VIRGULA DeclVarList //{$1 = strdup(yytext); inserir(t, $1, escopo);}
 	| error {erros++; yyerror("Problema na lista de variaveis", yylineno, yytext);}
 ;
 
@@ -192,21 +232,8 @@ DeclStringList:
 ;
 
 Inicio:
-	INICIO TerminaLinha FimAlgoritmo
-	| INICIO TerminaLinha Comandos FimAlgoritmo
+	INICIO TerminaLinha
 	| error {erros++; yyerror("Falta a palavra inicio", yylineno, yytext);}
-;
-
-InicioFuncao:
-        INICIO TerminaLinha RetorneFuncao FimFuncao
-        | INICIO TerminaLinha Comandos RetorneFuncao FimFuncao
-        | error {erros++; yyerror("Esperada a palavra inicio na funcao", yylineno, yytext);}
-;
-
-InicioProcedimento:
-        INICIO TerminaLinha FimProcedimento
-        | INICIO TerminaLinha Comandos FimProcedimento
-        | error {erros++; yyerror("Esperada a palavra inicio no procedimento", yylineno, yytext);}
 ;
 
 Comandos:
@@ -219,8 +246,9 @@ Comandos:
 	| Comandos Repita
 	| Comandos Para
 	| Comandos Enquanto
-	| Comandos Proc
+	// | Comandos Proc
 	| Comandos Interrompa
+	/*| error {erros++; yyerror("Comando invalido", yylineno, yytext);}*/
 ;
 
 Escreva:
@@ -267,7 +295,7 @@ FimSe:
 ;
 
 Escolha:
-	ESCOLHA VARIAVEL TerminaLinha CasoList OutroCaso Comandos FIMESCOLHA TerminaLinha
+	ESCOLHA VarUtil TerminaLinha CasoList OutroCaso Comandos FIMESCOLHA TerminaLinha
 ;
 
 CasoList:
@@ -290,11 +318,11 @@ LimiteRepita:
 ;
 
 Para:
-	PARA VARIAVEL DE LimitePara ATE LimitePara PassoPara FACA TerminaLinha Comandos FIMPARA TerminaLinha
+	PARA VarUtil DE LimitePara ATE LimitePara PassoPara FACA TerminaLinha Comandos FIMPARA TerminaLinha
 ;
 
 LimitePara:
-	COMPR APARENTESE VARIAVEL FPARENTESE
+	COMPR APARENTESE VarUtil FPARENTESE
 	| Expr
 ;
 
@@ -306,11 +334,11 @@ PassoPara:
 Enquanto:
 	ENQUANTO Expr FACA TerminaLinha Comandos FIMENQUANTO TerminaLinha
 ;
-
+/*
 Proc:
 	VARIAVEL APARENTESE FPARENTESE TerminaLinha
 ;
-
+*/
 Interrompa:
 	INTERROMPA TerminaLinha
 ;
@@ -372,28 +400,21 @@ int main(int argc, char *argv[]) {
   	}
 	else{
     		yyin = fopen(argv[1], "r");
-		erros = 0;
 		yyparse();
 
 		if (erros == 0)
-			printf("  Arquivo compilado com sucesso!\n");
+			printf("  ALGORTITMO COMPILADO COM SUCESSO :)\n");
 		else
-			printf("  Arquivo não compilado.\n");
+			printf("  ERROS Encontrados no Algorimo \n");
      	return 0;
   }
 }
 
-int yyerror(char *s, int line, char *msg) {
-  	//printf("ERRO->%d %s %s\n", line, s, msg);
-	erros++;
-	/*
-	printf("Erro: %s \n", s);
-	printf("\t %d ", line);
-	printf("%s \n",msg);*/
-	printf("Erro: %s \n\t%d %s\n", s, line, msg);
-
-
-	return 0;
+int yyerror(char *s,int line, char *msg) {
+  	if (line > 0 && line < 100) {
+	printf("Erro na Linha: %d. %s .\n",line,s);
+    
+	return 0;  }
 }
 
 int yywrap(void){

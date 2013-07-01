@@ -4,7 +4,7 @@ elfs: elfs.y elfs.lex
 	gcc -o elfs elfs.lex.c elfs.tab.c -lfl 
 
 clean:
-	rm -f *.c *.h elfs Makefile~
+	rm -f *tab.c *lex.c  *tab.h elfs Makefile~
 
 test_all: elfs
 	./elfs Exemplos/Link1/1.1_Ola_Mundo.alg
