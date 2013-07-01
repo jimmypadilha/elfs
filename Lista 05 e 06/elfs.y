@@ -3,33 +3,19 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "tab_hash.c"
+//#include "tab_hash.c"
 #define YYSTYPE char*
 
 extern FILE *yyin;
 extern char *yytext;
 int erros;
-tab_hash *t;
+//tab_hash *t;
 char escopo_var[30];
 char nome_var[30];
 extern yylineno;
 
 
-void inserir(tab_hash *t, char *nome_var, char *escopo_var, int linha) {
-	if (!buscar(t, nome_var, escopo_var))
-		insere(t, nome_var, escopo_var);
-	else {
-		erros++;
-		printf("ERRO: variável '%s' declarada mais de uma vez! LINHA: %d\n", nome_var, linha);
-	}
-}
 
-void checar_variavel(tab_hash *t, char *nome_var, char *escopo_var, int linha) {
-	if (!buscar(t, nome_var, escopo_var)) {
-		erros++;
-		printf("ERRO: variável '%s' não declarada no escopo %s! LINHA: %d\n", nome_var, escopo_var, linha);
-   	}
-}
 
 
 %}

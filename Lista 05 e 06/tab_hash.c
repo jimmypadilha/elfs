@@ -1,86 +1,77 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#define tamanhoHash 500
-
-typedef struct {
-	int chave;
-} tab_hash;
-
-void transforma(char *variavel){
-int i;
-    for(i = 0; variavel[i] != '\0'; ++i){
-        if((variavel[i]>=65)&&(variavel[i]<=90))
-            variavel[i] = variavel[i] + 32;
-    }
-}
-// Calcula a função de espalhamento
-// transforma a chave no indice da tabela hash.
-unsigned int gerar_pesos_variavel(char *variavel)
+#define tamanhoHash 10
+typedef struct
 {
-    int peso = 0, i;
-    transforma(variavel);
-    for(i = 0; variavel[i] != '\0'; ++i){
-        peso = peso * 61 + variavel[i];
-    }
-    peso = ((peso+1) % tamanhoHash);
-        if(peso<0)
-        peso=peso*(-1);
-	return (peso);
-}
+   char escopo[5], variavel[10], tipo[7];
+}tab_hash;
 
-unsigned int gerar_pesos_escopo(char *escopo)
-{
-    int peso = 0, i;
-    transforma(escopo);
-    for(i = 0; escopo[i] != '\0'; ++i){
-        peso = peso * 61 + escopo[i];
-    }
-    peso = (peso % tamanhoHash);
-        if(peso<0)
-        peso=peso*(-1);
-	return (peso);
-}
-
-
+// Cria a tabela hash
 
 tab_hash *cria_hash ()
 {
     tab_hash *temp;
     int i;
     //Aloca memoria suficiente para o nó da tabela
-   if((temp = (tab_hash*)malloc(2*tamanhoHash*sizeof(tab_hash))) != NULL)
+
+   if((temp = (tab_hash*)malloc(tamanhoHash*sizeof(tab_hash))) != 0)
    {
         //Inicia todos os valores da tabela
         for(i = 0; i < tamanhoHash; i++){
-            temp[i].chave = 0;
+            temp[i] = NULL;
         }
         return temp;
    }
    else
         exit(0);
 }
-// Insere uma variavelvel na tabela t de tamanho m
-void insere(tab_hash *t, char *variavel, char *escopo)
+/* Calcula a função de espalhamento
+   transforma a chave no indice da tabela hash.
+*/
+
+unsigned int funcao_hash(char *variavel)
 {
-    int j = 0, k = 0;
-        j = gerar_pesos_variavel(variavel);
-        k = gerar_pesos_escopo(escopo);
-        t[j+k].chave = (j+k);
+    int indice = 0, i;
+    for(i = 0; variavel[i] != '\0'; ++i){
+        printf("CARACTER = %c   ----   ASCII = %d\n",variavel[i], variavel[i]);
+        indice = indice * 19 + variavel[i];
+    }
+    indice = (indice % tamanhoHash);
+	printf("Indice = %d\n\n", indice);
+	return (indice);
 }
 
-int buscar(tab_hash *t, char *variavel, char *escopo)
+// Insere uma variavelvel na tabela t de tamanho m
+
+void inserir(tab_hash *h, char *variavel, char *tipo, char *escopo)
+{
+    int j = 0;
+	char temp[10] = variavel;
+	strcat(variavel, tipo);
+	strcat(variavel, escopo);
+    transforma(variavel);
+    j = funcao_hash(variavel);
+	if(h[j] != 0){
+		h[j].variavel = temp;
+		h[j].escopo = escopo;
+		h[j].tipo = tipo;
+		printf("Inserida posicao: %d\n\n", j);
+	}else if(h[j].variavel == temp){
+		printf("Variavel ja presente na tabela");
+	}
+	
+}
+
+int buscar(tab_hash *h, char *pesquisa)
 {
     int i = 0;
-    int j = 0, k = 0;
-    transforma(variavel);
-    transforma(escopo);
-    j = gerar_pesos_variavel(variavel);
-    k = gerar_pesos_escopo(escopo);
-    if((i < tamanhoHash))//Garante a comparação com todos elementos
+    if((i < tamanhoHash)) //Garante a comparação com todos elementos
     {
-                if(t[j+k].chave != 0){
-                    return 1;//Se for encontrado a função recebe o valor da pesquisa, e invalidando a 1º condicional
+        int j = gerar_pesos(pesquisa);
+                if(h[j].chave != 0){
+                    printf("ACHOU!!! \n");
+                    return 1; //Se for encontrado a função recebe o valor da pesquisa, e invalidando a 1º condicional
                 }
                 else{
                     return 0;
@@ -89,6 +80,50 @@ int buscar(tab_hash *t, char *variavel, char *escopo)
     }
     else
     {
-     return 0;//Quando o elemento é encontrado j!=0, invalidando a 1º condicional
+     return 0; //Quando o elemento é encontrado j!=0, invalidando a 1º condicional
     }
+}
+
+void transforma(char *variavel){
+int i;
+    for(i = 0; variavel[i] != '\0'; ++i){
+        if((variavel[i]>=65)&&(variavel[i]<=90))
+            variavel[i] = variavel[i] + 32;
+    }
+    printf("TRANSFORMADO => %s \n",variavel);
+}
+
+int main ()
+{
+    char escopo[5], variavel[10], pesquisa[10], tipo[7];
+    int opcao = 0;
+    tab_hash *h;
+    h = cria_hash();
+
+    do{
+        printf("Digite a variavel: \n");
+        gets(variavel);
+        printf("LOCAL ou GLOBAL?\n");
+        gets(escopo);
+        printf("Digite o tipo:\n");
+        gets(tipo);
+		inserir(h,variavel,tipo,escopo);
+
+        ++opcao;
+    }while(opcao != 3);
+
+    printf("Pesquisa: \n");
+    gets(pesquisa);
+    transforma(pesquisa);
+    printf("%s B U S C A N D O . . .  .    .\n",pesquisa);
+
+    if(buscar(h, pesquisa) == 0)
+        {
+            printf("\nVariavel nao encontrado!\n");
+        }
+        else
+            {
+                printf("\nVariavel encontrado.\n");
+            }
+  return 0;
 }
