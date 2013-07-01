@@ -3,26 +3,31 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-//#include "tab_hash.c"
-#define YYSTYPE char*
+#include "hash.c"
 
 extern FILE *yyin;
-extern char *yytext;
 int erros;
-//tab_hash *t;
-char escopo_var[30];
-char nome_var[30];
+tab_hash *t;
+char escopo[30], var[30];
 extern yylineno;
+extern char *yytext;
 
+void inserir(tab_hash *t, char *var, char *escopo) {
+if (!buscar(t, var, escopo))
+insere(t, var, escopo);
+else {
+erros++;
+printf(" ERRO: variável %s declarada mais de uma vez\n", var);
+}
+}
 
-
-
-
+void checar_variavel(tab_hash *t, char *var, char *escopo) {
+if (!buscar(t, var, escopo)) {
+erros++;
+printf("ERRO: variável %s não declarada no escopo %s\n", var, escopo );
+    }
+}
 %}
-
-%locations
-
-%error-verbose
 
 
 %union {
@@ -121,14 +126,9 @@ extern yylineno;
 
 %%
 
-/*Entrada:
-Algoritmo Nome_Algoritmo Fim_Linha Var Inicio Fim_Linha {strcpy(escopo,"global");} Comandos Fim
-| Algoritmo Nome_Algoritmo Fim_Linha Var Estrutura_Funcao Inicio Fim_Linha {strcpy(escopo,"global");} Comandos Fim
-;
-*/
 
 Programa:
-	Algoritmo NomeAlgoritmo Var Funcao Procedimento Inicio /*{strcpy(escopo,"global");}*/ Comandos FimAlgoritmo
+	Algoritmo NomeAlgoritmo Var Funcao Procedimento Inicio {strcpy(escopo,"global");} Comandos FimAlgoritmo
 ;
 
 Algoritmo:
@@ -138,13 +138,13 @@ Algoritmo:
 
 NomeAlgoritmo:
 	STRING TerminaLinha
-	| STRING //{$1 = strdup(yytext); printf("Nome: %s\n", $1);} 
+	| STRING {$1 = strdup(yytext); printf("Nome: %s\n", $1);} 
 	| error {erros++; yyerror("Falta o nome do algoritmo", yylineno, yytext);}
 ;
 
 Var:
-	VAR TerminaLinha //{strcpy(escopo,"local");} {strcpy(escopo,"global");}
-	| VAR TerminaLinha DeclVar //{strcpy(escopo,"local");} {strcpy(escopo,"global");}
+	VAR TerminaLinha {strcpy(escopo,"local");} {strcpy(escopo,"global");}
+	| VAR TerminaLinha DeclVar {strcpy(escopo,"local");} {strcpy(escopo,"global");}
 	| error {erros++; yyerror("Falta a palavra var", yylineno, yytext);}
 ;
 
@@ -155,18 +155,19 @@ VarUtil:
 
 VarFuncao:
 	
-        | VAR TerminaLinha //{strcpy(escopo,"local");} {strcpy(escopo,"global");}
-        | VAR TerminaLinha DeclVar //{strcpy(escopo,"local");} {strcpy(escopo,"global");}
+        | VAR TerminaLinha {strcpy(escopo,"local");} {strcpy(escopo,"global");}
+        | VAR TerminaLinha DeclVar {strcpy(escopo,"local");} {strcpy(escopo,"global");}
         | error {erros++; yyerror("Problema no var da funcao", yylineno, yytext);}
 ;
 
+
 Funcao:
 	
-	| DeclFuncao VarFuncao Inicio /*{strcpy(escopo,"local");}*/ Comandos RetorneFuncao FimFuncao
+	| DeclFuncao VarFuncao Inicio {strcpy(escopo,"local");} Comandos RetorneFuncao FimFuncao
 ;
 
 DeclFuncao:
-	FUNCAO VARIAVEL APARENTESE /*{strcpy(escopo,"local");}*/ DeclVar FPARENTESE DOISPONTOS TipoVar TerminaLinha
+	FUNCAO VARIAVEL APARENTESE {strcpy(escopo,"local");} DeclVar FPARENTESE DOISPONTOS TipoVar TerminaLinha
 ;
 
 RetorneFuncao:
@@ -386,21 +387,28 @@ int main(int argc, char *argv[]) {
   	}
 	else{
     		yyin = fopen(argv[1], "r");
+		erros = 0;
 		yyparse();
-
+		t = cria_hash();
 		if (erros == 0)
-			printf("  ALGORTITMO COMPILADO COM SUCESSO :)\n");
+			printf("  Arquivo compilado com sucesso!\n");
 		else
-			printf("  ERROS Encontrados no Algorimo \n");
+			printf("  Arquivo não compilado.\n");
      	return 0;
   }
 }
 
-int yyerror(char *s,int line, char *msg) {
-  	if (line > 0 && line < 100) {
-	printf("Erro na Linha: %d. %s .\n",line,s);
-    
-	return 0;  }
+int yyerror(char *s, int line, char *msg) {
+  	//printf("ERRO->%d %s %s\n", line, s, msg);
+	erros++;
+	/*
+	printf("Erro: %s \n", s);
+	printf("\t %d ", line);
+	printf("%s \n",msg);*/
+	printf("Erro: %s \n\t%d %s\n", s, line, msg);
+
+
+	return 0;
 }
 
 int yywrap(void){

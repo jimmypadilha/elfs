@@ -1,10 +1,10 @@
 elfs: elfs.y elfs.lex
 	bison -d elfs.y
 	flex -o elfs.lex.c elfs.lex
-	gcc -o elfs elfs.lex.c elfs.tab.c -lfl 
+	gcc -o elfs elfs.lex.c elfs.tab.c hash.c -lfl
 
 clean:
-	rm -f *tab.c *lex.c  *tab.h elfs Makefile~
+	rm -f *.tab.c *.tab.h elfs Makefile~
 
 test_all: elfs
 	./elfs Exemplos/Link1/1.1_Ola_Mundo.alg
