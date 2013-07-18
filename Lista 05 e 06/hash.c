@@ -1,12 +1,15 @@
 #include "hash.h"
 
+/*Responsavel pela inicializacao da Tabela Hash*/
 tab_hash *IniciaHash () {
-    tab_hash *temp;
+    tab_hash *temp; //ponteiro para a estrutura da hash
     int i;
-    //Aloca memoria suficiente para o nó da tabela
-   if((temp = (tab_hash*)malloc(2*tam*sizeof(tab_hash))) != NULL)
+    /* Aloca bloco consecutivo de bytes para  na memoria para a tabela
+    *  Utilizamos o sizeOF para determinar a qde de bytes da nossa estrutura 
+    */
+    if((temp = (tab_hash*)malloc(2*tam*sizeof(tab_hash))) != NULL)
    {
-        //Inicia todos os valores da tabela
+    //Inicia todos os valores da tabela
         for(i = 0; i < tam; i++){
             temp[i].chave = 0;
         }
