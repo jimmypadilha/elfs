@@ -7,10 +7,10 @@ tab_hash *IniciaHash () {
     /* Aloca bloco consecutivo de bytes para  na memoria para a tabela
     *  Utilizamos o sizeOF para determinar a qde de bytes da nossa estrutura 
     */
-    if((temp = (tab_hash*)malloc(2*tam*sizeof(tab_hash))) != NULL)
+    if((temp = (tab_hash*)malloc(2*TAMANHO_HASH*sizeof(tab_hash))) != NULL)
    {
     //Inicia todos os valores da tabela
-        for(i = 0; i < tam; i++){
+        for(i = 0; i < TAMANHO_HASH; i++){
             temp[i].chave = 0;
         }
         return temp;
@@ -33,7 +33,7 @@ unsigned int Variavel(char *variavel) {
     for(i = 0; variavel[i] != '\0'; ++i){
         peso = peso * 61 + variavel[i];
     }
-    peso = ((peso+1) % tam);
+    peso = ((peso+1) % TAMANHO_HASH);
         if(peso<0)
         peso=peso*(-1);
 return (peso);
@@ -45,7 +45,7 @@ unsigned int Escopo(char *escopo) {
     for(i = 0; escopo[i] != '\0'; ++i){
         peso = peso * 61 + escopo[i];
     }
-    peso = (peso % tam);
+    peso = (peso % TAMANHO_HASH);
         if(peso<0)
         peso=peso*(-1);
 return (peso);
@@ -58,7 +58,7 @@ int Pesquisa(tab_hash *t, char *variavel, char *escopo) {
     MudaVar(escopo);
     j = Variavel(variavel);
     k = Escopo(escopo);
-    if((i < tam))
+    if((i < TAMANHO_HASH))
     {
                 if(t[j+k].chave != 0){
                     return 1;
@@ -73,6 +73,7 @@ int Pesquisa(tab_hash *t, char *variavel, char *escopo) {
     }
 }
 
+ /*Responsavel pela insercao dos dados na tabela hash */
 void insere(tab_hash *t, char *variavel, char *escopo) {
     int j = 0, k = 0;
         j = Variavel(variavel);

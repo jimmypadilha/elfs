@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#define tam 1000
+#define TAMANHO_HASH 1000
 
 typedef struct {
 int chave;
