@@ -19,10 +19,18 @@ tab_hash *inicializarHash () {
         exit(0);
 }
 
-void MudaVar(char *variavel) {
+ /*Converte sequencia de caracteres para minusculo caso estejam maiusculo */
+void converterString(char *variavel) {
     int i;
-    for(i = 0; variavel[i] != '\0'; ++i){
-        if((variavel[i]>=65)&&(variavel[i]<=90))
+       	/* Caso algum caractere esteja em letra maiuscula
+	* e transformado em letra minuscula, pois visualg
+       	*  nao e case sensitive
+	* 65 - codigo ascii para A
+	* 90 - codigo ascii para Z
+	* para trasnformar esse intervalo so adicionar 32
+     	*/
+     for(i = 0; variavel[i] != '\0'; ++i){
+	if((variavel[i]>=65)&&(variavel[i]<=90))
             variavel[i] = variavel[i] + 32;
     }
 }
@@ -31,7 +39,7 @@ void MudaVar(char *variavel) {
 unsigned int Variavel(char *variavel) {
     int peso = 0;
     int i;
-    MudaVar(variavel);
+    converterString(variavel);
     for(i = 0; variavel[i] != '\0'; ++i){
         peso = peso * 61 + variavel[i];
     }
@@ -43,7 +51,7 @@ return (peso);
 
 unsigned int Escopo(char *escopo) {
     int peso = 0, i;
-    MudaVar(escopo);
+    converterString(escopo);
     for(i = 0; escopo[i] != '\0'; ++i){
         peso = peso * 61 + escopo[i];
     }
@@ -56,8 +64,8 @@ return (peso);
 int Pesquisa(tab_hash *t, char *variavel, char *escopo) {
     int i = 0;
     int j = 0, k = 0;
-    MudaVar(variavel);
-    MudaVar(escopo);
+    converterString(variavel);
+    converterString(escopo);
     j = Variavel(variavel);
     k = Escopo(escopo);
     if((i < TAMANHO_HASH))

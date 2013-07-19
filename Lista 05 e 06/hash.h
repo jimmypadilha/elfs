@@ -10,8 +10,8 @@ typedef struct {
 int chave;
 } tab_hash;
 
-tab_hash *IniciaHash ();
-void MudaVar(char *variavel);
+tab_hash *inicializarHash();
+void converterString(char *variavel);
 unsigned int Variavel(char *variavel);
 unsigned int Escopo(char *escopo);
 int Pesquisa(tab_hash *t, char *variavel, char *escopo);
