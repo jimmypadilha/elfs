@@ -49,6 +49,7 @@ unsigned int Variavel(char *variavel) {
 return (peso);
 }
 
+ /*Atribui um peso a sequencia de caracters que esta em escopo */
 unsigned int Escopo(char *escopo) {
     int peso = 0, i;
     converterString(escopo);
@@ -61,6 +62,7 @@ unsigned int Escopo(char *escopo) {
 return (peso);
 }
 
+ /*Pesquisa a existencia de  uma chave na tabela hash */
 int Pesquisa(tab_hash *t, char *variavel, char *escopo) {
     int i = 0;
     int j = 0, k = 0;
