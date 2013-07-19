@@ -1,7 +1,7 @@
 #include "hash.h"
 
 /*Responsavel pela inicializacao da Tabela Hash*/
-tab_hash *IniciaHash () {
+tab_hash *inicializarHash () {
     tab_hash *temp; //ponteiro para a estrutura da hash
     int i;
     /* Aloca bloco consecutivo de bytes para  na memoria para a tabela
@@ -20,15 +20,17 @@ tab_hash *IniciaHash () {
 }
 
 void MudaVar(char *variavel) {
-	int i;
+    int i;
     for(i = 0; variavel[i] != '\0'; ++i){
         if((variavel[i]>=65)&&(variavel[i]<=90))
             variavel[i] = variavel[i] + 32;
     }
 }
 
+ /*atribui um peso a sequencia de caracteres  que esta em variavel*/
 unsigned int Variavel(char *variavel) {
-    int peso = 0, i;
+    int peso = 0;
+    int i;
     MudaVar(variavel);
     for(i = 0; variavel[i] != '\0'; ++i){
         peso = peso * 61 + variavel[i];

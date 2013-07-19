@@ -389,7 +389,7 @@ int main(int argc, char *argv[]) {
     		yyin = fopen(argv[1], "r");
 		erros = 0;
 		yyparse();
-		t = IniciaHash();
+		t = inicializarHash();
 		if (erros == 0)
 			printf("  Arquivo compilado com sucesso!\n");
 		else
