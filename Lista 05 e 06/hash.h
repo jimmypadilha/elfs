@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#define TAMANHO_HASH 1000
+#define TAMANHO_HASH 1024 // Acelera o calculo da funcao de Hash, pois multiplo mais proximo de 2 acima de 1000
 
 typedef struct {
 int chave;
