@@ -1,4 +1,7 @@
 %{
+  /*Zona de inclusao de bibliotecas,estruturas de dados,
+  * funcoes recorridos de C.
+  */
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -14,23 +17,28 @@ char escopo[30], var[30];
 extern yylineno;
 extern char *yytext;
 
+ /*Funcao da Tabela Hash que insere o escopo e nome da variável*/
 void inserir(tab_hash *t, char *var, char *escopo) {
-if (!Pesquisa(t, var, escopo))
-insere(t, var, escopo);
-else {
-erros++;
-printf(" ERRO: variável %s declarada mais de uma vez\n", var);
+  if (!Pesquisa(t, var, escopo))
+	insere(t, var, escopo);
+  else {
+	erros++;
+	printf(" ERRO: variável %s declarada mais de uma vez\n", var);
+  }
 }
-}
+
 
 void checar_variavel(tab_hash *t, char *var, char *escopo) {
-if (!Pesquisa(t, var, escopo)) {
-erros++;
-printf("ERRO: variável %s não declarada no escopo %s\n", var, escopo );
-    }
+  /*Pesquisa e uma funcao da tabela hash que retorna  se a variavel e seu escopo existem na tablea */
+  if (!Pesquisa(t, var, escopo)) {
+	erros++;
+	printf("ERRO: variável %s não declarada no escopo %s\n", var, escopo );
+  }
 }
+
 %}
 
+ /*Zona de declarações bison*/ 
 
 %union {
  int intval;
