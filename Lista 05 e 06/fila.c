@@ -2,7 +2,6 @@
 #include<stdlib.h>
 #include<string.h>
 
-//FILE *arq;
 
 struct lista{
 	char* info;
@@ -36,7 +35,7 @@ void fila_insere(Fila *f,char* v){
 	f->fim=n;
 }
 
-char* fila_retira(Fila* f){
+/*char* fila_retira(Fila* f){
 	Lista *t;
 	char* v;
 	if (fila_vazia(f)){
@@ -49,7 +48,7 @@ char* fila_retira(Fila* f){
 	if (f->ini==NULL) f->fim=NULL;
 	free(t);
 	return v;
-}
+}*/
 
 void fila_libera(Fila *f){
 	Lista *q=f->ini;
@@ -70,20 +69,8 @@ void arq_imprime(Fila *f,FILE *arq){
 	}
 }
 
-void fila_imprime(Fila *f){
-	Lista *q=f->ini;
-	if (fila_vazia(f)) return;
-	while (q!=NULL){
-		printf("\n%s",q->info);
-		q=q->prox;
-	}
-}
 
-void abrir_arq(FILE *arq){
-    if (!(arq=fopen("C:/Users/WEVERTON_PERDIGÃO/Desktop/arquivo/traducao.txt","a+"))){
-        printf("erro na abertura do arquivo!");
-        exit(1);
-    }
-}
+
+
 
 

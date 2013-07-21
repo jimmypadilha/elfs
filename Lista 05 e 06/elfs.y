@@ -408,6 +408,7 @@ int main(int argc, char *argv[])
         				exit(1);
  		    		}
 			arq_imprime(f,arq);
+			fila_libera(f);
 			printf("  Transcrição feita com Sucesso!.\n");
 		}else{
 			printf("  Arquivo não compilado.\n");
