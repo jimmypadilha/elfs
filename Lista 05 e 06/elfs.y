@@ -40,12 +40,14 @@ void checar_variavel(tab_hash *t, char *var, char *escopo) {
 
  /*Zona de declarações bison*/ 
 
+/*Unio especifica o nosso conjunto de  possiveis tipos de valores semanticos*/
 %union {
  int intval;
  double floatval;
  char *strval;
 }
 
+ /*Simbolos Terminais ou palavras reservadas   */
 
 %token <strval> STRING
 %token <floatval> APPROXNUM
@@ -122,7 +124,10 @@ void checar_variavel(tab_hash *t, char *var, char *escopo) {
 %token MAIUSC
 %token INTERROMPA
 
-
+ /*Left - operadore associativo a esquerda
+ * Right - operador associativo a direita
+ * Nonassoc - operador que nao esta associado 
+ */
 %left OU
 %left E
 %left MENOR MAIOR DIFERENTE IGUAL MENORIGUAL MAIORIGUAL 
@@ -131,7 +136,7 @@ void checar_variavel(tab_hash *t, char *var, char *escopo) {
 %right POTENCIA RAIZQ
 %nonassoc UMINUS
 
-
+ /*Simbolo Inicial */
 %start Programa
 
 %%
