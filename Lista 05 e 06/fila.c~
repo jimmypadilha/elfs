@@ -86,4 +86,47 @@ void abrir_arq(FILE *arq){
     }
 }
 
+/*main (){
+    int esc;
+    char* cod;
+    Fila *f=fila_cria();
 
+//    abrir_arq(arq);
+    if (!(arq=fopen("C:/Users/WEVERTON_PERDIGÃO/Desktop/arquivo/traducao.txt","a+"))){
+        printf("erro na abertura do arquivo!");
+        exit(1);
+    }
+
+    while (1){
+        system("cls");
+        scanf("%i",&esc);
+        switch (esc){
+            case 1:
+                getchar();
+                if (!(cod=(char *)(malloc((sizeof(char)*100))))) break;
+                gets(cod);
+                fila_insere(f,cod);
+                break;
+            case 2:
+                cod=fila_retira(f);
+                printf("\n%s",cod);
+                break;
+            case 3:
+                fila_libera(f);
+                printf("liberou a fila toda :O");
+                break;
+            case 4:
+                //fila_imprime(f);
+                arq_imprime(f,arq);
+           //     fflush(arq);
+                break;
+            case 5:
+                fclose(arq);
+                exit(1);
+            default:
+                break;
+
+        }
+        system("pause>0");
+    }
+}*/

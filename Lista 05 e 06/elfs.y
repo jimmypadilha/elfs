@@ -4,7 +4,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include "hash.c"
+#include "fila.c"
 
+Fila* f;
 extern FILE *yyin;
 int erros;
 tab_hash *t;
@@ -219,7 +221,7 @@ DeclStringList:
 ;
 
 Inicio:
-	INICIO TerminaLinha
+	INICIO TerminaLinha {fila_insere(f,"void main() {");}
 	| error {erros++; yyerror("Falta a palavra inicio", yylineno, yytext);}
 ;
 
@@ -381,21 +383,37 @@ TerminaLinha:
 
 %%
 
-int main(int argc, char *argv[]) {
-  	if (argc < 2){
+int main(int argc, char *argv[]) 
+{
+	FILE *arq;
+	
+  	if (argc < 2)
+	{
      		printf("Digite o arquivo\n");
-  	}
-	else{
-    		yyin = fopen(argv[1], "r");
+  	}else{
+		f=fila_cria();
+		char* conc;
+		conc=(char *)(malloc((sizeof(char)*100)));//variável para concatenação de strings
+		yyin = fopen(argv[1], "r");
 		erros = 0;
-		yyparse();
 		t = inicializarHash();
+                yyparse();
 		if (erros == 0)
+		{
 			printf("  Arquivo compilado com sucesso!\n");
-		else
+				//    abrir_arq(arq);				
+				if (!(arq=fopen("traducao.c","w+")))
+				{
+      					printf("erro na abertura do arquivo!");
+        				exit(1);
+ 		    		}
+			arq_imprime(f,arq);
+			printf("  Transcrição feita com Sucesso!.\n");
+		}else{
 			printf("  Arquivo não compilado.\n");
-     	return 0;
-  }
+		     }
+                return 0;	     
+	     }
 }
 
 int yyerror(char *s, int line, char *msg) {
@@ -406,8 +424,6 @@ int yyerror(char *s, int line, char *msg) {
 	printf("\t %d ", line);
 	printf("%s \n",msg);*/
 	printf("Erro: %s \n\t%d %s\n", s, line, msg);
-
-
 	return 0;
 }
 
