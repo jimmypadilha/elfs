@@ -157,47 +157,71 @@ NomeAlgoritmo:
 	| error {erros++; yyerror("Falta o nome do algoritmo", yylineno, yytext);}
 ;
 
+ /* Inicio  Zona de declaracao de variaveis do programa principal */
 Var:
 	VAR TerminaLinha {strcpy(escopo,"local");} {strcpy(escopo,"global");}
 	| VAR TerminaLinha DeclVar {strcpy(escopo,"local");} {strcpy(escopo,"global");}
 	| error {erros++; yyerror("Falta a palavra var", yylineno, yytext);}
 ;
 
+DeclVar:
+        DeclVarList DOISPONTOS TipoVar TerminaLinha
+        | DeclVarList DOISPONTOS TipoVar TerminaLinha DeclVar
+        | DeclVarList DOISPONTOS TipoVar
+;
+
+TipoVar:
+        INTEIRO
+        | REAL
+        | CARACTER
+        | error {erros++; yyerror("Tipo invalido", yylineno, yytext);}
+;
+
+DeclVarList:
+        VARIAVEL //{$1 = strdup(yytext); inserir(t, $1, escopo);}
+        | VARIAVEL VIRGULA DeclVarList //{$1 = strdup(yytext); inserir(t, $1, escopo);}
+        | error {erros++; yyerror("Problema na lista de variaveis", yylineno, yytext);}
+;
+
+
 VarUtil: 
 	VARIAVEL //{$1 = strdup(yytext); printf("Nome: %s\n", $1);}
 	| error {erros++; yyerror("Falta a variavel", yylineno, yytext);}	
 ;
 
-VarFuncao:
 	
+    /*Zona de Declarações de Funções */ 
+
+Funcao:
+        | DeclFuncao VarFuncao Inicio {strcpy(escopo,"local");} Comandos RetorneFuncao FimFuncao
+;
+
+DeclFuncao:
+        FUNCAO VARIAVEL APARENTESE {strcpy(escopo,"local");} DeclVar FPARENTESE DOISPONTOS TipoVar TerminaLinha
+;
+
+VarFuncao:
+        
         | VAR TerminaLinha {strcpy(escopo,"local");} {strcpy(escopo,"global");}
         | VAR TerminaLinha DeclVar {strcpy(escopo,"local");} {strcpy(escopo,"global");}
         | error {erros++; yyerror("Problema no var da funcao", yylineno, yytext);}
 ;
 
-
-Funcao:
-	
-	| DeclFuncao VarFuncao Inicio {strcpy(escopo,"local");} Comandos RetorneFuncao FimFuncao
-;
-
-DeclFuncao:
-	FUNCAO VARIAVEL APARENTESE {strcpy(escopo,"local");} DeclVar FPARENTESE DOISPONTOS TipoVar TerminaLinha
-;
-
 RetorneFuncao:
-	RETORNE TipoRetorno TerminaLinha
+        RETORNE TipoRetorno TerminaLinha
 ;
 
 TipoRetorno:
-	STRING
-	| VARIAVEL
-	| error {erros++; yyerror("Tipo de retorno desconhecido", yylineno, yytext);}
+        STRING
+        | VARIAVEL
+        | error {erros++; yyerror("Tipo de retorno desconhecido", yylineno, yytext);}
 ;
 
+
 FimFuncao:
-	FIMFUNCAO TerminaLinha
+        FIMFUNCAO TerminaLinha
 ;
+
 
 Procedimento:
 
@@ -206,25 +230,6 @@ Procedimento:
 
 DeclProc:
 	PROCEDIMENTO VARIAVEL TerminaLinha
-;
-
-DeclVar:
-	DeclVarList DOISPONTOS TipoVar TerminaLinha
-	| DeclVarList DOISPONTOS TipoVar TerminaLinha DeclVar
-  	| DeclVarList DOISPONTOS TipoVar
-;
-
-TipoVar:
-	INTEIRO
-	| REAL
-	| CARACTER
-	| error {erros++; yyerror("Tipo invalido", yylineno, yytext);}
-;
-
-DeclVarList:
-	VARIAVEL //{$1 = strdup(yytext); inserir(t, $1, escopo);}
-	| VARIAVEL VIRGULA DeclVarList //{$1 = strdup(yytext); inserir(t, $1, escopo);}
-	| error {erros++; yyerror("Problema na lista de variaveis", yylineno, yytext);}
 ;
 
 DeclStringList:
