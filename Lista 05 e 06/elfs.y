@@ -190,7 +190,7 @@ VarUtil:
 ;
 
 	
-    /*Zona de Declarações de Funções */ 
+    /* Inicio Zona de Declarações de Funções */ 
 
 Funcao:
         | DeclFuncao VarFuncao Inicio {strcpy(escopo,"local");} Comandos RetorneFuncao FimFuncao
@@ -222,7 +222,7 @@ FimFuncao:
         FIMFUNCAO TerminaLinha
 ;
 
-
+ /* Inicio zona de declaração de procedimentos */
 Procedimento:
 
 	| DeclProc Inicio Comandos FIMPROCEDIMENTO TerminaLinha
@@ -232,17 +232,20 @@ DeclProc:
 	PROCEDIMENTO VARIAVEL TerminaLinha
 ;
 
+Inicio:
+        INICIO TerminaLinha {fila_insere(f,"void main() {");}
+        | error {erros++; yyerror("Falta a palavra inicio", yylineno, yytext);}
+;
+
+
+
 DeclStringList:
         STRING
         | STRING VIRGULA DeclStringList
         | error {erros++; yyerror("Problema na lista de strings", yylineno, yytext);}
 ;
 
-Inicio:
-	INICIO TerminaLinha {fila_insere(f,"void main() {");}
-	| error {erros++; yyerror("Falta a palavra inicio", yylineno, yytext);}
-;
-
+ /* Zona de Comandos */
 Comandos:
 	
 	| Comandos Escreva
