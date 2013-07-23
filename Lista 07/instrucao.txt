@@ -1,0 +1,18 @@
+Todos os exemplos utilizados para criação deste compilador estão presentes na pasta Exemplos.
+Dentro desta pasta há a divisão por link de exercícios.
+Os exercícios utilizados envolvem comandos como escreva, leia, repita, para, se, escolha, enquanto, procedimento e função.
+
+
+Para compilar os arquivos criados no Visualg, basta utilizar o comando do Makefile:
+
+	make test_all
+
+Se houver a necessidade de guardar o resultado da compilação execute o comando:
+
+	make test_all > <NOME_DO_ARQUIVO>
+
+Para compilar apenas um arquivo digite os comandos:
+	
+	make clean
+	make
+	./elfs <NOME_DO_ARQUIVO.alg>
