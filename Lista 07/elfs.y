@@ -147,7 +147,7 @@ Programa:
 ;
 
 Algoritmo:
-	ALGORITMO
+	ALGORITMO {fila_insere(f, "#include <stdio.h>");}
 //	| error {erros++; yyerror("Falta a palavra algoritmo", yylineno, yytext);}
 ;
 
@@ -251,11 +251,11 @@ Comandos:
 ;
 
 Escreva:
-	ESCREVA EscrevaList TerminaLinha
+	ESCREVA {fila_insere(f, "printf(");} EscrevaList TerminaLinha {fila_insere(f, ");");}
 ;
 
 EscrevaList:
-	STRING
+	STRING {fila_insere(f, $1);}
 	| APARENTESE EscrevaList FPARENTESE
 	| STRING VIRGULA EscrevaList
 	| VARIAVEL
@@ -391,7 +391,7 @@ CopiaList:
 
 
 FimAlgoritmo:
-	FIMALGORITMO TerminaLinha
+	FIMALGORITMO TerminaLinha {fila_insere(f, "}");}
 //	| error {erros++; yyerror("Falta a palavra fimalgoritmo", yylineno, yytext);}
 ;
 
