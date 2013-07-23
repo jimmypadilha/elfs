@@ -333,8 +333,8 @@ Para:
 ;
 
 LimitePara:
-	COMPR APARENTESE VarUtil FPARENTESE
-	| Expr
+  //	COMPR APARENTESE VarUtil FPARENTESE
+	 Expr
 ;
 
 PassoPara:
