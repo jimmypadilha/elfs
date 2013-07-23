@@ -52,6 +52,7 @@ void checar_variavel(tab_hash *t, char *var, char *escopo) {
 %token <strval> STRING
 %token <floatval> APPROXNUM
 %token <intval> INTNUM
+%token <strval> VARIAVEL
 
 %token ALGORITMO 
 %token VAR
@@ -87,7 +88,6 @@ void checar_variavel(tab_hash *t, char *var, char *escopo) {
 %token ATRIBUICAO
 %token BRANCO 
 
-%token VARIAVEL
 %token REAL
 %token NUMERO
 %token CARACTER
@@ -258,7 +258,7 @@ EscrevaList:
 	STRING {fila_insere(f, $1);}
 	| APARENTESE EscrevaList FPARENTESE
 	| STRING VIRGULA EscrevaList
-	| VARIAVEL
+	| VARIAVEL {fila_insere(f, $1);}
 	| VARIAVEL EscrevaList
 	| VARIAVEL VIRGULA EscrevaList
 	| COPIA APARENTESE CopiaList FPARENTESE

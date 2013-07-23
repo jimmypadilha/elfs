@@ -104,7 +104,7 @@ Z [zZ]
 "("    		        return(APARENTESE);
 ")"   			return(FPARENTESE);
 
-[A-Za-z][A-Za-z0-9_]* return(VARIAVEL);
+[A-Za-z][A-Za-z0-9_]* {yylval.strval = strdup(yytext); return(VARIAVEL);}
 
 
 \"(\\.|\"\"|[^"\n])*\"  { yylval.strval = strdup(yytext); return STRING; }
