@@ -4,14 +4,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#define TAMANHO_HASH 1024 // Acelera o calculo da funcao de Hash, pois multiplo mais proximo de 2 acima de 1000
+#define tam 1000
 
 typedef struct {
 int chave;
 } tab_hash;
 
-tab_hash *inicializarHash();
-void converterString(char *variavel);
+tab_hash *IniciaHash ();
+void MudaVar(char *variavel);
 unsigned int Variavel(char *variavel);
 unsigned int Escopo(char *escopo);
 int Pesquisa(tab_hash *t, char *variavel, char *escopo);

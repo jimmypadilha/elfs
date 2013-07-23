@@ -1,15 +1,10 @@
 %{
-  /*Zona de inclusao de bibliotecas,estruturas de dados,
-  * funcoes recorridos de C.
-  */
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include "hash.c"
-#include "fila.c"
 
-Fila* f;
 extern FILE *yyin;
 int erros;
 tab_hash *t;
@@ -17,37 +12,30 @@ char escopo[30], var[30];
 extern yylineno;
 extern char *yytext;
 
- /*Funcao da Tabela Hash que insere o escopo e nome da variável*/
 void inserir(tab_hash *t, char *var, char *escopo) {
-  if (!Pesquisa(t, var, escopo))
-	insere(t, var, escopo);
-  else {
-	erros++;
-	printf(" ERRO: variável %s declarada mais de uma vez\n", var);
-  }
+if (!Pesquisa(t, var, escopo))
+insere(t, var, escopo);
+else {
+erros++;
+printf(" ERRO: variável %s declarada mais de uma vez\n", var);
 }
-
+}
 
 void checar_variavel(tab_hash *t, char *var, char *escopo) {
-  /*Pesquisa e uma funcao da tabela hash que retorna  se a variavel e seu escopo existem na tablea */
-  if (!Pesquisa(t, var, escopo)) {
-	erros++;
-	printf("ERRO: variável %s não declarada no escopo %s\n", var, escopo );
-  }
+if (!Pesquisa(t, var, escopo)) {
+erros++;
+printf("ERRO: variável %s não declarada no escopo %s\n", var, escopo );
+    }
 }
-
 %}
 
- /*Zona de declarações bison*/ 
 
-/*Unio especifica o nosso conjunto de  possiveis tipos de valores semanticos*/
 %union {
  int intval;
  double floatval;
  char *strval;
 }
 
- /*Simbolos Terminais ou palavras reservadas   */
 
 %token <strval> STRING
 %token <floatval> APPROXNUM
@@ -124,19 +112,16 @@ void checar_variavel(tab_hash *t, char *var, char *escopo) {
 %token MAIUSC
 %token INTERROMPA
 
- /*Left - operadore associativo a esquerda
- * Right - operador associativo a direita
- * Nonassoc - operador que nao esta associado 
- */
+
 %left OU
 %left E
 %left MENOR MAIOR DIFERENTE IGUAL MENORIGUAL MAIORIGUAL 
 %left SOMA MENOS
-%left MULTIPLICACAO DIVISAO RESTO
+%left MULTIPLICACAO DIVISAO
 %right POTENCIA RAIZQ
 %nonassoc UMINUS
 
- /*Simbolo Inicial */
+
 %start Programa
 
 %%
@@ -148,77 +133,57 @@ Programa:
 
 Algoritmo:
 	ALGORITMO
-//	| error {erros++; yyerror("Falta a palavra algoritmo", yylineno, yytext);}
+	| error {erros++; yyerror("Falta a palavra algoritmo", yylineno, yytext);}
 ;
 
 NomeAlgoritmo:
 	STRING TerminaLinha
 	| STRING {$1 = strdup(yytext); printf("Nome: %s\n", $1);} 
-//	| error {erros++; yyerror("Falta o nome do algoritmo", yylineno, yytext);}
+	| error {erros++; yyerror("Falta o nome do algoritmo", yylineno, yytext);}
 ;
 
- /* Inicio  Zona de declaracao de variaveis do programa principal */
 Var:
 	VAR TerminaLinha {strcpy(escopo,"local");} {strcpy(escopo,"global");}
 	| VAR TerminaLinha DeclVar {strcpy(escopo,"local");} {strcpy(escopo,"global");}
-//	| error {erros++; yyerror("Falta a palavra var", yylineno, yytext);}
+	| error {erros++; yyerror("Falta a palavra var", yylineno, yytext);}
 ;
 
-DeclVar:
-        DeclVarList DOISPONTOS TipoVar TerminaLinha
-        | DeclVarList DOISPONTOS TipoVar TerminaLinha DeclVar
-        | DeclVarList DOISPONTOS TipoVar
-;
-
-TipoVar:
-        INTEIRO
-        | REAL
-        | CARACTER
-  //      | error {erros++; yyerror("Tipo invalido", yylineno, yytext);}
-;
-
-DeclVarList:
-        VARIAVEL //{$1 = strdup(yytext); inserir(t, $1, escopo);}
-        | VARIAVEL VIRGULA DeclVarList //{$1 = strdup(yytext); inserir(t, $1, escopo);}
-    //    | error {erros++; yyerror("Problema na lista de variaveis", yylineno, yytext);}
-;
-
-
-
-	
-    /* Inicio Zona de Declarações de Funções */ 
-
-Funcao:
-        | DeclFuncao VarFuncao Inicio {strcpy(escopo,"local");} Comandos RetorneFuncao FimFuncao
-;
-
-DeclFuncao:
-        FUNCAO VARIAVEL APARENTESE {strcpy(escopo,"local");} DeclVar FPARENTESE DOISPONTOS TipoVar TerminaLinha
+VarUtil: 
+	VARIAVEL //{$1 = strdup(yytext); printf("Nome: %s\n", $1);}
+	| error {erros++; yyerror("Falta a variavel", yylineno, yytext);}	
 ;
 
 VarFuncao:
-        
+	
         | VAR TerminaLinha {strcpy(escopo,"local");} {strcpy(escopo,"global");}
         | VAR TerminaLinha DeclVar {strcpy(escopo,"local");} {strcpy(escopo,"global");}
-  //      | error {erros++; yyerror("Problema no var da funcao", yylineno, yytext);}
+        | error {erros++; yyerror("Problema no var da funcao", yylineno, yytext);}
+;
+
+
+Funcao:
+	
+	| DeclFuncao VarFuncao Inicio {strcpy(escopo,"local");} Comandos RetorneFuncao FimFuncao
+;
+
+DeclFuncao:
+	FUNCAO VARIAVEL APARENTESE {strcpy(escopo,"local");} DeclVar FPARENTESE DOISPONTOS TipoVar TerminaLinha
 ;
 
 RetorneFuncao:
-        RETORNE TipoRetorno TerminaLinha
+	RETORNE TipoRetorno TerminaLinha
 ;
 
 TipoRetorno:
-        STRING
-        | VARIAVEL
-    //    | error {erros++; yyerror("Tipo de retorno desconhecido", yylineno, yytext);}
+	STRING
+	| VARIAVEL
+	| error {erros++; yyerror("Tipo de retorno desconhecido", yylineno, yytext);}
 ;
-
 
 FimFuncao:
-        FIMFUNCAO TerminaLinha
+	FIMFUNCAO TerminaLinha
 ;
 
- /* Inicio zona de declaração de procedimentos */
 Procedimento:
 
 	| DeclProc Inicio Comandos FIMPROCEDIMENTO TerminaLinha
@@ -228,13 +193,36 @@ DeclProc:
 	PROCEDIMENTO VARIAVEL TerminaLinha
 ;
 
-Inicio:
-        INICIO TerminaLinha {fila_insere(f,"void main() {");}
-      //  | error {erros++; yyerror("Falta a palavra inicio", yylineno, yytext);}
+DeclVar:
+	DeclVarList DOISPONTOS TipoVar TerminaLinha
+	| DeclVarList DOISPONTOS TipoVar TerminaLinha DeclVar
+  	| DeclVarList DOISPONTOS TipoVar
 ;
 
+TipoVar:
+	INTEIRO
+	| REAL
+	| CARACTER
+	| error {erros++; yyerror("Tipo invalido", yylineno, yytext);}
+;
 
- /* Zona de Comandos */
+DeclVarList:
+	VARIAVEL //{$1 = strdup(yytext); inserir(t, $1, escopo);}
+	| VARIAVEL VIRGULA DeclVarList //{$1 = strdup(yytext); inserir(t, $1, escopo);}
+	| error {erros++; yyerror("Problema na lista de variaveis", yylineno, yytext);}
+;
+
+DeclStringList:
+        STRING
+        | STRING VIRGULA DeclStringList
+        | error {erros++; yyerror("Problema na lista de strings", yylineno, yytext);}
+;
+
+Inicio:
+	INICIO TerminaLinha
+	| error {erros++; yyerror("Falta a palavra inicio", yylineno, yytext);}
+;
+
 Comandos:
 	
 	| Comandos Escreva
@@ -275,7 +263,7 @@ Atribuicao:
 
 Se:
 	SE Expr Entao Comandos Senao FimSe
- //	| error {erros++; yyerror("Problema no se", yylineno, yytext);}
+	| error {erros++; yyerror("Problema no se", yylineno, yytext);}
 ;
 
 Senao:
@@ -285,16 +273,16 @@ Senao:
 
 Entao:
 	ENTAO TerminaLinha
-//	| error {erros++; yyerror("Falta a palavra entao", yylineno, yytext);}
+	| error {erros++; yyerror("Falta a palavra entao", yylineno, yytext);}
 ;
 
 FimSe:
 	FIMSE TerminaLinha
-//	| error {erros++; yyerror("Falta a palavra fimse", yylineno, yytext);}
+	| error {erros++; yyerror("Falta a palavra fimse", yylineno, yytext);}
 ;
 
 Escolha:
-	ESCOLHA VarUtil TerminaLinha CasoList OutroCaso /* Comandos */ FIMESCOLHA TerminaLinha
+	ESCOLHA VarUtil TerminaLinha CasoList OutroCaso Comandos FIMESCOLHA TerminaLinha
 ;
 
 CasoList:
@@ -304,20 +292,8 @@ CasoList:
 
 OutroCaso:
 	
-	| OUTROCASO TerminaLinha Comandos
+	| OUTROCASO TerminaLinha
 ;
-
-DeclStringList:
-        STRING
-        | STRING VIRGULA DeclStringList
-      //  | error {erros++; yyerror("Problema na lista de strings", yylineno, yytext);}
-;
-
-VarUtil: 
-        VARIAVEL //{$1 = strdup(yytext); printf("Nome: %s\n", $1);}
-//      | error {erros++; yyerror("Falta a variavel", yylineno, yytext);}       
-;
-
 
 Repita:
 	REPITA TerminaLinha Comandos LimiteRepita
@@ -333,8 +309,8 @@ Para:
 ;
 
 LimitePara:
-  //	COMPR APARENTESE VarUtil FPARENTESE
-	 Expr
+	COMPR APARENTESE VarUtil FPARENTESE
+	| Expr
 ;
 
 PassoPara:
@@ -373,7 +349,7 @@ Expr:
 	| Expr MENOR Expr
 	| Expr RESTO Expr
 	| Expr DIFERENTE Expr
-	| MAIUSC APARENTESE  Expr FPARENTESE
+	| MAIUSC Expr
 	| COPIA APARENTESE CopiaList FPARENTESE
 	| COMPR APARENTESE Expr FPARENTESE
 ;
@@ -386,13 +362,13 @@ Expr:
 CopiaList:
         INTNUM
         | VARIAVEL VIRGULA CopiaList
-  //      | error {erros++; yyerror("Problema na lista de variaveis do copia", yylineno, yytext);}
+        | error {erros++; yyerror("Problema na lista de variaveis do copia", yylineno, yytext);}
 ;
 
 
 FimAlgoritmo:
 	FIMALGORITMO TerminaLinha
-//	| error {erros++; yyerror("Falta a palavra fimalgoritmo", yylineno, yytext);}
+	| error {erros++; yyerror("Falta a palavra fimalgoritmo", yylineno, yytext);}
 ;
 
 TerminaLinha:
@@ -400,43 +376,26 @@ TerminaLinha:
 	| QUEBRA_LINHA TerminaLinha
         | COMENTARIO QUEBRA_LINHA
         | COMENTARIO QUEBRA_LINHA TerminaLinha
-  //      | error {erros++; yyerror("Comentario",yylineno, yytext);}
+        | error {erros++; yyerror("Comentario",yylineno, yytext);}
 ;
 
 %%
 
-int main(int argc, char *argv[]) 
-{
-	FILE *arq;
-	
-  	if (argc < 2)
-	{
+int main(int argc, char *argv[]) {
+  	if (argc < 2){
      		printf("Digite o arquivo\n");
-  	}else{
-		f=fila_cria();
-		char* conc;
-		conc=(char *)(malloc((sizeof(char)*100)));//variável para concatenação de strings
-		yyin = fopen(argv[1], "r");
+  	}
+	else{
+    		yyin = fopen(argv[1], "r");
 		erros = 0;
-		t = inicializarHash();
-                yyparse();
+		yyparse();
+		t = IniciaHash();
 		if (erros == 0)
-		{
 			printf("  Arquivo compilado com sucesso!\n");
-				//    abrir_arq(arq);				
-				if (!(arq=fopen("traducao.c","w+")))
-				{
-      					printf("erro na abertura do arquivo!");
-        				exit(1);
- 		    		}
-			arq_imprime(f,arq);
-			fila_libera(f);
-			printf("  Transcrição feita com Sucesso!.\n");
-		}else{
+		else
 			printf("  Arquivo não compilado.\n");
-		     }
-                return 0;	     
-	     }
+     	return 0;
+  }
 }
 
 int yyerror(char *s, int line, char *msg) {
@@ -447,6 +406,8 @@ int yyerror(char *s, int line, char *msg) {
 	printf("\t %d ", line);
 	printf("%s \n",msg);*/
 	printf("Erro: %s \n\t%d %s\n", s, line, msg);
+
+
 	return 0;
 }
 
