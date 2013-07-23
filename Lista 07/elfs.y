@@ -245,7 +245,7 @@ Comandos:
 	| Comandos Repita
 	| Comandos Para
 	| Comandos Enquanto
-	// | Comandos Proc
+	| Comandos Proc
 	| Comandos Interrompa
 	/*| error {erros++; yyerror("Comando invalido", yylineno, yytext);}*/
 ;
@@ -345,11 +345,11 @@ PassoPara:
 Enquanto:
 	ENQUANTO Expr FACA TerminaLinha Comandos FIMENQUANTO TerminaLinha
 ;
-/*
+
 Proc:
 	VARIAVEL APARENTESE FPARENTESE TerminaLinha
 ;
-*/
+
 Interrompa:
 	INTERROMPA TerminaLinha
 ;
