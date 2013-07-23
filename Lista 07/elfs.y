@@ -265,7 +265,7 @@ EscrevaList:
 ;
 
 Leia:
-	LEIA APARENTESE VARIAVEL FPARENTESE TerminaLinha
+	LEIA APARENTESE VARIAVEL FPARENTESE TerminaLinha {fila_insere(f, "scanf();");}
 ;
 
 Atribuicao:
