@@ -184,10 +184,6 @@ DeclVarList:
 ;
 
 
-VarUtil: 
-	VARIAVEL //{$1 = strdup(yytext); printf("Nome: %s\n", $1);}
-//	| error {erros++; yyerror("Falta a variavel", yylineno, yytext);}	
-;
 
 	
     /* Inicio Zona de Declarações de Funções */ 
@@ -237,13 +233,6 @@ Inicio:
       //  | error {erros++; yyerror("Falta a palavra inicio", yylineno, yytext);}
 ;
 
-
-
-DeclStringList:
-        STRING
-        | STRING VIRGULA DeclStringList
-      //  | error {erros++; yyerror("Problema na lista de strings", yylineno, yytext);}
-;
 
  /* Zona de Comandos */
 Comandos:
@@ -305,7 +294,7 @@ FimSe:
 ;
 
 Escolha:
-	ESCOLHA VarUtil TerminaLinha CasoList OutroCaso Comandos FIMESCOLHA TerminaLinha
+	ESCOLHA VarUtil TerminaLinha CasoList OutroCaso /* Comandos */ FIMESCOLHA TerminaLinha
 ;
 
 CasoList:
@@ -315,8 +304,20 @@ CasoList:
 
 OutroCaso:
 	
-	| OUTROCASO TerminaLinha
+	| OUTROCASO TerminaLinha Comandos
 ;
+
+DeclStringList:
+        STRING
+        | STRING VIRGULA DeclStringList
+      //  | error {erros++; yyerror("Problema na lista de strings", yylineno, yytext);}
+;
+
+VarUtil: 
+        VARIAVEL //{$1 = strdup(yytext); printf("Nome: %s\n", $1);}
+//      | error {erros++; yyerror("Falta a variavel", yylineno, yytext);}       
+;
+
 
 Repita:
 	REPITA TerminaLinha Comandos LimiteRepita
