@@ -109,13 +109,14 @@ Z [zZ]
 
 \"(\\.|\"\"|[^"\n])*\"  return STRING; 
 
--?[0-9]+  		return INTNUM;
+-?[0-9]+  		return INTNUM;}
 
 -?[0-9]+"."[0-9]* |
 -?"."[0-9]+	|
 -?[0-9]+E[-+]?[0-9]+	|
 -?[0-9]+"."[0-9]*E[-+]?[0-9]+ |
--?"."[0-9]*E[-+]?[0-9]+	 return APPROXNUM;
+-?"."[0-9]*E[-+]?[0-9]+	{ yylval.floatval = atof(yytext) ;
+                                  return APPROXNUM; }
 
 %%
 

@@ -1230,12 +1230,12 @@ return(VARIAVEL);
 case 69:
 YY_RULE_SETUP
 #line 110 "elfs.lex"
-{ yylval.strval = strdup(yytext); return STRING; }
+return STRING; 
 	YY_BREAK
 case 70:
 YY_RULE_SETUP
 #line 112 "elfs.lex"
-{ yylval.intval = atoi(yytext); return INTNUM;}
+return INTNUM;
 	YY_BREAK
 case 71:
 #line 115 "elfs.lex"
@@ -1248,15 +1248,14 @@ case 74:
 case 75:
 YY_RULE_SETUP
 #line 118 "elfs.lex"
-{ yylval.floatval = atof(yytext) ;
-                                  return APPROXNUM; }
+return APPROXNUM;
 	YY_BREAK
 case 76:
 YY_RULE_SETUP
-#line 121 "elfs.lex"
+#line 120 "elfs.lex"
 ECHO;
 	YY_BREAK
-#line 1260 "elfs.lex.c"
+#line 1259 "elfs.lex.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -2254,7 +2253,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 121 "elfs.lex"
+#line 120 "elfs.lex"
 
 
 
