@@ -8,13 +8,12 @@
 #include <string.h>
 #include "hash.c"
 #include "fila.c"
-#define YYSTYPE char*
 
 Fila* f;
 extern FILE *yyin;
 int erros;
 tab_hash *t;
-char *conc;
+char *conc, *linha;
 char escopo[30], var[30];
 extern yylineno;
 extern char *yytext;
@@ -38,18 +37,36 @@ void checar_variavel(tab_hash *t, char *var, char *escopo) {
   }
 }
 
+/* Funcao que concatena strings de uma linha de comando */
+void Concatenar(char *texto){
+	strcat(conc, texto);
+	/*printf("Ver... %s\n\n", conc);*/
+}
+
+/* Funcao que limpa a variavel utilizada para concatenacao de strings de um comando */
+void Limpar(){
+	strcpy(linha, conc);
+	printf("Valor linha %s\n\n", linha);
+	strcpy(conc, "" );
+}
+
 %}
 
  /*Zona de declarações bison*/ 
 
-
+/*Union especifica o nosso conjunto de  possiveis tipos de valores semanticos*/
+%union {
+	int intval;
+	double floatval;
+	char *strval;
+}
 
  /*Simbolos Terminais ou palavras reservadas   */
 
-%token  STRING
-%token  APPROXNUM
-%token  INTNUM
-%token  VARIAVEL
+%token <strval> STRING
+%token <floatval> APPROXNUM
+%token <intval> INTNUM
+%token <strval> VARIAVEL
 
 %token ALGORITMO 
 %token VAR
@@ -144,13 +161,13 @@ Programa:
 ;
 
 Algoritmo:
-	ALGORITMO {fila_insere(f,"#include <stdio.h>"); fila_insere(f,"#include <stdlib.h>");fila_insere(f,"#include <string.h>");}
+	ALGORITMO {fila_insere(f, "#include <stdio.h>");} 
 //	| error {erros++; yyerror("Falta a palavra algoritmo", yylineno, yytext);}
 ;
 
 NomeAlgoritmo:
 	STRING TerminaLinha
-	| STRING {$1 = strdup(yytext); printf("Algoritmo: %s\n", $1);} 
+	| STRING {$1 = strdup(yytext); printf("Nome: %s\n", $1);}  
 //	| error {erros++; yyerror("Falta o nome do algoritmo", yylineno, yytext);}
 ;
 
@@ -162,20 +179,20 @@ Var:
 ;
 
 DeclVar:
-        DeclVarList DOISPONTOS TipoVar TerminaLinha
+        DeclVarList DOISPONTOS TipoVar TerminaLinha {Limpar(); fila_insere(f, linha);}
         | DeclVarList DOISPONTOS TipoVar TerminaLinha DeclVar
         | DeclVarList DOISPONTOS TipoVar
 ;
 
 TipoVar:
-        INTEIRO
-        | REAL
+        INTEIRO {Concatenar("int ");}
+        | REAL 
         | CARACTER
   //      | error {erros++; yyerror("Tipo invalido", yylineno, yytext);}
 ;
 
 DeclVarList:
-        VARIAVEL //{$1 = strdup(yytext); inserir(t, $1, escopo);}
+        VARIAVEL /*{$1 = strdup(yytext); inserir(t, $1, escopo);}*/ {Concatenar($1); Concatenar(";");}
         | VARIAVEL VIRGULA DeclVarList //{$1 = strdup(yytext); inserir(t, $1, escopo);}
     //    | error {erros++; yyerror("Problema na lista de variaveis", yylineno, yytext);}
 ;
@@ -226,7 +243,7 @@ DeclProc:
 ;
 
 Inicio:
-        INICIO TerminaLinha {fila_insere(f,"void main() {");}
+        INICIO TerminaLinha {fila_insere(f, "void main() {");}
       //  | error {erros++; yyerror("Falta a palavra inicio", yylineno, yytext);}
 ;
 
@@ -248,20 +265,25 @@ Comandos:
 ;
 
 Escreva:
-	ESCREVA APARENTESE EscrevaList FPARENTESE TerminaLinha  {strcpy(conc,"printf("); strcat(conc,$3); strcat(conc,");");fila_insere(f,conc);}
+	ESCREVA {Concatenar("printf(");} EscrevaList TerminaLinha {Concatenar(");"); Limpar(); fila_insere(f, linha);}
 ;
+
 EscrevaList:
-	STRING {$$ = strdup(yytext); }
-	//| APARENTESE EscrevaList FPARENTESE
-	//| STRING VIRGULA EscrevaList
-	//| VARIAVEL {fila_insere(f, $1);}
-	//| VARIAVEL EscrevaList
-	//| VARIAVEL VIRGULA EscrevaList
-	//| COPIA APARENTESE CopiaList FPARENTESE
+	STRING {Concatenar($1);}
+	| APARENTESE EscrevaList FPARENTESE 
+	| STRING VIRGULA EscrevaList {Concatenar($1); Concatenar(",");}
+	| VARIAVEL {Concatenar($1);}
+	| VARIAVEL EscrevaList
+	| VARIAVEL VIRGULA EscrevaList
+	| COPIA APARENTESE CopiaList FPARENTESE
 ;
 
 Leia:
-	LEIA APARENTESE VARIAVEL FPARENTESE TerminaLinha {fila_insere(f, "scanf();");}
+	LEIA APARENTESE {Concatenar("scanf(");} LeiaList FPARENTESE TerminaLinha {Concatenar(");"); Limpar(); fila_insere(f, linha);}
+;
+
+LeiaList:
+	VARIAVEL {Concatenar($1);}
 ;
 
 Atribuicao:
@@ -409,9 +431,11 @@ int main(int argc, char *argv[])
 	{
      		printf("Digite o arquivo\n");
   	}else{
-		f=fila_cria();
+		f = fila_cria();
 		
 		conc=(char *)(malloc((sizeof(char)*100)));//variável para concatenação de strings
+		
+		linha=(char *)(malloc((sizeof(char)*100)));//variável para ser passada para a fila
 
 		yyin = fopen(argv[1], "r");
 
@@ -423,13 +447,13 @@ int main(int argc, char *argv[])
 
 		if (erros == 0)
 		{
-			printf("compilado com sucesso!\n");
-				//    abrir_arq(arq);				
-				if (!(arq=fopen("traducao.c","w+")))
-				{
-      					printf("erro na abertura do arquivo!");
-        				exit(1);
- 		    		}
+			printf("  Arquivo compilado com sucesso!\n"); 
+			//    abrir_arq(arq);				
+			if (!(arq=fopen("traducao.c","w+")))
+			{
+    				printf("erro na abertura do arquivo!");
+        			exit(1);
+ 	    		}
 			arq_imprime(f,arq);
 	
 			fila_libera(f);

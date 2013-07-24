@@ -104,18 +104,18 @@ Z [zZ]
 "("    		        return(APARENTESE);
 ")"   			return(FPARENTESE);
 
-[A-Za-z][A-Za-z0-9_]* 	return(VARIAVEL);
+[A-Za-z][A-Za-z0-9_]* 	{yylval.strval = strdup(yytext); return(VARIAVEL);}
 
 
-\"(\\.|\"\"|[^"\n])*\"  return STRING; 
+\"(\\.|\"\"|[^"\n])*\"  { yylval.strval = strdup(yytext); return STRING; }
 
--?[0-9]+  		return INTNUM;
+-?[0-9]+  		{ yylval.intval = atoi(yytext); return INTNUM;}
 
 -?[0-9]+"."[0-9]* |
 -?"."[0-9]+	|
 -?[0-9]+E[-+]?[0-9]+	|
 -?[0-9]+"."[0-9]*E[-+]?[0-9]+ |
--?"."[0-9]*E[-+]?[0-9]+	 return APPROXNUM;
+-?"."[0-9]*E[-+]?[0-9]+	 { yylval.floatval = atof(yytext) ; return APPROXNUM; } 
 
 %%
 
