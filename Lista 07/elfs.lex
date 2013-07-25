@@ -78,7 +78,7 @@ Z [zZ]
 {M}{A}{I}{U}{S}{C}			  return(MAIUSC);
 {I}{N}{T}{E}{R}{R}{O}{M}{P}{A}		  return(INTERROMPA);
 
-[/][/].*		        	   return(COMENTARIO);
+[/][/].*		        	 { yylval.strval = strdup(yytext);return(COMENTARIO);}
 "<-"   				           return(ATRIBUICAO);
 [\n\t\r]+  			           return(QUEBRA_LINHA);
 

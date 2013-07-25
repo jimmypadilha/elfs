@@ -36,20 +36,6 @@ void fila_insere(Fila *f,char* v){
 	f->fim=n;
 }
 
-/*char* fila_retira(Fila* f){
-	Lista *t;
-	char* v;
-	if (fila_vazia(f)){
-		printf("Fila Vazia.\n");
-		exit(1);
-	}
-	t=f->ini;
-	v=t->info;
-	f->ini=t->prox;
-	if (f->ini==NULL) f->fim=NULL;
-	free(t);
-	return v;
-}*/
 
 void fila_libera(Fila *f){
 	Lista *q=f->ini;

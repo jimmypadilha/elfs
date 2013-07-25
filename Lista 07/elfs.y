@@ -65,11 +65,11 @@ void Limpar(){
 %token <floatval> APPROXNUM
 %token <strval> INTNUM
 %token <strval> VARIAVEL
+%token <strval> COMENTARIO
 
-%token ALGORITMO 
+%token  ALGORITMO 
 %token VAR
 %token INICIO
-%token COMENTARIO
 %token ESCREVA
 %token FIMALGORITMO
 
@@ -164,8 +164,7 @@ Algoritmo:
 ;
 
 NomeAlgoritmo:
-	STRING TerminaLinha
-	| STRING {$1 = strdup(yytext); printf("Nome: %s\n", $1);}  
+	 STRING {$1 = strdup(yytext); printf("Algoritmo: %s\n", $1);} TerminaLinha 
 	| error {erros++; yyerror("Falta o nome do algoritmo", yylineno, yytext);}
 ;
 
@@ -410,10 +409,12 @@ FimAlgoritmo:
 TerminaLinha:
         QUEBRA_LINHA
 	| QUEBRA_LINHA TerminaLinha
-        | COMENTARIO QUEBRA_LINHA
-        | COMENTARIO QUEBRA_LINHA TerminaLinha
+        | TK_comentario QUEBRA_LINHA 
+        | TK_comentario QUEBRA_LINHA TerminaLinha
 ;
-
+TK_comentario:
+	COMENTARIO  {Concatenar($1); Limpar(); fila_insere(f, linha);} 
+;
 %%
 
 int main(int argc, char *argv[]) 
