@@ -288,21 +288,21 @@ Atribuicao:
 ;
 
 Se:
-	SE Expr Entao Comandos Senao FimSe
+	SE {Concatenar("if");}  Expr Entao Comandos Senao FimSe {fila_insere(f, linha);}
 ;
 
 Senao:
 	
-	| SENAO TerminaLinha Comandos
+	| SENAO TerminaLinha Comandos {fila_insere(f, "else{");}
 ;
 
 Entao:
-	ENTAO TerminaLinha
+	ENTAO TerminaLinha {Concatenar("{");}
 	| error {erros++; yyerror("Falta a palavra entao", yylineno, yytext);}
 ;
 
 FimSe:
-	FIMSE TerminaLinha
+	FIMSE TerminaLinha {Concatenar("}");}
 ;
 
 Escolha:
@@ -413,7 +413,7 @@ TerminaLinha:
         | TK_comentario QUEBRA_LINHA TerminaLinha
 ;
 TK_comentario:
-	COMENTARIO  {Concatenar($1); Limpar(); fila_insere(f, linha);} 
+	COMENTARIO {Concatenar($1); Limpar(); fila_insere(f, linha);} 
 ;
 %%
 
