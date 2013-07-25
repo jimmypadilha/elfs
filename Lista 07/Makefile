@@ -4,9 +4,9 @@ elfs: elfs.y elfs.lex
 	gcc -o elfs elfs.lex.c elfs.tab.c -lfl
 
 clean:
-	rm -f *.tab.c *.tab.h elfs Makefile~
+	rm -f *.tab.c *.lex.c traducao.c *.tab.h elfs Makefile~
 
-test_all: elfs
+test_all: 
 	./elfs Exemplos/Link1/1.1_Ola_Mundo.alg
 	./elfs Exemplos/Link1/1.2_numero.alg
 	./elfs Exemplos/Link1/1.3_soma.alg
@@ -48,5 +48,5 @@ test_all: elfs
 	./elfs Exemplos/Link5/5.4_strings_vertical_escada.alg
 	./elfs Exemplos/Link5/5.5_strings_vertical_escada_invertida.alg
 
-test_um: elfs
-	./elfs Exemplos/Link3/3.15_fibonacci_ntermos\ .alg
+test_um: 
+	./elfs maior.alg
