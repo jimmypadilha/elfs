@@ -28,7 +28,8 @@ int fila_vazia(Fila *f){
 
 void fila_insere(Fila *f,char* v){
 	Lista *n= (Lista*)malloc(sizeof(Lista));
-	n->info=v;
+	n->info = (char*)malloc(50*sizeof(char));
+        strcpy (n->info, v);
 	n->prox=NULL;
 	if (f->fim!=NULL) f->fim->prox=n;
 	else f->ini=n;
