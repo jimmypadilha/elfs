@@ -6,9 +6,11 @@ algoritmo "função_soma_três"
 
 var
 // Declaração de variáveis
-Valor_1, Valor_2, Valor_3, total, fsoma: real
+Valor_1, Valor_2, Valor_3, fsoma: real
 
 FUNCAO Soma (Recebe_valor1, Recebe_valor2, Recebe_valor3 :Real):Real
+var
+total: real
 
 inicio
 

@@ -191,7 +191,7 @@ TipoVar:
 
 DeclVarList:
         VARIAVEL {strcpy(escopo, "global"); inserir(t, $1, escopo); Concatenar($1); Concatenar(";");}
-        | VARIAVEL VIRGULA DeclVarList {strcpy(escopo, "local"); inserir(t, $1, escopo); strcpy(escopo, "global"); inserir(t, $1, escopo);}
+        | VARIAVEL VIRGULA DeclVarList {/*strcpy(escopo, "local"); inserir(t, $1, escopo);*/ strcpy(escopo, "global"); inserir(t, $1, escopo);}
         | error {erros++; yyerror("Problema na lista de variaveis", yylineno, yytext);}
 ;
 
