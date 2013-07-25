@@ -428,18 +428,11 @@ FimAlgoritmo:
 TerminaLinha:
         QUEBRA_LINHA
 	| QUEBRA_LINHA TerminaLinha
-        | TK_comentario QUEBRA_LINHA 
-        | TK_comentario QUEBRA_LINHA TerminaLinha
+	| COMENTARIO QUEBRA_LINHA {fila_insere(f, $1);}
+        | COMENTARIO QUEBRA_LINHA TerminaLinha {fila_insere(f, $1);}
 ;
 
-TK_comentario:
-	COMENTARIO {Concatenar($1); Limpar(); fila_insere(f, linha);} 
-;
-/*
-Variavel:
-	VARIAVEL {Verificar(t, $1, escopo);}
-;
-*/
+
 %%
 
 int main(int argc, char *argv[]) 
