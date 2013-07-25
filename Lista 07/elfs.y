@@ -29,7 +29,7 @@ void inserir(tab_hash *t, char *var, char *escopo) {
 }
 
 
-void checar_variavel(tab_hash *t, char *var, char *escopo) {
+void Verificar(tab_hash *t, char *var, char *escopo) {
   /*Pesquisa e uma funcao da tabela hash que retorna  se a variavel e seu escopo existem na tablea */
   if (!Pesquisa(t, var, escopo)) {
 	erros++;
@@ -170,7 +170,7 @@ NomeAlgoritmo:
 
  /* Inicio  Zona de declaracao de variaveis do programa principal */
 Var:
-	VAR TerminaLinha {strcpy(escopo,"global");}
+	VAR TerminaLinha
 	| VAR TerminaLinha DeclVar {strcpy(escopo,"global");}
 	| error {erros++; yyerror("Falta a palavra var", yylineno, yytext);}
 ;
@@ -189,7 +189,7 @@ TipoVar:
 ;
 
 DeclVarList:
-        VARIAVEL {inserir(t, $1, escopo);} {Concatenar($1); Concatenar(";");}
+        VARIAVEL {strcpy(escopo, "global"); inserir(t, $1, escopo); Concatenar($1); Concatenar(";");}
         | VARIAVEL VIRGULA DeclVarList {inserir(t, $1, escopo);}
         | error {erros++; yyerror("Problema na lista de variaveis", yylineno, yytext);}
 ;
@@ -268,7 +268,7 @@ EscrevaList:
 	STRING {Concatenar($1);}
 	| APARENTESE EscrevaList FPARENTESE 
 	| STRING VIRGULA EscrevaList {Concatenar($1); Concatenar(",");}
-	| VARIAVEL {Concatenar($1);}
+	| VARIAVEL {Verificar(t, $1, escopo); Concatenar($1);}
 	| VARIAVEL EscrevaList 
 	| VARIAVEL VIRGULA EscrevaList {Concatenar(",");}
 	| COPIA APARENTESE CopiaList FPARENTESE
@@ -279,7 +279,7 @@ Leia:
 ;
 
 LeiaList:
-	VARIAVEL {Concatenar($1);}
+	VARIAVEL {Verificar(t, $1, escopo); Concatenar($1);}
 ;
 
 Atribuicao:
@@ -412,9 +412,15 @@ TerminaLinha:
         | TK_comentario QUEBRA_LINHA 
         | TK_comentario QUEBRA_LINHA TerminaLinha
 ;
+
 TK_comentario:
 	COMENTARIO {Concatenar($1); Limpar(); fila_insere(f, linha);} 
 ;
+/*
+Variavel:
+	VARIAVEL {Verificar(t, $1, escopo);}
+;
+*/
 %%
 
 int main(int argc, char *argv[]) 
