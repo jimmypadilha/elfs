@@ -283,7 +283,7 @@ LeiaList:
 ;
 
 Atribuicao:
-	VARIAVEL ATRIBUICAO Expr TerminaLinha {Limpar(); fila_insere(f, linha);}
+	VARIAVEL ATRIBUICAO Expr TerminaLinha {Verificar(t, $1, escopo); Limpar(); fila_insere(f, linha);}
 	| VARIAVEL ATRIBUICAO VARIAVEL APARENTESE DeclVarList FPARENTESE TerminaLinha
 ;
 
@@ -326,7 +326,7 @@ DeclStringList:
 ;
 
 VarUtil: 
-        VARIAVEL //{$1 = strdup(yytext); printf("Nome: %s\n", $1);}
+        VARIAVEL {Verificar(t, $1, escopo);}
       | error {erros++; yyerror("Falta a variavel", yylineno, yytext);}       
 ;
 
@@ -366,7 +366,7 @@ Interrompa:
 ;
 
 Expr:
-	VARIAVEL {Concatenar($1);}
+	VARIAVEL {Verificar(t, $1, escopo); Concatenar($1);}
 	| INTNUM {Concatenar($1);}
 	| APPROXNUM
 ;
