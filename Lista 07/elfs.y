@@ -164,7 +164,7 @@ Algoritmo:
 ;
 
 NomeAlgoritmo:
-	 STRING {$1 = strdup(yytext); printf("Algoritmo: %s\n", $1);} TerminaLinha 
+	 STRING {$1 = strdup(yytext);} TerminaLinha 
 	| error {erros++; yyerror("Falta o nome do algoritmo", yylineno, yytext);}
 ;
 
