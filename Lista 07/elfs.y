@@ -160,20 +160,20 @@ Programa:
 
 Algoritmo:
 	ALGORITMO {fila_insere(f, "#include <stdio.h>");} 
-//	| error {erros++; yyerror("Falta a palavra algoritmo", yylineno, yytext);}
+	| error {erros++; yyerror("Falta a palavra algoritmo", yylineno, yytext);}
 ;
 
 NomeAlgoritmo:
 	STRING TerminaLinha
 	| STRING {$1 = strdup(yytext); printf("Nome: %s\n", $1);}  
-//	| error {erros++; yyerror("Falta o nome do algoritmo", yylineno, yytext);}
+	| error {erros++; yyerror("Falta o nome do algoritmo", yylineno, yytext);}
 ;
 
  /* Inicio  Zona de declaracao de variaveis do programa principal */
 Var:
 	VAR TerminaLinha {strcpy(escopo,"local");} {strcpy(escopo,"global");}
 	| VAR TerminaLinha DeclVar {strcpy(escopo,"local");} {strcpy(escopo,"global");}
-//	| error {erros++; yyerror("Falta a palavra var", yylineno, yytext);}
+	| error {erros++; yyerror("Falta a palavra var", yylineno, yytext);}
 ;
 
 DeclVar:
@@ -186,13 +186,13 @@ TipoVar:
         INTEIRO {Concatenar("int ");}
         | REAL {Concatenar("float");}
         | CARACTER
-  //      | error {erros++; yyerror("Tipo invalido", yylineno, yytext);}
+        | error {erros++; yyerror("Tipo invalido", yylineno, yytext);}
 ;
 
 DeclVarList:
         VARIAVEL /*{$1 = strdup(yytext); inserir(t, $1, escopo);}*/ {Concatenar($1); Concatenar(";");}
         | VARIAVEL VIRGULA DeclVarList //{$1 = strdup(yytext); inserir(t, $1, escopo);}
-    //    | error {erros++; yyerror("Problema na lista de variaveis", yylineno, yytext);}
+        | error {erros++; yyerror("Problema na lista de variaveis", yylineno, yytext);}
 ;
 
 
@@ -212,7 +212,7 @@ VarFuncao:
         
         | VAR TerminaLinha {strcpy(escopo,"local");} {strcpy(escopo,"global");}
         | VAR TerminaLinha DeclVar {strcpy(escopo,"local");} {strcpy(escopo,"global");}
-  //      | error {erros++; yyerror("Problema no var da funcao", yylineno, yytext);}
+        | error {erros++; yyerror("Problema no var da funcao", yylineno, yytext);}
 ;
 
 RetorneFuncao:
@@ -222,7 +222,7 @@ RetorneFuncao:
 TipoRetorno:
         STRING
         | VARIAVEL
-    //    | error {erros++; yyerror("Tipo de retorno desconhecido", yylineno, yytext);}
+        | error {erros++; yyerror("Tipo de retorno desconhecido", yylineno, yytext);}
 ;
 
 
@@ -242,7 +242,6 @@ DeclProc:
 
 Inicio:
         INICIO TerminaLinha {fila_insere(f, "void main() {");}
-      //  | error {erros++; yyerror("Falta a palavra inicio", yylineno, yytext);}
 ;
 
 
@@ -259,7 +258,7 @@ Comandos:
 	| Comandos Enquanto
 	| Comandos Proc
 	| Comandos Interrompa
-	/*| error {erros++; yyerror("Comando invalido", yylineno, yytext);}*/
+	| error {erros++; yyerror("Comando invalido", yylineno, yytext);}
 ;
 
 Escreva:
@@ -291,7 +290,6 @@ Atribuicao:
 
 Se:
 	SE Expr Entao Comandos Senao FimSe
- //	| error {erros++; yyerror("Problema no se", yylineno, yytext);}
 ;
 
 Senao:
@@ -301,12 +299,11 @@ Senao:
 
 Entao:
 	ENTAO TerminaLinha
-//	| error {erros++; yyerror("Falta a palavra entao", yylineno, yytext);}
+	| error {erros++; yyerror("Falta a palavra entao", yylineno, yytext);}
 ;
 
 FimSe:
 	FIMSE TerminaLinha
-//	| error {erros++; yyerror("Falta a palavra fimse", yylineno, yytext);}
 ;
 
 Escolha:
@@ -326,12 +323,12 @@ OutroCaso:
 DeclStringList:
         STRING
         | STRING VIRGULA DeclStringList
-      //  | error {erros++; yyerror("Problema na lista de strings", yylineno, yytext);}
+        | error {erros++; yyerror("Problema na lista de strings", yylineno, yytext);}
 ;
 
 VarUtil: 
         VARIAVEL //{$1 = strdup(yytext); printf("Nome: %s\n", $1);}
-//      | error {erros++; yyerror("Falta a variavel", yylineno, yytext);}       
+      | error {erros++; yyerror("Falta a variavel", yylineno, yytext);}       
 ;
 
 
@@ -349,7 +346,6 @@ Para:
 ;
 
 LimitePara:
-  //	COMPR APARENTESE VarUtil FPARENTESE
 	 Expr
 ;
 
@@ -392,6 +388,7 @@ Expr:
 	| MAIUSC APARENTESE  Expr FPARENTESE
 	| COPIA APARENTESE CopiaList FPARENTESE
 	| COMPR APARENTESE Expr FPARENTESE
+        | error {erros++; yyerror("Expresao incorreta", yylineno, yytext);}
 ;
 
 Expr:
@@ -402,13 +399,12 @@ Expr:
 CopiaList:
         INTNUM
         | VARIAVEL VIRGULA CopiaList
-  //      | error {erros++; yyerror("Problema na lista de variaveis do copia", yylineno, yytext);}
+        | error {erros++; yyerror("Problema na lista de variaveis do copia", yylineno, yytext);}
 ;
 
 
 FimAlgoritmo:
 	FIMALGORITMO TerminaLinha {fila_insere(f, "}");}
-//	| error {erros++; yyerror("Falta a palavra fimalgoritmo", yylineno, yytext);}
 ;
 
 TerminaLinha:
@@ -416,7 +412,6 @@ TerminaLinha:
 	| QUEBRA_LINHA TerminaLinha
         | COMENTARIO QUEBRA_LINHA
         | COMENTARIO QUEBRA_LINHA TerminaLinha
-  //      | error {erros++; yyerror("Comentario",yylineno, yytext);}
 ;
 
 %%
