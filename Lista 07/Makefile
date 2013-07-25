@@ -47,6 +47,7 @@ test_all:
 	./elfs Exemplos/Link5/5.3_strings_vertical.alg
 	./elfs Exemplos/Link5/5.4_strings_vertical_escada.alg
 	./elfs Exemplos/Link5/5.5_strings_vertical_escada_invertida.alg
+	./elfs Exemplos/nota_uea.alg
 
 test_um: 
 	./elfs maior.alg
