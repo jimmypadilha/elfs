@@ -170,8 +170,8 @@ NomeAlgoritmo:
 
  /* Inicio  Zona de declaracao de variaveis do programa principal */
 Var:
-	VAR TerminaLinha {strcpy(escopo,"local");} {strcpy(escopo,"global");}
-	| VAR TerminaLinha DeclVar {strcpy(escopo,"local");} {strcpy(escopo,"global");}
+	VAR TerminaLinha {strcpy(escopo,"global");}
+	| VAR TerminaLinha DeclVar {strcpy(escopo,"global");}
 	| error {erros++; yyerror("Falta a palavra var", yylineno, yytext);}
 ;
 
@@ -189,8 +189,8 @@ TipoVar:
 ;
 
 DeclVarList:
-        VARIAVEL /*{$1 = strdup(yytext); inserir(t, $1, escopo);}*/ {Concatenar($1); Concatenar(";");}
-        | VARIAVEL VIRGULA DeclVarList //{$1 = strdup(yytext); inserir(t, $1, escopo);}
+        VARIAVEL {inserir(t, $1, escopo);} {Concatenar($1); Concatenar(";");}
+        | VARIAVEL VIRGULA DeclVarList {inserir(t, $1, escopo);}
         | error {erros++; yyerror("Problema na lista de variaveis", yylineno, yytext);}
 ;
 
