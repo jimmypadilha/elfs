@@ -1,3 +1,5 @@
+%option yylineno
+
 %{
 #include "elfs.tab.h"
 #include <stdarg.h>
