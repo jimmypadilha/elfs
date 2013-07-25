@@ -171,7 +171,7 @@ NomeAlgoritmo:
  /* Inicio  Zona de declaracao de variaveis do programa principal */
 Var:
 	VAR TerminaLinha
-	| VAR TerminaLinha DeclVar {strcpy(escopo,"global");}
+	| VAR TerminaLinha DeclVar
 	| error {erros++; yyerror("Falta a palavra var", yylineno, yytext);}
 ;
 
@@ -190,7 +190,7 @@ TipoVar:
 
 DeclVarList:
         VARIAVEL {strcpy(escopo, "global"); inserir(t, $1, escopo); Concatenar($1); Concatenar(";");}
-        | VARIAVEL VIRGULA DeclVarList {inserir(t, $1, escopo);}
+        | VARIAVEL VIRGULA DeclVarList { inserir(t, $1, escopo);}
         | error {erros++; yyerror("Problema na lista de variaveis", yylineno, yytext);}
 ;
 
@@ -204,14 +204,26 @@ Funcao:
 ;
 
 DeclFuncao:
-        FUNCAO VARIAVEL APARENTESE {strcpy(escopo,"local");} DeclVar FPARENTESE DOISPONTOS TipoVar TerminaLinha
+        FUNCAO VARIAVEL APARENTESE {strcpy(escopo,"local");} DeclVarFuncao FPARENTESE DOISPONTOS TipoVar TerminaLinha
 ;
 
 VarFuncao:
         
-        | VAR TerminaLinha {strcpy(escopo,"local");} {strcpy(escopo,"global");}
-        | VAR TerminaLinha DeclVar {strcpy(escopo,"local");} {strcpy(escopo,"global");}
+        | VAR TerminaLinha
+        | VAR TerminaLinha DeclVarFuncao
         | error {erros++; yyerror("Problema no var da funcao", yylineno, yytext);}
+;
+
+DeclVarFuncao:
+        DeclVarListFuncao DOISPONTOS TipoVar TerminaLinha {Limpar(); fila_insere(f, linha);}
+        | DeclVarListFuncao DOISPONTOS TipoVar TerminaLinha DeclVarFuncao
+        | DeclVarListFuncao DOISPONTOS TipoVar
+;
+
+DeclVarListFuncao:
+        VARIAVEL {strcpy(escopo, "local"); inserir(t, $1, escopo); Concatenar($1); Concatenar(";");}
+        | VARIAVEL VIRGULA DeclVarListFuncao {inserir(t, $1, escopo);}
+        | error {erros++; yyerror("Problema na lista de variaveis da funcao", yylineno, yytext);}
 ;
 
 RetorneFuncao:
@@ -269,8 +281,8 @@ EscrevaList:
 	| APARENTESE EscrevaList FPARENTESE 
 	| STRING VIRGULA EscrevaList {Concatenar($1); Concatenar(",");}
 	| VARIAVEL {Verificar(t, $1, escopo); Concatenar($1);}
-	| VARIAVEL EscrevaList 
-	| VARIAVEL VIRGULA EscrevaList {Concatenar(",");}
+	| VARIAVEL EscrevaList /* Chamada de funcao dentro do escreva */
+	| VARIAVEL VIRGULA EscrevaList {Verificar(t, $1, escopo); Concatenar(",");}
 	| COPIA APARENTESE CopiaList FPARENTESE
 ;
 
