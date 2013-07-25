@@ -109,7 +109,7 @@ Z [zZ]
 
 \"(\\.|\"\"|[^"\n])*\"  { yylval.strval = strdup(yytext); return STRING; }
 
--?[0-9]+  		{ yylval.intval = atoi(yytext); return INTNUM;}
+-?[0-9]+  		{ yylval.strval = strdup(yytext); return INTNUM;}
 
 -?[0-9]+"."[0-9]* |
 -?"."[0-9]+	|

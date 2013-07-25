@@ -40,13 +40,11 @@ void checar_variavel(tab_hash *t, char *var, char *escopo) {
 /* Funcao que concatena strings de uma linha de comando */
 void Concatenar(char *texto){
 	strcat(conc, texto);
-	/*printf("Ver... %s\n\n", conc);*/
 }
 
 /* Funcao que limpa a variavel utilizada para concatenacao de strings de um comando */
 void Limpar(){
 	strcpy(linha, conc);
-	printf("Valor linha %s\n\n", linha);
 	strcpy(conc, "" );
 }
 
@@ -65,7 +63,7 @@ void Limpar(){
 
 %token <strval> STRING
 %token <floatval> APPROXNUM
-%token <intval> INTNUM
+%token <strval> INTNUM
 %token <strval> VARIAVEL
 
 %token ALGORITMO 
@@ -186,7 +184,7 @@ DeclVar:
 
 TipoVar:
         INTEIRO {Concatenar("int ");}
-        | REAL 
+        | REAL {Concatenar("float");}
         | CARACTER
   //      | error {erros++; yyerror("Tipo invalido", yylineno, yytext);}
 ;
@@ -273,8 +271,8 @@ EscrevaList:
 	| APARENTESE EscrevaList FPARENTESE 
 	| STRING VIRGULA EscrevaList {Concatenar($1); Concatenar(",");}
 	| VARIAVEL {Concatenar($1);}
-	| VARIAVEL EscrevaList
-	| VARIAVEL VIRGULA EscrevaList
+	| VARIAVEL EscrevaList 
+	| VARIAVEL VIRGULA EscrevaList {Concatenar(",");}
 	| COPIA APARENTESE CopiaList FPARENTESE
 ;
 
@@ -287,7 +285,7 @@ LeiaList:
 ;
 
 Atribuicao:
-	VARIAVEL ATRIBUICAO Expr TerminaLinha
+	VARIAVEL ATRIBUICAO Expr TerminaLinha {Limpar(); fila_insere(f, linha);}
 	| VARIAVEL ATRIBUICAO VARIAVEL APARENTESE DeclVarList FPARENTESE TerminaLinha
 ;
 
@@ -373,15 +371,15 @@ Interrompa:
 ;
 
 Expr:
-	VARIAVEL
-	| INTNUM
+	VARIAVEL {Concatenar($1);}
+	| INTNUM {Concatenar($1);}
 	| APPROXNUM
 ;
  
 Expr: 
-	Expr SOMA Expr
-	| Expr DIVISAO Expr
-	| Expr MULTIPLICACAO Expr
+	Expr SOMA Expr {Concatenar("+");}
+	| Expr DIVISAO Expr {Concatenar("/");}
+	| Expr MULTIPLICACAO Expr {Concatenar("*");}
 	| APARENTESE Expr FPARENTESE
 	| Expr MENOS Expr
 	| Expr MAIOR Expr
@@ -455,7 +453,7 @@ int main(int argc, char *argv[])
         			exit(1);
  	    		}
 			arq_imprime(f,arq);
-	
+				
 			fila_libera(f);
 
 			printf("  Transcrição feita com Sucesso!.\n");
