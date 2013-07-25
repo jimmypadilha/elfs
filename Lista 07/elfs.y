@@ -307,21 +307,21 @@ AtribuicaoList:
 ;
 
 Se:
-	SE {Concatenar("if");}  Expr Entao Comandos Senao FimSe {fila_insere(f, linha);}
+	SE {Concatenar("if");}  Expr Entao{Concatenar("{");Limpar(); fila_insere(f, linha);}  Comandos Senao FimSe {Limpar();fila_insere(f, linha);}
 ;
 
 Senao:
 	
-	| SENAO TerminaLinha Comandos {fila_insere(f, "else{");}
+	| SENAO{Concatenar("}else{");Limpar(); fila_insere(f, linha);} TerminaLinha Comandos 
 ;
 
 Entao:
-	ENTAO TerminaLinha {Concatenar("{");}
+	ENTAO TerminaLinha
 	| error {erros++; yyerror("Falta a palavra entao", yylineno, yytext);}
 ;
 
 FimSe:
-	FIMSE TerminaLinha {Concatenar("}");}
+	FIMSE {Concatenar("}");} TerminaLinha 
 ;
 
 Escolha:
@@ -391,27 +391,30 @@ Expr:
 ;
  
 Expr: 
-	Expr SOMA Expr {Concatenar("+");}
-	| Expr DIVISAO Expr {Concatenar("/");}
-	| Expr MULTIPLICACAO Expr {Concatenar("*");}
-	| APARENTESE Expr FPARENTESE
-	| Expr MENOS Expr
-	| Expr MAIOR Expr
-	| Expr MAIORIGUAL Expr
-	| Expr IGUAL Expr
-	| Expr MENORIGUAL Expr
-	| Expr MENOR Expr
-	| Expr RESTO Expr
-	| Expr DIFERENTE Expr
-	| MAIUSC APARENTESE  Expr FPARENTESE
-	| COPIA APARENTESE CopiaList FPARENTESE
-	| COMPR APARENTESE Expr FPARENTESE
+	Expr SOMA{Concatenar("+");} Expr 
+	| Expr DIVISAO {Concatenar("/");} Expr
+	| Expr MULTIPLICACAO{Concatenar("*");} Expr 
+	| APARENTESE{Concatenar("(");} Expr FPARENTESE{Concatenar(")");} 
+	| Expr MENOS{Concatenar("-");}  Expr
+	| Expr MAIOR{Concatenar(">");}  Expr
+	| Expr MAIORIGUAL{Concatenar(">=");}  Expr
+	| Expr IGUAL{Concatenar("=");} Expr
+	| Expr MENORIGUAL{Concatenar("<=");} Expr
+	| Expr MENOR{Concatenar("<");} Expr
+	| Expr RESTO{Concatenar("%");} Expr
+	| Expr DIFERENTE{Concatenar("!=");} Expr
+	| MAIUSC APARENTESE{Concatenar("(");}  Expr FPARENTESE{Concatenar(")");} 
+	| COPIA APARENTESE{Concatenar("(");}  CopiaList FPARENTESE {Concatenar(")");} 
+	| TK_Compr APARENTESE{Concatenar("(");} Expr FPARENTESE {Concatenar(")");}
         | error {erros++; yyerror("Expresao incorreta", yylineno, yytext);}
 ;
 
+TK_Compr:
+	COMPR  {Concatenar("strlen");} 
+;
 Expr:
-	Expr OU Expr
-	| Expr E Expr
+	Expr OU{Concatenar("||");} Expr
+	| Expr E{Concatenar("&&");} Expr
 ;
 
 CopiaList:
