@@ -135,6 +135,7 @@ void Limpar(){
 %token COPIA
 %token MAIUSC
 %token INTERROMPA
+%type <strval> DeclVar  DeclVarList
 
  /*Left - operadore associativo a esquerda
  * Right - operador associativo a direita
@@ -164,7 +165,7 @@ Algoritmo:
 ;
 
 NomeAlgoritmo:
-	 STRING {$1 = strdup(yytext);} TerminaLinha 
+	STRING {$1 = strdup(yytext); printf ("Algoritmo: %s \n", $1);} TerminaLinha 
 	| error {erros++; yyerror("Falta o nome do algoritmo", yylineno, yytext);}
 ;
 
@@ -176,7 +177,7 @@ Var:
 ;
 
 DeclVar:
-        DeclVarList DOISPONTOS TipoVar TerminaLinha {Limpar(); fila_insere(f, linha);}
+        DeclVarList DOISPONTOS TipoVar TerminaLinha {  Concatenar($1);  Concatenar(" ;"); Limpar(); fila_insere(f, linha);}
         | DeclVarList DOISPONTOS TipoVar TerminaLinha DeclVar
         | DeclVarList DOISPONTOS TipoVar
 ;
@@ -184,7 +185,7 @@ DeclVar:
 TipoVar:
         INTEIRO {Concatenar("int ");}
         | REAL {Concatenar("float");}
-        | CARACTER
+        | CARACTER {Concatenar("char ");}
         | error {erros++; yyerror("Tipo invalido", yylineno, yytext);}
 ;
 
@@ -261,7 +262,7 @@ Comandos:
 ;
 
 Escreva:
-	ESCREVA {Concatenar("printf(");} EscrevaList TerminaLinha {Concatenar(");"); Limpar(); fila_insere(f, linha);}
+	ESCREVA {Concatenar("printf(");} EscrevaList {Concatenar(");"); Limpar(); fila_insere(f, linha);} TerminaLinha 
 ;
 
 EscrevaList:
@@ -275,7 +276,7 @@ EscrevaList:
 ;
 
 Leia:
-	LEIA APARENTESE {Concatenar("scanf(");} LeiaList FPARENTESE TerminaLinha {Concatenar(");"); Limpar(); fila_insere(f, linha);}
+	LEIA APARENTESE {Concatenar("scanf(");} LeiaList FPARENTESE {Concatenar(");"); Limpar(); fila_insere(f, linha);} TerminaLinha 
 ;
 
 LeiaList:

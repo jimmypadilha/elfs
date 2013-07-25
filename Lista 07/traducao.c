@@ -1,27 +1,23 @@
 
 #include <stdio.h>
-// Função : Compara 2 numeros e mostra o maior valor
+// Função : Compara 2 numeros e mostra o maior valor
 // Autor : grupo 4
 // Data : 7/5/2013
 // Seção de Declarações
 // Declaração de variáveis
-n2;float
+n2;floatn1 ;
+// Imprime na tela o texto
 void main() {
-printf("Entre com o primeiro numero: "// Imprime na 
-);
-scanf(n1// Recebe o primeiro numero
-);
-printf("Entre com o segundo numero: "// Imprime na t
-);
-scanf(n2// Recebe o segundo numero
-);
-ifn1n2// Verifica se n1 é maior que n2
-{printf(n2" E maior que: ",,// Imprime na tela o tex
-);
-// Caso a condição não seja verdadeira, a segunda pa
-printf(n1" E maior que: ",,// Imprime na tela o text
-);
+printf("Entre com o primeiro numero: ");
+// Recebe o primeiro numero
+scanf(n1);
+// Imprime na tela o texto
+printf("Entre com o segundo numero: ");
+// Recebe o segundo numero
+scanf(n2);
+// Verifica se n1 é maior que n2
+ifn1n2{printf(n2" E maior que: ",,);
+printf(n1" E maior que: ",,);
 else{
-// Encerra o comando se
-// Encerra o comando se
+printf(n1" E maior que: ",,);
 }
