@@ -165,7 +165,7 @@ Algoritmo:
 ;
 
 NomeAlgoritmo:
-	STRING {$1 = strdup(yytext); printf ("Algoritmo: %s \n", $1);} TerminaLinha 
+	STRING TerminaLinha 
 	| error {erros++; yyerror("Falta o nome do algoritmo", yylineno, yytext);}
 ;
 
@@ -191,7 +191,7 @@ TipoVar:
 
 DeclVarList:
         VARIAVEL {strcpy(escopo, "global"); inserir(t, $1, escopo); Concatenar($1); Concatenar(";");}
-        | VARIAVEL VIRGULA DeclVarList { inserir(t, $1, escopo);}
+        | VARIAVEL VIRGULA DeclVarList {strcpy(escopo, "local"); inserir(t, $1, escopo); strcpy(escopo, "global"); inserir(t, $1, escopo);}
         | error {erros++; yyerror("Problema na lista de variaveis", yylineno, yytext);}
 ;
 
@@ -297,7 +297,13 @@ LeiaList:
 
 Atribuicao:
 	VARIAVEL ATRIBUICAO Expr TerminaLinha {Verificar(t, $1, escopo); Limpar(); fila_insere(f, linha);}
-	| VARIAVEL ATRIBUICAO VARIAVEL APARENTESE DeclVarList FPARENTESE TerminaLinha
+	| VARIAVEL ATRIBUICAO VARIAVEL APARENTESE AtribuicaoList FPARENTESE TerminaLinha
+;
+
+AtribuicaoList:
+        VARIAVEL {Verificar(t, $1, escopo); Concatenar($1); Concatenar(";");}
+        | VARIAVEL VIRGULA AtribuicaoList {Verificar(t, $1, escopo);}
+        | error {erros++; yyerror("Problema na lista de variaveis", yylineno, yytext);}
 ;
 
 Se:
