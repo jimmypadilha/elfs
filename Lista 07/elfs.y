@@ -13,7 +13,7 @@ Fila* f;
 extern FILE *yyin;
 int erros;
 tab_hash *t;
-char *conc, *linha;
+char *conc, *linha,*aux;
 char escopo[30], var[30];
 extern yylineno;
 extern char *yytext;
@@ -70,7 +70,7 @@ void Limpar(){
 %token  ALGORITMO 
 %token VAR
 %token INICIO
-%token ESCREVA
+%token  <strval> ESCREVA
 %token FIMALGORITMO
 
 %token MAIORIGUAL
@@ -135,7 +135,7 @@ void Limpar(){
 %token COPIA
 %token MAIUSC
 %token INTERROMPA
-%type <strval> DeclVar  DeclVarList
+%type <strval> DeclVar  DeclVarList TK_Variavel VarUtil Escreva DeclFuncao
 
  /*Left - operadore associativo a esquerda
  * Right - operador associativo a direita
@@ -177,22 +177,21 @@ Var:
 ;
 
 DeclVar:
-        DeclVarList DOISPONTOS TipoVar TerminaLinha {  Concatenar($1);  Concatenar(" ;"); Limpar(); fila_insere(f, linha);}
+        DeclVarList DOISPONTOS TipoVar TerminaLinha {  Concatenar(aux); Concatenar(" ;"); Limpar(); fila_insere(f, linha);}
         | DeclVarList DOISPONTOS TipoVar TerminaLinha DeclVar
         | DeclVarList DOISPONTOS TipoVar
 ;
 
 TipoVar:
-        INTEIRO {Concatenar("int ");}
-        | REAL {Concatenar("float");}
-        | CARACTER {Concatenar("char ");}
+        INTEIRO {Concatenar("int  ");}
+        | REAL {Concatenar("float  ");}
+        | CARACTER {Concatenar("char  ");}
         | error {erros++; yyerror("Tipo invalido", yylineno, yytext);}
 ;
 
 DeclVarList:
-        VARIAVEL {strcpy(escopo, "global"); inserir(t, $1, escopo); Concatenar($1); Concatenar(";");}
-        | VARIAVEL VIRGULA DeclVarList {/*strcpy(escopo, "local"); inserir(t, $1, escopo);*/ strcpy(escopo, "global"); inserir(t, $1, escopo);}
-        | error {erros++; yyerror("Problema na lista de variaveis", yylineno, yytext);}
+        VARIAVEL {strcpy(escopo, "global"); inserir(t, $1, escopo);strcat(aux,$1);}
+        | VARIAVEL{strcat(aux,$1); strcat(aux,","); } VIRGULA DeclVarList {/*strcpy(escopo, "local"); inserir(t, $1, escopo);*/ strcpy(escopo, "global"); inserir(t, $1, escopo);}
 ;
 
 
@@ -201,11 +200,13 @@ DeclVarList:
     /* Inicio Zona de Declarações de Funções */ 
 
 Funcao:
-        | DeclFuncao VarFuncao Inicio {strcpy(escopo,"local");} Comandos RetorneFuncao FimFuncao
+        | DeclFuncao VarFuncao InicioFuncao {strcpy(escopo,"local");} Comandos RetorneFuncao FimFuncao
 ;
-
+InicioFuncao:
+        INICIO TerminaLinha
+;
 DeclFuncao:
-        FUNCAO VARIAVEL APARENTESE {strcpy(escopo,"local");} DeclVarFuncao FPARENTESE DOISPONTOS TipoVar TerminaLinha
+        FUNCAO VARIAVEL {Concatenar($2);} APARENTESE {Concatenar("(");} {strcpy(escopo,"local");} DeclVarFuncao FPARENTESE  DOISPONTOS TipoVar TerminaLinha
 ;
 
 VarFuncao:
@@ -216,14 +217,14 @@ VarFuncao:
 ;
 
 DeclVarFuncao:
-        DeclVarListFuncao DOISPONTOS TipoVar TerminaLinha {Limpar(); fila_insere(f, linha);}
-        | DeclVarListFuncao DOISPONTOS TipoVar TerminaLinha DeclVarFuncao
+        DeclVarListFuncao  DOISPONTOS TipoVar TerminaLinha { Concatenar(aux); Concatenar(" ;"); Limpar(); fila_insere(f, linha);}
+        | DeclVarListFuncao DOISPONTOS TipoVar {Concatenar(",");}TerminaLinha DeclVarFuncao
         | DeclVarListFuncao DOISPONTOS TipoVar
 ;
 
 DeclVarListFuncao:
-        VARIAVEL {strcpy(escopo, "local"); inserir(t, $1, escopo); Concatenar($1); Concatenar(";");}
-        | VARIAVEL VIRGULA DeclVarListFuncao {inserir(t, $1, escopo);}
+        VARIAVEL {strcpy(escopo, "local"); inserir(t, $1, escopo);strcat(aux,$1); }
+        | VARIAVEL{strcat(aux,$1); strcat(aux,","); } VIRGULA DeclVarListFuncao {inserir(t, $1, escopo);}
         | error {erros++; yyerror("Problema na lista de variaveis da funcao", yylineno, yytext);}
 ;
 
@@ -274,17 +275,17 @@ Comandos:
 ;
 
 Escreva:
-	ESCREVA {Concatenar("printf(");} EscrevaList {Concatenar(");"); Limpar(); fila_insere(f, linha);} TerminaLinha 
+	ESCREVA {Concatenar("printf");} EscrevaList { Concatenar(";"); Limpar(); fila_insere(f, linha);} TerminaLinha //if (!strcmp($1,"escreval")); Concatenar(",\\n");
 ;
 
 EscrevaList:
 	STRING {Concatenar($1);}
-	| APARENTESE EscrevaList FPARENTESE 
-	| STRING VIRGULA EscrevaList {Concatenar($1); Concatenar(",");}
-	| VARIAVEL {Verificar(t, $1, escopo); Concatenar($1);}
-	| VARIAVEL EscrevaList /* Chamada de funcao dentro do escreva */
-	| VARIAVEL VIRGULA EscrevaList {Verificar(t, $1, escopo); Concatenar(",");}
-	| COPIA APARENTESE CopiaList FPARENTESE
+	| APARENTESE {Concatenar("(");} EscrevaList FPARENTESE {Concatenar(")");} 
+	| STRING {Concatenar($1);} VIRGULA {Concatenar(",");} EscrevaList
+	| VARIAVEL {Concatenar($1);} {Verificar(t, $1, escopo);}
+	| VARIAVEL  {Concatenar($1);} EscrevaList /* Chamada de funcao dentro do escreva */
+	| VARIAVEL{Concatenar($1);} VIRGULA{Concatenar(",");}  EscrevaList {Verificar(t, $1, escopo);}
+	| COPIA{Concatenar("strcpy");} APARENTESE {Concatenar("(");} CopiaList FPARENTESE {Concatenar(")");} 
 ;
 
 Leia:
@@ -296,8 +297,15 @@ LeiaList:
 ;
 
 Atribuicao:
-	VARIAVEL ATRIBUICAO Expr TerminaLinha {Verificar(t, $1, escopo); Limpar(); fila_insere(f, linha);}
-	| VARIAVEL ATRIBUICAO VARIAVEL APARENTESE AtribuicaoList FPARENTESE TerminaLinha
+	TK_Variavel TK_Atribuicao Expr  {Verificar(t, $1, escopo); {Concatenar(";");} Limpar(); fila_insere(f, linha);} TerminaLinha
+	|TK_Variavel  TK_Atribuicao  TK_Variavel  APARENTESE AtribuicaoList FPARENTESE TerminaLinha
+;
+TK_Variavel:
+	VARIAVEL {Concatenar($$);}
+;
+
+TK_Atribuicao:
+	 ATRIBUICAO {Concatenar("=");}
 ;
 
 AtribuicaoList:
@@ -345,7 +353,7 @@ DeclStringList:
 ;
 
 VarUtil: 
-        VARIAVEL {Verificar(t, $1, escopo);}
+        VARIAVEL {Concatenar($1);strcpy(aux,$1);Verificar(t, $1, escopo);}
       | error {erros++; yyerror("Falta a variavel", yylineno, yytext);}       
 ;
 
@@ -360,7 +368,7 @@ LimiteRepita:
 ;
 
 Para:
-	PARA VarUtil DE LimitePara ATE LimitePara PassoPara FACA TerminaLinha Comandos FIMPARA TerminaLinha
+	PARA {Concatenar("for (");} VarUtil DE{Concatenar("=");} LimitePara  {Concatenar(";");} ATE {Concatenar(aux);Concatenar("<=");}LimitePara {Concatenar(";");} PassoPara FACA { Concatenar(aux);Concatenar("++");Concatenar(")");Concatenar("{");Limpar();fila_insere(f, linha);}TerminaLinha Comandos {Concatenar("}");} FIMPARA {Limpar();fila_insere(f, linha);}TerminaLinha
 ;
 
 LimitePara:
@@ -373,7 +381,7 @@ PassoPara:
 ;
 
 Enquanto:
-	ENQUANTO Expr FACA TerminaLinha Comandos FIMENQUANTO TerminaLinha
+	ENQUANTO{Concatenar("while ");} Expr FACA {Concatenar("{");Limpar();fila_insere(f, linha);} TerminaLinha Comandos  {Concatenar("}");Limpar();fila_insere(f, linha);}FIMENQUANTO TerminaLinha
 ;
 
 Proc:
@@ -418,8 +426,8 @@ Expr:
 ;
 
 CopiaList:
-        INTNUM
-        | VARIAVEL VIRGULA CopiaList
+        INTNUM{Concatenar($1);}
+        | VARIAVEL{Concatenar($1);Concatenar(",");} VIRGULA CopiaList
         | error {erros++; yyerror("Problema na lista de variaveis do copia", yylineno, yytext);}
 ;
 
@@ -431,8 +439,8 @@ FimAlgoritmo:
 TerminaLinha:
         QUEBRA_LINHA
 	| QUEBRA_LINHA TerminaLinha
-	| COMENTARIO QUEBRA_LINHA {fila_insere(f, $1);}
-        | COMENTARIO QUEBRA_LINHA TerminaLinha {fila_insere(f, $1);}
+        | COMENTARIO QUEBRA_LINHA {fila_insere(f,$1);} 
+        | COMENTARIO QUEBRA_LINHA TerminaLinha {fila_insere(f,$1);}
 ;
 
 
@@ -451,6 +459,8 @@ int main(int argc, char *argv[])
 		conc=(char *)(malloc((sizeof(char)*100)));//variável para concatenação de strings
 		
 		linha=(char *)(malloc((sizeof(char)*100)));//variável para ser passada para a fila
+
+		aux=(char *)(malloc((sizeof(char)*100)));//variável auxiliar
 
 		yyin = fopen(argv[1], "r");
 
